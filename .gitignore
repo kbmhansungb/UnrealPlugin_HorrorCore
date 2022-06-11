@@ -5,9 +5,9 @@ Saved
 Config
 Platforms
 Source
-.uproject
 .vscode
 .vs
+*.uproject
 *.VC.db
 *.opensdf
 *.opendb
