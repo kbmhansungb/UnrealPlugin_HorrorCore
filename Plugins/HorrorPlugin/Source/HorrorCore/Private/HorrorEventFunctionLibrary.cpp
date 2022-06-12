@@ -3,7 +3,6 @@
 
 #include "HorrorEventFunctionLibrary.h"
 #include "HorrorEventComponent.h"
-
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "CollisionQueryParams.h"

@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "HorrorEventCallerComponent.h"
 #include "HorrorItemAsset.generated.h"
 
 class UHorrorEventComponent;
-class UHorrorEventCallerComponent;
 
 /**
  * 
@@ -23,11 +23,11 @@ protected:
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void CallHorrorEvent(UHorrorEventCallerComponent* CallerComponent) const;
-	virtual void CallHorrorEvent_Implementation(UHorrorEventCallerComponent* CallerComponent) const;
+	void CallHorrorEvent(const FHorrorEventCallStruct& CallStruct);
+	virtual void CallHorrorEvent_Implementation(const FHorrorEventCallStruct& CallStruct);
 
 protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	UHorrorEventComponent* GetHorrorComponent(UHorrorEventCallerComponent* CallerComponent) const;
-	virtual UHorrorEventComponent* GetHorrorComponent_Implementation(UHorrorEventCallerComponent* CallerComponent) const;
+	UHorrorEventComponent* GetHorrorComponent(const FHorrorEventCallStruct& CallStruct) const;
+	virtual UHorrorEventComponent* GetHorrorComponent_Implementation(const FHorrorEventCallStruct& CallStruct) const;
 };

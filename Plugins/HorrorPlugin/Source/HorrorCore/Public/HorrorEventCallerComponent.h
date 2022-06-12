@@ -8,6 +8,24 @@
 #include "HorrorEventCallerComponent.generated.h"
 
 class UHorrorEventComponent;
+class UHorrorEventCallerComponent;
+
+
+USTRUCT(BlueprintType)
+struct FHorrorEventCallStruct
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UHorrorEventCallerComponent* CallerComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector Origin;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector Direction;
+};
 
 /**
  * Purpose : Used to call a horror event that can be RPC function using a character or player controller.
