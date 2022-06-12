@@ -6,10 +6,11 @@
 #include "HorrorEventInstance.h"
 #include "HorrorEventFunctionLibrary.h"
 
-FHorrorEventRequired UHorrorEventCallerComponent::GetRequired()
+FHorrorEventRequired UHorrorEventCallerComponent::GetRequired(TScriptInterface<IHorrorItemInterface> ItemInterface)
 {
 	FHorrorEventRequired Required;
 	Required.Subject = GetOwner();
+	Required.ItemInterface = ItemInterface;
 	return Required;
 }
 
@@ -34,12 +35,12 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 		return;
 	}
 
-	FHorrorEventRequired Required = GetRequired();
+	FHorrorEventRequired Required = GetRequired(ItemInterface);
 
 	for (FHorrorEventInstanced& HorrorEvent : EventComponent->GetHorrorEvents())
 	{
 		if (IsValid(HorrorEvent.Instance) == false ||
-			HorrorEvent.Instance->GetState().IsExecuteable() == false)
+			HorrorEvent.Instance->IsExecuteable(Required) == false)
 		{
 			continue;
 		}

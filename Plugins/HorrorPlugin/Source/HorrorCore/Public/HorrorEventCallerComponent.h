@@ -56,7 +56,7 @@ class HORRORCORE_API UHorrorEventCallerComponent final : public UActorComponent
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
-	FHorrorEventRequired GetRequired();
+	FHorrorEventRequired GetRequired(TScriptInterface<IHorrorItemInterface> ItemInterface);
 
 	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
 	void CallHorrorEvent(const FVector& Origin, const FVector& Direction, TScriptInterface<IHorrorItemInterface> ItemInterface);

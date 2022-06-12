@@ -3,14 +3,15 @@
 
 #include "HorrorEventInstance.h"
 
+bool UHorrorEventInstance::IsExecuteable(const FHorrorEventRequired& HorrorEventRequired)
+{
+	return
+		State.IsExecuteable() &&
+		IsValid(EventCondition) && EventCondition->CheckCondition(HorrorEventRequired);
+}
+
 void UHorrorEventInstance::Execute(const FHorrorEventRequired& HorrorEventRequired)
 {
-	if (IsValid(EventCondition) &&
-		EventCondition->CheckCondition(HorrorEventRequired) == false)
-	{
-		return;
-	}
-
 	Enter(HorrorEventRequired);
 
 	State.Disabled = !IsItReuseable_Implementation(HorrorEventRequired);

@@ -69,14 +69,17 @@ class HORRORCORE_API UHorrorEventInstance : public UObject
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable)
+	bool IsExecuteable(const FHorrorEventRequired& HorrorEventRequired);
+
 	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
 	void Execute(const FHorrorEventRequired& HorrorEventRequired);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHorrorEventState State;
-public:
-	FORCEINLINE const FHorrorEventState& GetState() const { return State; }
+//public:
+//	FORCEINLINE const FHorrorEventState& GetState() const { return State; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category = "HorrorEventDefinition")
