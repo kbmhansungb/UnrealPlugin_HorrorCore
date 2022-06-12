@@ -10,15 +10,21 @@
 
 #define DRAWING_PARAM false, 1.0f
 
-void UHorrorEventFunctionLibrary::GetHorrorEventComponent(AActor* Actor, const FVector& Start, const FVector& Direction, float Length, UHorrorEventComponent*& HorrorEventComponent)
+void UHorrorEventFunctionLibrary::GetHorrorEventComponent(const FHorrorEventCallStruct& CallStruct, float Length, UHorrorEventComponent*& HorrorEventComponent)
 {
 	HorrorEventComponent = nullptr;
+
+	if (IsValid(CallStruct.CallerComponent) == false)
+	{
+		return;
+	}
+	const AActor* Actor = CallStruct.CallerComponent->GetOwner();
 
 	FHitResult HitResult;
 	FCollisionObjectQueryParams ObjectQueryParams;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(Actor);
-	if (Actor->GetWorld()->LineTraceSingleByObjectType(HitResult, Start, Start + Direction * Length, ObjectQueryParams, QueryParams))
+	if (Actor->GetWorld()->LineTraceSingleByObjectType(HitResult, CallStruct.Origin, CallStruct.Origin + CallStruct.Direction * Length, ObjectQueryParams, QueryParams))
 	{
 		if (!HitResult.Actor.IsValid())
 		{
@@ -35,16 +41,19 @@ void UHorrorEventFunctionLibrary::GetHorrorEventComponent(AActor* Actor, const F
 	}
 }
 
-void UHorrorEventFunctionLibrary::GetHorrorEventComponentLikeEye(AActor* Actor, const FVector& Start, const FVector& Direction, float Length, float Radius, UHorrorEventComponent*& HorrorEventComponent)
+void UHorrorEventFunctionLibrary::GetHorrorEventComponentLikeEye(const FHorrorEventCallStruct& CallStruct, float Length, float Radius, UHorrorEventComponent*& HorrorEventComponent)
 {
+	HorrorEventComponent = nullptr;
+	const AActor* Actor = CallStruct.CallerComponent->GetOwner();
+
 	TArray<FHitResult> HitResults;
 	FCollisionObjectQueryParams QueryParams;
-	Actor->GetWorld()->SweepMultiByObjectType(HitResults, Start, Start + Direction * Length, FQuat::Identity, QueryParams, FCollisionShape::MakeSphere(Radius));
+	Actor->GetWorld()->SweepMultiByObjectType(HitResults, CallStruct.Origin, CallStruct.Origin + CallStruct.Direction * Length, FQuat::Identity, QueryParams, FCollisionShape::MakeSphere(Radius));
 
 #if ENABLE_DRAW_DEBUG
 
-	FVector Center = (Start + (Start + Direction * Length)) / 2.0f;
-	FVector Axis = Center - Start;
+	FVector Center = (CallStruct.Origin + (CallStruct.Origin + CallStruct.Direction * Length)) / 2.0f;
+	FVector Axis = Center - CallStruct.Origin;
 	FQuat Quat = Axis.Normalize() ? FRotationMatrix::MakeFromZ(Axis).ToQuat() : FQuat::Identity;
 	DrawDebugCapsule(Actor->GetWorld(), Center, Length / 2.0f, Radius, Quat, FColor::Blue, DRAWING_PARAM);
 
@@ -66,7 +75,7 @@ void UHorrorEventFunctionLibrary::GetHorrorEventComponentLikeEye(AActor* Actor, 
 
 	for (const FHitResult& HitResult : HitResults)
 	{
-		if ( !(FVector::DotProduct(Direction, HitResult.Normal) < 0) )
+		if ( !(FVector::DotProduct(CallStruct.Direction, HitResult.Normal) < 0) )
 		{
 			continue;
 		}
@@ -84,7 +93,7 @@ void UHorrorEventFunctionLibrary::GetHorrorEventComponentLikeEye(AActor* Actor, 
 
 #if ENABLE_DRAW_DEBUG
 
-		DrawDebugLine(Actor->GetWorld(), Start, HitResult.Location, FColor::Green, DRAWING_PARAM);
+		DrawDebugLine(Actor->GetWorld(), HitResult.TraceStart, HitResult.Location, FColor::Green, DRAWING_PARAM);
 
 #endif
 		return;

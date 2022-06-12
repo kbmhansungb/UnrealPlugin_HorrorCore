@@ -25,12 +25,9 @@ void UHorrorItemAsset::CallHorrorEvent_Implementation(const FHorrorEventCallStru
 
 UHorrorEventComponent* UHorrorItemAsset::GetHorrorComponent_Implementation(const FHorrorEventCallStruct& CallStruct) const
 {
-	AActor* Owner = CallStruct.CallerComponent->GetOwner();
 	UHorrorEventComponent* HorrorEventComponent;
 	UHorrorEventFunctionLibrary::GetHorrorEventComponent(
-		Owner,
-		CallStruct.Origin,
-		CallStruct.Direction,
+		CallStruct,
 		MaximumInteractableDistance,
 		HorrorEventComponent);
 	return HorrorEventComponent;
