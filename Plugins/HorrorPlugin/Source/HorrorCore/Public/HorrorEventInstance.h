@@ -6,8 +6,14 @@
 #include "UObject/NoExportTypes.h"
 #include "HorrorEventInstance.generated.h"
 
+class AActor;
+
 /**
- *
+ * Purpose : This is the struct to sent by the horror component to check the condition of the event.
+ * 
+ * It is based on the sentence structure of the subject verb and object.
+ * Verb simplifies to 'do'.
+ * Object is simplified to owner Actor of HorrorComponent.
  */
 USTRUCT(BlueprintType)
 struct HORRORCORE_API FHorrorEventRequired
@@ -18,7 +24,7 @@ public:
 	FHorrorEventRequired() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TWeakObjectPtr<class AActor> Subject;
+	AActor* Subject;
 };
 
 /**
@@ -31,9 +37,23 @@ struct HORRORCORE_API FHorrorEventState
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool Disabled;
+	bool Disabled;
 
 	FORCEINLINE bool IsExecuteable() const { return !Disabled; }
+};
+
+/**
+ * 
+ */
+UCLASS(Abstract, ClassGroup = (HorrorEvent), Blueprintable, DefaultToInstanced, EditInlineNew)
+class HORRORCORE_API UHorrorEventCondition : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool CheckCondition(const FHorrorEventRequired& HorrorEventRequired);
+	virtual bool CheckCondition_Implementation(const FHorrorEventRequired& HorrorEventRequired) { return true; };
 };
 
 /**
@@ -44,15 +64,20 @@ class HORRORCORE_API UHorrorEventInstance : public UObject
 {
 	GENERATED_BODY()
 	
-public:
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHorrorEventState State;
+public:
+	FORCEINLINE const FHorrorEventState& GetState() const { return State; }
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category = "HorrorEventDefinition")
+	UHorrorEventCondition* EventCondition;
+
 	/**
 	 *  Used to net multicast from Horror Event Caller Component.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HorrorEventDefinition")
 	bool LocalEvent = false;
 public:
 	FORCEINLINE bool IsLocalEvent() const { return LocalEvent; }
@@ -61,11 +86,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
 	void Execute(const FHorrorEventRequired& HorrorEventRequired);
 	
+protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HorrorEvent")
 	bool IsItReuseable(const FHorrorEventRequired& HorrorEventRequired);
 	virtual bool IsItReuseable_Implementation(const FHorrorEventRequired& HorrorEventRequired);
 
-protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HorrorEvent")
 	void Enter(const FHorrorEventRequired& HorrorEventRequired);
 	virtual void Enter_Implementation(const FHorrorEventRequired& HorrorEventRequired);

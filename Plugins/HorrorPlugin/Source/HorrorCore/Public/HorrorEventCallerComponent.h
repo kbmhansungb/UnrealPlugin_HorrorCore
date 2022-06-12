@@ -9,25 +9,30 @@
 
 class UHorrorEventComponent;
 
+/**
+ * Purpose : Used to call a horror event that can be RPC function using a character or player controller.
+ */
 UCLASS( ClassGroup=(HorrorEvent), meta=(BlueprintSpawnableComponent) )
 class HORRORCORE_API UHorrorEventCallerComponent final : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
+	FHorrorEventRequired GetRequired();
+
+	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
 	void CallHorrorEvent(UHorrorEventComponent* HorrorEventComponent);
 
 protected:
 	void ExecuteHorrorEvent(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
 
-	UFUNCTION(Server, Reliable)
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerRPC_CallHorrorEvent(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
 	bool ServerRPC_CallHorrorEvent_Validate(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
 	void ServerRPC_CallHorrorEvent_Implementation(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastRPC_CallHorrorEvent(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
-	bool MulticastRPC_CallHorrorEvent_Validate(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
 	void MulticastRPC_CallHorrorEvent_Implementation(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
 };

@@ -5,13 +5,21 @@
 #include "HorrorEventComponent.h"
 #include "HorrorEventInstance.h"
 
-void UHorrorEventCallerComponent::CallHorrorEvent(UHorrorEventComponent* HorrorEventComponent)
+FHorrorEventRequired UHorrorEventCallerComponent::GetRequired()
 {
 	FHorrorEventRequired Required;
+	Required.Subject = GetOwner();
+	return Required;
+}
+
+void UHorrorEventCallerComponent::CallHorrorEvent(UHorrorEventComponent* HorrorEventComponent)
+{
+	FHorrorEventRequired Required = GetRequired();
 
 	for (FHorrorEventInstanced& HorrorEvent : HorrorEventComponent->GetHorrorEvents())
 	{
-		if (!HorrorEvent.Instance)
+		if (IsValid(HorrorEvent.Instance) == false ||
+			HorrorEvent.Instance->GetState().IsExecuteable() == false)
 		{
 			continue;
 		}
@@ -29,11 +37,7 @@ void UHorrorEventCallerComponent::CallHorrorEvent(UHorrorEventComponent* HorrorE
 
 void UHorrorEventCallerComponent::ExecuteHorrorEvent(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent)
 {
-	if (HorrorEvent.Instance->State.IsExecuteable())
-	{
-		HorrorEvent.Instance->Execute(Required);
-		HorrorEvent.Instance->State.Disabled = !HorrorEvent.Instance->IsItReuseable(Required);
-	}
+	HorrorEvent.Instance->Execute(Required);
 }
 
 bool UHorrorEventCallerComponent::ServerRPC_CallHorrorEvent_Validate(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent)
@@ -44,11 +48,6 @@ bool UHorrorEventCallerComponent::ServerRPC_CallHorrorEvent_Validate(const FHorr
 void UHorrorEventCallerComponent::ServerRPC_CallHorrorEvent_Implementation(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent)
 {
 	MulticastRPC_CallHorrorEvent(Required, HorrorEvent);
-}
-
-bool UHorrorEventCallerComponent::MulticastRPC_CallHorrorEvent_Validate(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent)
-{
-	return true;
 }
 
 void UHorrorEventCallerComponent::MulticastRPC_CallHorrorEvent_Implementation(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent)
