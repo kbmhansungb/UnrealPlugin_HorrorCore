@@ -27,6 +27,25 @@ public:
 	FVector Direction;
 };
 
+UINTERFACE(MinimalAPI, BlueprintType)
+class UHorrorItemInterface : public UInterface
+{
+	GENERATED_BODY()
+};
+
+/**
+ *
+ */
+class HORRORCORE_API IHorrorItemInterface
+{
+	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UHorrorEventComponent* GetHorrorComponent(const FHorrorEventCallStruct& CallStruct) const;
+	virtual UHorrorEventComponent* GetHorrorComponent_Implementation(const FHorrorEventCallStruct& CallStruct) const { return nullptr; };
+};
+
 /**
  * Purpose : Used to call a horror event that can be RPC function using a character or player controller.
  */
@@ -40,7 +59,7 @@ public:
 	FHorrorEventRequired GetRequired();
 
 	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
-	void CallHorrorEvent(UHorrorEventComponent* HorrorEventComponent);
+	void CallHorrorEvent(const FVector& Origin, const FVector& Direction, TScriptInterface<IHorrorItemInterface> ItemInterface);
 
 protected:
 	void ExecuteHorrorEvent(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
@@ -53,4 +72,8 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastRPC_CallHorrorEvent(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
 	void MulticastRPC_CallHorrorEvent_Implementation(const FHorrorEventRequired& Required, const FHorrorEventInstanced& HorrorEvent);
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float DefaultRayMaxLength = 200.0f;
 };

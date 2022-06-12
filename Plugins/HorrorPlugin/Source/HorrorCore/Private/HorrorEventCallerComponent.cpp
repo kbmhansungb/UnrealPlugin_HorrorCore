@@ -4,6 +4,7 @@
 #include "HorrorEventCallerComponent.h"
 #include "HorrorEventComponent.h"
 #include "HorrorEventInstance.h"
+#include "HorrorEventFunctionLibrary.h"
 
 FHorrorEventRequired UHorrorEventCallerComponent::GetRequired()
 {
@@ -12,11 +13,30 @@ FHorrorEventRequired UHorrorEventCallerComponent::GetRequired()
 	return Required;
 }
 
-void UHorrorEventCallerComponent::CallHorrorEvent(UHorrorEventComponent* HorrorEventComponent)
+void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const FVector& Direction, TScriptInterface<IHorrorItemInterface> ItemInterface)
 {
+	UHorrorEventComponent* EventComponent = nullptr;
+	FHorrorEventCallStruct CallStruct;
+	CallStruct.CallerComponent = this;
+	CallStruct.Origin = Origin;
+	CallStruct.Direction = Direction;
+	if (IsValid(ItemInterface.GetObject()))
+	{
+		EventComponent = ItemInterface->Execute_GetHorrorComponent(ItemInterface.GetObject(), CallStruct);
+	}
+	else
+	{
+		UHorrorEventFunctionLibrary::GetHorrorEventComponent(CallStruct, DefaultRayMaxLength, EventComponent);
+	}
+
+	if (EventComponent == nullptr)
+	{
+		return;
+	}
+
 	FHorrorEventRequired Required = GetRequired();
 
-	for (FHorrorEventInstanced& HorrorEvent : HorrorEventComponent->GetHorrorEvents())
+	for (FHorrorEventInstanced& HorrorEvent : EventComponent->GetHorrorEvents())
 	{
 		if (IsValid(HorrorEvent.Instance) == false ||
 			HorrorEvent.Instance->GetState().IsExecuteable() == false)

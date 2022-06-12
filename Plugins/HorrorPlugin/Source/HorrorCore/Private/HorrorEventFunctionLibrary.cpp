@@ -24,21 +24,21 @@ void UHorrorEventFunctionLibrary::GetHorrorEventComponent(const FHorrorEventCall
 	FCollisionObjectQueryParams ObjectQueryParams;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(Actor);
-	if (Actor->GetWorld()->LineTraceSingleByObjectType(HitResult, CallStruct.Origin, CallStruct.Origin + CallStruct.Direction * Length, ObjectQueryParams, QueryParams))
+	
+	bool IsHit = Actor->GetWorld()->LineTraceSingleByObjectType(HitResult, CallStruct.Origin, CallStruct.Origin + CallStruct.Direction * Length, ObjectQueryParams, QueryParams);
+	if (IsHit && HitResult.Actor.IsValid())
 	{
-		if (!HitResult.Actor.IsValid())
-		{
-			return;
-		}
-
 		HorrorEventComponent = Cast<UHorrorEventComponent>(HitResult.Actor->GetComponentByClass(UHorrorEventComponent::StaticClass()));
+	}
 
 #if ENABLE_DRAW_DEBUG
 
-		DrawDebugLine(Actor->GetWorld(), HitResult.TraceStart, HitResult.Location, FColor::Green, DRAWING_PARAM);
+	DrawDebugLine(Actor->GetWorld(), HitResult.TraceStart, 
+		IsHit ? HitResult.Location : HitResult.TraceEnd,
+		HorrorEventComponent ? FColor::Green : FColor::Red,
+		DRAWING_PARAM);
 
 #endif
-	}
 }
 
 void UHorrorEventFunctionLibrary::GetHorrorEventComponentLikeEye(const FHorrorEventCallStruct& CallStruct, float Length, float Radius, UHorrorEventComponent*& HorrorEventComponent)

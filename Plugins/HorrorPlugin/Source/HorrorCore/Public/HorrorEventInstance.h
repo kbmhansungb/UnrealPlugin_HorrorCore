@@ -7,6 +7,7 @@
 #include "HorrorEventInstance.generated.h"
 
 class AActor;
+class IHorrorItemInterface;
 
 /**
  * Purpose : This is the struct to sent by the horror component to check the condition of the event.
@@ -25,6 +26,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* Subject;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TScriptInterface<IHorrorItemInterface> ItemInterface;
 };
 
 /**
