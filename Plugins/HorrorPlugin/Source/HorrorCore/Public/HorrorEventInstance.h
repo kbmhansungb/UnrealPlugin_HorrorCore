@@ -63,7 +63,11 @@ UCLASS(Abstract, ClassGroup = (HorrorEvent), Blueprintable, DefaultToInstanced, 
 class HORRORCORE_API UHorrorEventInstance : public UObject
 {
 	GENERATED_BODY()
-	
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
+	void Execute(const FHorrorEventRequired& HorrorEventRequired);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHorrorEventState State;
@@ -81,10 +85,6 @@ protected:
 	bool LocalEvent = false;
 public:
 	FORCEINLINE bool IsLocalEvent() const { return LocalEvent; }
-
-public:
-	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
-	void Execute(const FHorrorEventRequired& HorrorEventRequired);
 	
 protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HorrorEvent")

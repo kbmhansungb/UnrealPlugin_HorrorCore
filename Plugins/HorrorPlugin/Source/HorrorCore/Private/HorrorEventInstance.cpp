@@ -16,7 +16,7 @@ void UHorrorEventInstance::Execute(const FHorrorEventRequired& HorrorEventRequir
 	State.Disabled = !IsItReuseable_Implementation(HorrorEventRequired);
 }
 
-bool UHorrorEventInstance::IsItReuseable_Implementation(const FHorrorEventRequired& HorrorEventRequired) 
+bool UHorrorEventInstance::IsItReuseable_Implementation(const FHorrorEventRequired& HorrorEventRequired)
 { 
 	return false; 
 }
