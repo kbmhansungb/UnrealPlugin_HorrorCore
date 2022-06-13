@@ -1,4 +1,4 @@
-@ Todo HorrorItem Module
+방어적 프로그래밍 기준 필요.
 
 # UnrealPlugin_HorrorCore
 Developed with Unreal Engine

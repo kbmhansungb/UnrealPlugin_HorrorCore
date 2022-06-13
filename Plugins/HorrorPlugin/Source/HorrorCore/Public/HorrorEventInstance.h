@@ -14,21 +14,30 @@ class IHorrorItemInterface;
  * 
  * It is based on the sentence structure of the subject verb and object.
  * Verb simplifies to 'do'.
- * Object is simplified to owner Actor of HorrorComponent.
  */
 USTRUCT(BlueprintType)
-struct HORRORCORE_API FHorrorEventRequired
+struct HORRORCORE_API FHorrorEventStruct
 {
 	GENERATED_BODY()
 
 public:
-	FHorrorEventRequired() {}
+	FHorrorEventStruct();
+	FHorrorEventStruct(AActor* Subject, AActor* Object, TScriptInterface<IHorrorItemInterface> ItemInterface, FVector Origin, FVector Direction);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* Subject;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* Object;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TScriptInterface<IHorrorItemInterface> ItemInterface;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector Origin;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector Direction;
 };
 
 /**
@@ -42,8 +51,6 @@ struct HORRORCORE_API FHorrorEventState
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Disabled;
-
-	FORCEINLINE bool IsExecuteable() const { return !Disabled; }
 };
 
 /**
@@ -56,8 +63,8 @@ class HORRORCORE_API UHorrorEventCondition : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool CheckCondition(const FHorrorEventRequired& HorrorEventRequired);
-	virtual bool CheckCondition_Implementation(const FHorrorEventRequired& HorrorEventRequired) { return true; };
+	bool CheckCondition(const FHorrorEventStruct& HorrorEventRequired);
+	virtual bool CheckCondition_Implementation(const FHorrorEventStruct& HorrorEventRequired) { return true; };
 };
 
 /**
@@ -70,10 +77,10 @@ class HORRORCORE_API UHorrorEventInstance : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable)
-	bool IsExecuteable(const FHorrorEventRequired& HorrorEventRequired);
+	bool IsExecuteable(const FHorrorEventStruct& HorrorEventRequired);
 
 	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
-	void Execute(const FHorrorEventRequired& HorrorEventRequired);
+	void Execute(const FHorrorEventStruct& HorrorEventRequired);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -95,12 +102,12 @@ public:
 	
 protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HorrorEvent")
-	bool IsItReuseable(const FHorrorEventRequired& HorrorEventRequired);
-	virtual bool IsItReuseable_Implementation(const FHorrorEventRequired& HorrorEventRequired);
+	bool IsItReuseable(const FHorrorEventStruct& HorrorEventRequired);
+	virtual bool IsItReuseable_Implementation(const FHorrorEventStruct& HorrorEventRequired);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HorrorEvent")
-	void Enter(const FHorrorEventRequired& HorrorEventRequired);
-	virtual void Enter_Implementation(const FHorrorEventRequired& HorrorEventRequired);
+	void Enter(const FHorrorEventStruct& HorrorEventRequired);
+	virtual void Enter_Implementation(const FHorrorEventStruct& HorrorEventRequired);
 };
 
 /**

@@ -23,5 +23,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UObject* SpecificObject;
 
-	bool CheckCondition_Implementation(const FHorrorEventRequired& HorrorEventRequired) override;
+	bool CheckCondition_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
 };

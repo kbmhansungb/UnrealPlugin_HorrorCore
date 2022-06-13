@@ -5,7 +5,7 @@
 #include "HorrorEventCallerComponent.h"
 #include "GameFramework/Actor.h"
 
-bool UHorrorEventCondition_HaveHorrorItem::CheckCondition_Implementation(const FHorrorEventRequired& Required)
+bool UHorrorEventCondition_HaveHorrorItem::CheckCondition_Implementation(const FHorrorEventStruct& Required)
 {
 	if (!Required.ItemInterface.GetObject())
 	{
