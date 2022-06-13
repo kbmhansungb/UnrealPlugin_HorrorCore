@@ -48,11 +48,3 @@ Developed with Unreal Engine
 
 ## 호러 아이템을 다른 아이템 시스템과 합치는 방법
 다른 아이템 시스템, 예로 아이템 애셋 클래스에 호러 아이템인터페이스를 구현하여 사용할 수 있습니다.
-
-# 설치
-## Git bash
-```
-$ git submodule add https://github.com/kbmhansungb/UnrealPlugin_HorrorCore Plugins/Horrorplugin
-```
-## 다운로드
-다운로드 후 HorrorPlugin 디렉토리를 Project/Plugins/ 디렉토리에 이동시킵니다.
