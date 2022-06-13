@@ -19,8 +19,6 @@ Developed with Unreal Engine
 그가 문을 열었다. 조명이 꺼지고 문이 닫혔다. 그리고 알수 없는 소리가 들린다.
 ```
 
-문장의 변형 예시는 HorrorItem에서 볼 수 있습니다.
-
 ## 주요 컨셉
 * FHorrorEventRequired
 * UHorrorEventInstance
