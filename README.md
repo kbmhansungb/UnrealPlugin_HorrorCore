@@ -32,8 +32,6 @@ Developed with Unreal Engine
 	- 호러 이벤트를 실행하기 위한 내용이 정의되어 있습니다.
 * HorrorEvent
 	- 사용할 수 있는 HorrorEventInstance들이 정의되어 있습니다.
-* HorrorItem
-	- 호러 이벤트에서 사용될 아이템 애셋을 정의합니다.
 * 플러그인 컨텐츠
 	- 샘플 에셋이 있습니다.
 
@@ -48,15 +46,8 @@ Developed with Unreal Engine
 	- HorrorEventInstance에 조건이 필요한 경우 EventCondition에 인스턴스를 추가합니다.
 3. 클라이언트의 입력에서 HorrorEventCallerComponent를 이용하여 이벤트를 호출하는 로직을 작성합니다.
 
-## 호러 아이템을 이용
-1. 캐릭터가 호러 아이템과 상호작용 할 수 있도록 합니다.
-	- HorrorItem애셋의 주소 변수를 플레이어 캐릭터에 정의합니다.
-	- WithHorrorItemInterface를 캐릭터 클래스가 상속받고 인터페이스 함수를 정의합니다.
-2. HorrorItem애셋을 이용해서 호러 이벤트를 호출 하는 로직을 작성합니다.
-
 ## 호러 아이템을 다른 아이템 시스템과 합치는 방법
-1. 다른 아이템 시스템, 예로 아이템 애셋에 호러 아이템을 변수로 추가합니다.
-2. 아이템 애셋의 호러 아이템을 사용하도록 로직을 변경합니다.
+다른 아이템 시스템, 예로 아이템 애셋 클래스에 호러 아이템인터페이스를 구현하여 사용할 수 있습니다.
 
 # 설치
 ## Git bash
