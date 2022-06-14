@@ -21,5 +21,5 @@ public:
 	ALevelSequenceActor* LevelSequenceActor;
 
 public:
-	virtual void Enter_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
+	virtual void CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
 };

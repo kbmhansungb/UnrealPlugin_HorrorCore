@@ -20,8 +20,7 @@ Developed with Unreal Engine
 ```
 
 ## 주요 컨셉
-* FHorrorEventRequired
-* UHorrorEventInstance
+* FHorrorEventStrut
 * UHorrorEventComponent
 * UHorrorEventCallerComponent
 

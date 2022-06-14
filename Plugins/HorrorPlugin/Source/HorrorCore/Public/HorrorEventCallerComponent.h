@@ -50,14 +50,16 @@ public:
 	void CallHorrorEvent(const FVector& Origin, const FVector& Direction);
 
 protected:
+	void CallHorrorEventByInterface(UObject* Object, const FHorrorEventStruct& Required);
+
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerRPC_CallHorrorEvent(const FHorrorEventStruct& Required, const FHorrorEventInstanced& HorrorEvent);
-	bool ServerRPC_CallHorrorEvent_Validate(const FHorrorEventStruct& Required, const FHorrorEventInstanced& HorrorEvent);
-	void ServerRPC_CallHorrorEvent_Implementation(const FHorrorEventStruct& Required, const FHorrorEventInstanced& HorrorEvent);
+	void ServerRPC_MulticastHorrorEvent(UObject* Object, const FHorrorEventStruct& Required);
+	bool ServerRPC_MulticastHorrorEvent_Validate(UObject* Object, const FHorrorEventStruct& Required);
+	void ServerRPC_MulticastHorrorEvent_Implementation(UObject* Object, const FHorrorEventStruct& Required);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastRPC_CallHorrorEventInstanced(const FHorrorEventStruct& Required, const FHorrorEventInstanced& HorrorEvent);
-	void MulticastRPC_CallHorrorEventInstanced_Implementation(const FHorrorEventStruct& Required, const FHorrorEventInstanced& HorrorEvent);
+	void MulticastRPC_CallHorrorEvent(UObject* Object, const FHorrorEventStruct& Required);
+	void MulticastRPC_CallHorrorEvent_Implementation(UObject* Object, const FHorrorEventStruct& Required);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

@@ -33,10 +33,7 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 		return;
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("Actor is called"));
 	FHorrorEventStruct Required = FHorrorEventStruct(GetOwner(), HitResult.Actor.Get(), ItemInterface, Origin, Direction);
-	//ServerRPC_CallHorrorEvent(Required);
-
 	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(Required.Object->GetComponentByClass(UHorrorEventComponent::StaticClass()));
 	if (EventComponent == nullptr)
 	{
@@ -46,38 +43,39 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 
 	for (FHorrorEventInstanced& HorrorEvent : EventComponent->GetHorrorEvents())
 	{
-		if (IsValid(HorrorEvent.Instance) == false ||
-			HorrorEvent.Instance->IsExecuteable(Required) == false)
-		{
-			UE_LOG(LogTemp, Display, TEXT("Instance is not valid %s"), *HorrorEvent.Instance->GetName());
-			continue;
-		}
-
-		if (HorrorEvent.Instance->IsLocalEvent())
-		{
-			UE_LOG(LogTemp, Display, TEXT("Local is called"));
-			HorrorEvent.Instance->Execute(Required);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Display, TEXT("Multicast is called"));
-			ServerRPC_CallHorrorEvent(Required, HorrorEvent);
-		}
+		CallHorrorEventByInterface(HorrorEvent.Instance, Required);
 	}
 }
 
-bool UHorrorEventCallerComponent::ServerRPC_CallHorrorEvent_Validate(const FHorrorEventStruct& Required, const FHorrorEventInstanced& HorrorEvent)
+void UHorrorEventCallerComponent::CallHorrorEventByInterface(UObject* Object, const FHorrorEventStruct& Required)
+{
+	if (IHorrorEventObjectInterface::Execute_IsExecuteable(Object, Required) == false)
+	{
+		return;
+	}
+
+	if (IHorrorEventObjectInterface::Execute_IsLocalEvent(Object, Required))
+	{
+		IHorrorEventObjectInterface::Execute_CallHorrorEvent(Object, Required);
+	}
+	else
+	{
+		ServerRPC_MulticastHorrorEvent(Object, Required);
+	}
+}
+
+bool UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Validate(UObject* Object, const FHorrorEventStruct& Required)
 {
 	return true;
 }
 
-void UHorrorEventCallerComponent::ServerRPC_CallHorrorEvent_Implementation(const FHorrorEventStruct& Required, const FHorrorEventInstanced& HorrorEvent)
+void UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Implementation(UObject* Object, const FHorrorEventStruct& Required)
 {
-	MulticastRPC_CallHorrorEventInstanced(Required, HorrorEvent);
+	MulticastRPC_CallHorrorEvent(Object, Required);
 }
 
-void UHorrorEventCallerComponent::MulticastRPC_CallHorrorEventInstanced_Implementation(const FHorrorEventStruct& Required, const FHorrorEventInstanced& HorrorEvent)
+void UHorrorEventCallerComponent::MulticastRPC_CallHorrorEvent_Implementation(UObject* Object, const FHorrorEventStruct& Required)
 {
-	HorrorEvent.Instance->Execute(Required);
+	IHorrorEventObjectInterface::Execute_CallHorrorEvent(Object, Required);
 }
 

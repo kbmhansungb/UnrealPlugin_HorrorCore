@@ -5,9 +5,9 @@
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 
-void UHorrorEventInstance_PlayLevelSequence::Enter_Implementation(const FHorrorEventStruct& HorrorEventRequired)
+void UHorrorEventInstance_PlayLevelSequence::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
-	if ( !LevelSequenceActor )
+	if (!LevelSequenceActor)
 	{
 		return;
 	}

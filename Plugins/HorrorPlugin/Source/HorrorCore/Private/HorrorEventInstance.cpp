@@ -3,32 +3,17 @@
 
 #include "HorrorEventInstance.h"
 
-bool UHorrorEventInstance::IsExecuteable(const FHorrorEventStruct& HorrorEventRequired)
+bool UHorrorEventInstance::IsExecuteable_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
-	return
-		State.Disabled == false &&
-		(IsValid(EventCondition) ? EventCondition->CheckCondition(HorrorEventRequired) : true);
+	return true;
 }
 
-void UHorrorEventInstance::Execute(const FHorrorEventStruct& HorrorEventRequired)
+bool UHorrorEventInstance::IsLocalEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
-	Enter(HorrorEventRequired);
-
-	State.Disabled = !IsItReuseable_Implementation(HorrorEventRequired);
+	return false;
 }
 
-bool UHorrorEventInstance::IsItReuseable_Implementation(const FHorrorEventStruct& HorrorEventRequired)
-{ 
-	return false; 
-}
-
-void UHorrorEventInstance::Enter_Implementation(const FHorrorEventStruct& HorrorEventRequired)
-{ 
-}
-
-FHorrorEventStruct::FHorrorEventStruct() {}
-
-FHorrorEventStruct::FHorrorEventStruct(AActor* Subject, AActor* Object, TScriptInterface<IHorrorItemInterface> ItemInterface, FVector Origin, FVector Direction)
-	: Subject(Subject), Object(Object), ItemInterface(ItemInterface), Origin(Origin), Direction(Direction)
+void UHorrorEventInstance::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
 }
+

@@ -10,7 +10,7 @@ bool IHorrorEventObjectInterface::isLocalEvent_Implementation(const FHorrorEvent
 	return false;
 }
 
-bool IHorrorEventObjectInterface::CheckCondition_Implementation(const FHorrorEventStruct& Required)
+bool IHorrorEventObjectInterface::IsExecuteable_Implementation(const FHorrorEventStruct& Required)
 {
 	return true; 
 }
