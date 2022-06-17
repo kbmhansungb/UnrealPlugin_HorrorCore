@@ -18,8 +18,12 @@ class HORROREVENT_API UHorrorEventInstance_PlayLevelSequence : public UHorrorEve
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ALevelSequenceActor* LevelSequenceActor;
+	TWeakObjectPtr<ALevelSequenceActor> LevelSequenceActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsExecutable = true;
 
 public:
+	virtual bool IsExecuteable_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
 	virtual void CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
 };
