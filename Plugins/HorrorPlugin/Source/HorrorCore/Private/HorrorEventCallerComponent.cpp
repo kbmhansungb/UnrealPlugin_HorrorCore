@@ -34,16 +34,19 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 	}
 
 	FHorrorEventStruct Required = FHorrorEventStruct(GetOwner(), HitResult.Actor.Get(), ItemInterface, Origin, Direction);
-	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(Required.Object->GetComponentByClass(UHorrorEventComponent::StaticClass()));
-	if (EventComponent == nullptr)
+
+	if (HitResult.Actor.Get()->GetClass()->ImplementsInterface(UHorrorEventObjectInterface::StaticClass()))
 	{
-		UE_LOG(LogTemp, Display, TEXT("EventComponent is not valid"));
-		return;
+		CallHorrorEventByInterface(HitResult.Actor.Get(), Required);
 	}
 
-	for (FHorrorEventInstanced& HorrorEvent : EventComponent->GetHorrorEvents())
+	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(Required.Object->GetComponentByClass(UHorrorEventComponent::StaticClass()));
+	if (EventComponent)
 	{
-		CallHorrorEventByInterface(HorrorEvent.Instance, Required);
+		for (FHorrorEventInstanced& HorrorEvent : EventComponent->GetHorrorEvents())
+		{
+			CallHorrorEventByInterface(HorrorEvent.Instance, Required);
+		}
 	}
 }
 
