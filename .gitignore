@@ -2,12 +2,8 @@ Binaries
 DerivedDataCache
 Intermediate
 Saved
-Config
-Platforms
-Source
 .vscode
 .vs
-*.uproject
 *.VC.db
 *.opensdf
 *.opendb
@@ -16,4 +12,3 @@ Source
 *.suo
 *.xcodeproj
 *.xcworkspace
-
