@@ -18,3 +18,20 @@ void FHorrorCoreModule::ShutdownModule()
 #undef LOCTEXT_NAMESPACE
 	
 IMPLEMENT_MODULE(FHorrorCoreModule, HorrorCore)
+
+
+DEFINE_LOG_CATEGORY(HorrorEventLog);
+
+
+#if !NO_CVARS
+
+FAutoConsoleCommand CCmd_HorrorEvent_PrintConsoleState(
+    TEXT("HorrorEvent.PrintConsoleState"),
+    TEXT("Print HorrorEvent`s Consol state."),
+    FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Params)
+        {
+            UE_LOG(HorrorEventLog, Display, TEXT("DebugDraw : %s"), CVar_HorrorEvent_DebugDraw.GetValueOnGameThread() ? TEXT("true") : TEXT("false"));
+        }),
+    ECVF_Default);
+
+#endif

@@ -6,36 +6,24 @@
 #include "Components/ActorComponent.h"
 #include "Components/PointLightComponent.h"
 
-
-void UHorrorEventInstance_LightSwitch::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
+void UHorrorLight_Default::UpdateState()
 {
-	UpdateState();
-}
-
-void UHorrorEventInstance_LightSwitch::UpdateState()
-{	
-	if (Actor.IsValid() == false)
-	{
-		return;
-	}
-
 	bool NewLightVisibility = IsLightEffectTheWorld();
-	UpdateComponentsLight(Actor.Get(), NewLightVisibility);
-	UpdateChildActorsLight(Actor.Get(), NewLightVisibility);
+	UpdateComponentsLight(GetOwner(), NewLightVisibility);
+	UpdateChildActorsLight(GetOwner(), NewLightVisibility);
 }
 
-void UHorrorEventInstance_LightSwitch::UpdateComponentsLight(AActor* TargetActor, bool Visibility)
+void UHorrorLight_Default::UpdateComponentsLight(AActor* TargetActor, bool Visibility)
 {
-	TArray<UActorComponent*> ChildComponents = TargetActor->GetComponentsByClass(ULocalLightComponent::StaticClass());
-	for (UActorComponent* ChildComponent : ChildComponents)
+	TArray<ULocalLightComponent*> LocalLights;
+	TargetActor->GetComponents<ULocalLightComponent>(LocalLights);
+	for (ULocalLightComponent* LocalLight : LocalLights)
 	{
-		ULocalLightComponent* LocalLight = Cast<ULocalLightComponent>(ChildComponent);
-
 		UpdateLocalLightComponent(LocalLight, Visibility);
 	}
 }
 
-void UHorrorEventInstance_LightSwitch::UpdateChildActorsLight(AActor* TargetActor, bool Visibility)
+void UHorrorLight_Default::UpdateChildActorsLight(AActor* TargetActor, bool Visibility)
 {
 	TArray<AActor*> ChildActors;
 	TargetActor->GetAttachedActors(ChildActors);
@@ -51,13 +39,13 @@ void UHorrorEventInstance_LightSwitch::UpdateChildActorsLight(AActor* TargetActo
 	}
 }
 
-void UHorrorEventInstance_LightSwitch::UpdateLocalLightComponent(ULocalLightComponent* LocalLightComponent, bool Visibility)
+void UHorrorLight_Default::UpdateLocalLightComponent(ULocalLightComponent* LocalLightComponent, bool Visibility)
 {
 	//LocalLightComponent->bAffectsWorld;
 	LocalLightComponent->SetVisibility(Visibility);
 }
 
-bool UHorrorEventInstance_LightSwitch::IsLightEffectTheWorld()
+bool UHorrorLight_Default::IsLightEffectTheWorld()
 {
 	switch (LightState)
 	{
@@ -70,5 +58,17 @@ bool UHorrorEventInstance_LightSwitch::IsLightEffectTheWorld()
 	default:
 		check(false && "Add a case.");
 		return false;
+	}
+}
+
+void UHorrorEventInstance_LightSwitch::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
+{
+	if (HorrorLightActor.IsValid())
+	{
+		UHorrorLight_Default* HorrorLight = Cast<UHorrorLight_Default>(HorrorLightActor.Get()->GetComponentByClass(UHorrorLight_Default::StaticClass()));
+		if (HorrorLight)
+		{
+			HorrorLight->UpdateState();
+		}
 	}
 }
