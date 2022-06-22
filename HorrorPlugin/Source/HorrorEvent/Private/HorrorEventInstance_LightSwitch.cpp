@@ -2,73 +2,52 @@
 
 
 #include "HorrorEventInstance_LightSwitch.h"
-#include "GameFramework/Actor.h"
+#include "Engine/Light.h"
 #include "Components/ActorComponent.h"
 #include "Components/PointLightComponent.h"
 
-void UHorrorLight_Default::UpdateState()
+
+void UHorrorLightComponent::BeginPlay()
 {
-	bool NewLightVisibility = IsLightEffectTheWorld();
-	UpdateComponentsLight(GetOwner(), NewLightVisibility);
-	UpdateChildActorsLight(GetOwner(), NewLightVisibility);
+	UpdateLight();
 }
 
-void UHorrorLight_Default::UpdateComponentsLight(AActor* TargetActor, bool Visibility)
+void UHorrorLightComponent::SetState(bool NewOn)
 {
-	TArray<ULocalLightComponent*> LocalLights;
-	TargetActor->GetComponents<ULocalLightComponent>(LocalLights);
-	for (ULocalLightComponent* LocalLight : LocalLights)
+	IsOn = DoesItTurnOn(NewOn);
+	UpdateLight();
+}
+
+void UHorrorLightComponent::UpdateLight()
+{
+	for (const auto& Light : Lights)
 	{
-		UpdateLocalLightComponent(LocalLight, Visibility);
+		ULightComponent* LightComponent = Light.Light->GetLightComponent();
+
+		LightComponent->SetVisibility(IsOn);
+		LightComponent->SetIntensity(MultiflyIntensity * Light.Intensity);
+		LightComponent->SetLightColor(BaseColor * Light.Color);
 	}
 }
 
-void UHorrorLight_Default::UpdateChildActorsLight(AActor* TargetActor, bool Visibility)
+AHorrorLight::AHorrorLight()
 {
-	TArray<AActor*> ChildActors;
-	TargetActor->GetAttachedActors(ChildActors);
-
-	for (AActor* ChildActor : ChildActors)
-	{
-		ULocalLightComponent* LocalLight = Cast<ULocalLightComponent>(ChildActor->GetRootComponent());
-
-		if (LocalLight != nullptr)
-		{
-			UpdateLocalLightComponent(LocalLight, Visibility);
-		}
-	}
+	HorrorLightComponent = CreateDefaultSubobject<UHorrorLightComponent>(FName("HorrorLIghtComponent"));
 }
 
-void UHorrorLight_Default::UpdateLocalLightComponent(ULocalLightComponent* LocalLightComponent, bool Visibility)
+void AHorrorLight::SetLight_Implementation(bool NewOn)
 {
-	//LocalLightComponent->bAffectsWorld;
-	LocalLightComponent->SetVisibility(Visibility);
+	HorrorLightComponent->SetState(NewOn);
+
+	PostSetLightState();
 }
 
-bool UHorrorLight_Default::IsLightEffectTheWorld()
+void AHorrorLight::SwitchLight_Implementation()
 {
-	switch (LightState)
-	{
-	case ELightState::OFF:
-	case ELightState::BROKE:
-		return false;
-	case ELightState::ON:
-	case ELightState::UNSTABLE:
-		return true;
-	default:
-		check(false && "Add a case.");
-		return false;
-	}
+	SetLight_Implementation(!HorrorLightComponent->IsOn);
 }
 
 void UHorrorEventInstance_LightSwitch::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
-	if (HorrorLightActor.IsValid())
-	{
-		UHorrorLight_Default* HorrorLight = Cast<UHorrorLight_Default>(HorrorLightActor.Get()->GetComponentByClass(UHorrorLight_Default::StaticClass()));
-		if (HorrorLight)
-		{
-			HorrorLight->UpdateState();
-		}
-	}
+	IHorrorLightInterface::Execute_SwitchLight(HorrorLightActor.GetObject());
 }

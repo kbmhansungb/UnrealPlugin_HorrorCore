@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "HorrorEventStruct.h"
-#include "HorrorEventInstance.h"
 #include "HorrorEventObjectInterface.h"
 #include "HorrorEventInstance.generated.h"
 
