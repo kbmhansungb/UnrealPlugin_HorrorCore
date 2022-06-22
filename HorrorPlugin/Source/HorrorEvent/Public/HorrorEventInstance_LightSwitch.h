@@ -52,9 +52,6 @@ public:
 	TArray<FHorrorLIghtStruct> Lights;
 
 public:
-	virtual void BeginPlay() override;
-
-public:
 	FORCEINLINE bool DoesItTurnOn(bool NewOn) const
 	{
 		return ((IsBroke == false) && NewOn);
@@ -109,6 +106,8 @@ class AHorrorLight : public AActor
 
 public:
 	AHorrorLight();
+
+	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UHorrorLightComponent* HorrorLightComponent;

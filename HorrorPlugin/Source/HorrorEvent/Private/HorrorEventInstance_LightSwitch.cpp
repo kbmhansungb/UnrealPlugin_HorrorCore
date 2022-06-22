@@ -7,11 +7,6 @@
 #include "Components/PointLightComponent.h"
 
 
-void UHorrorLightComponent::BeginPlay()
-{
-	UpdateLight();
-}
-
 void UHorrorLightComponent::SetState(bool NewOn)
 {
 	IsOn = DoesItTurnOn(NewOn);
@@ -33,6 +28,13 @@ void UHorrorLightComponent::UpdateLight()
 AHorrorLight::AHorrorLight()
 {
 	HorrorLightComponent = CreateDefaultSubobject<UHorrorLightComponent>(FName("HorrorLIghtComponent"));
+}
+
+void AHorrorLight::BeginPlay()
+{
+	Super::BeginPlay();
+
+	SetLight_Implementation(HorrorLightComponent->IsOn);
 }
 
 void AHorrorLight::SetLight_Implementation(bool NewOn)
