@@ -7,7 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "HorrorEventInstance.h"
 #include "GameFramework/Actor.h"
-#include "HorrorEventInstance_LightSwitch.generated.h"
+#include "HorrorEventInstance_Light.generated.h"
 
 class ALight;
 
@@ -117,8 +117,9 @@ public:
 	virtual void SwitchLight_Implementation() override;
 
 protected:
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent)
 	void PostSetLightState();
+	virtual void PostSetLightState_Implementation() {};
 };
 
 #pragma endregion
@@ -134,7 +135,7 @@ class HORROREVENT_API UHorrorEventInstance_LightSwitch : public UHorrorEventInst
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "HorrorEvent", EditAnywhere, BlueprintReadWrite)
 	TScriptInterface<UHorrorLightInterface> HorrorLightActor;
 
 public:

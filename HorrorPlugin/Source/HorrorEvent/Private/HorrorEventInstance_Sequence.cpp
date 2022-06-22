@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "HorrorEventInstance_PlayLevelSequence.h"
+#include "HorrorEventInstance_Sequence.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 
@@ -20,4 +20,9 @@ void UHorrorEventInstance_PlayLevelSequence::CallHorrorEvent_Implementation(cons
 	}
 
 	LevelSequenceActor->GetSequencePlayer()->Play();
+}
+
+void UHorrorEventInstance_PlayHorrorSequence::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
+{
+	IHorrorSequenceInterface::Execute_PlaySequence(HorrorSequenceActor.GetObject(), SequenceName);
 }

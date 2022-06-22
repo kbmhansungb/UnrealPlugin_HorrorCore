@@ -1,7 +1,7 @@
 // 2022 06    Bum moo, Kim    Free copyright
 
 
-#include "HorrorEventInstance_LightSwitch.h"
+#include "HorrorEventInstance_Light.h"
 #include "Engine/Light.h"
 #include "Components/ActorComponent.h"
 #include "Components/PointLightComponent.h"
