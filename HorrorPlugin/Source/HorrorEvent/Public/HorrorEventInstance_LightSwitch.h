@@ -59,7 +59,7 @@ public:
 	{
 		return ((IsBroke == false) && NewOn);
 	}
-	FORCEINLINE bool IsItLight() const
+	FORCEINLINE bool DoesItShine() const
 	{
 		return (MultiflyIntensity) > 0.f && (BaseColor != BaseColor.Black);
 	}
