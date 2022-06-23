@@ -66,6 +66,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, CallInEditor)
 	void UpdateLight();
+	
+	UFUNCTION(BlueprintCallable, CallInEditor)
+	void CatchLight();
 };
 
 

@@ -25,6 +25,28 @@ void UHorrorLightComponent::UpdateLight()
 	}
 }
 
+void UHorrorLightComponent::CatchLight()
+{
+	Lights.Empty();
+
+	TArray<AActor*> Actors;
+	GetOwner()->GetAttachedActors(Actors);
+
+	for (const AActor* Actor : Actors)
+	{
+		if (const ALight* Light = Cast<ALight>(Actor))
+		{
+			FHorrorLIghtStruct LightStruct;
+
+			LightStruct.Light = const_cast<ALight*>(Light);
+			LightStruct.Intensity = Light->GetLightComponent()->Intensity;
+			LightStruct.Color = Light->GetLightComponent()->LightColor;
+
+			Lights.Add(LightStruct);
+		}
+	}
+}
+
 AHorrorLight::AHorrorLight()
 {
 	HorrorLightComponent = CreateDefaultSubobject<UHorrorLightComponent>(FName("HorrorLIghtComponent"));
