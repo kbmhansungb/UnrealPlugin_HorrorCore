@@ -27,7 +27,7 @@ public:
 	ALight*	Light;
 };
 
-UCLASS(ClassGroup = (Horror), BlueprintType, Blueprintable)
+UCLASS(ClassGroup = (Horror), BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
 class UHorrorLightComponent : public UActorComponent
 {
 	GENERATED_BODY()
