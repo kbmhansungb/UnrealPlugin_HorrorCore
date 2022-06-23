@@ -10,7 +10,7 @@ public class HorrorEvent : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				// ... add public include paths required here ...
+				// ... add public include paths required here 
 			}
 			);
 				
@@ -40,8 +40,9 @@ public class HorrorEvent : ModuleRules
 				"Slate",
 				"SlateCore",
 				// ... add private dependencies that you statically link with here ...	
-				"LevelSequence",
 				"MovieScene",
+				"LevelSequence",
+				"ActorSequence",
 			}
 			);
 		

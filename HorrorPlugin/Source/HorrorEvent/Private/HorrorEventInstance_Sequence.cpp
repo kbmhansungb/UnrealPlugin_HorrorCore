@@ -2,27 +2,42 @@
 
 
 #include "HorrorEventInstance_Sequence.h"
+#include "GameFramework/Actor.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
+#include "ActorSequenceComponent.h"
+#include "ActorSequencePlayer.h"
 
-bool UHorrorEventInstance_PlayLevelSequence::IsExecuteable_Implementation(const FHorrorEventStruct& HorrorEventRequired)
+void UHorrorEventInstance_PlaySequence::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
-	return IsExecutable;
-}
-
-void UHorrorEventInstance_PlayLevelSequence::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
-{
-	IsExecutable = false;
-
-	if (LevelSequenceActor.IsValid() == false)
+	TScriptInterface<UHorrorSequenceInterface> HorrorSequenceInterface;
+	if (ALevelSequenceActor * LevelSequenceActor = Cast<ALevelSequenceActor>(SequenceActor))
 	{
-		return;
+		LevelSequenceActor->GetSequencePlayer()->Play();
+		HorrorSequenceInterface = LevelSequenceActor->GetSequence()->GetDirectorBlueprint();
+	}
+	else
+	{
+		TArray<UActorSequenceComponent*> Components;
+		SequenceActor->GetComponents<UActorSequenceComponent>(Components);
+
+		UActorSequenceComponent** Component = Components.FindByPredicate(
+			[DesireName = SequenceName](const UActorComponent* Component) -> bool
+			{
+				return Component->GetFName().IsEqual(DesireName);
+			}
+		);
+
+		if (Component != nullptr)
+		{
+			(*Component)->GetSequencePlayer()->Play();
+		}
+
+		HorrorSequenceInterface = SequenceActor;
 	}
 
-	LevelSequenceActor->GetSequencePlayer()->Play();
-}
-
-void UHorrorEventInstance_PlayHorrorSequence::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
-{
-	IHorrorSequenceInterface::Execute_PlaySequence(HorrorSequenceActor.GetObject(), SequenceName);
+	if (HorrorSequenceInterface.GetInterface())
+	{
+		IHorrorSequenceInterface::Execute_PlaySequence(HorrorSequenceInterface.GetObject(), HorrorEventRequired);
+	}
 }
