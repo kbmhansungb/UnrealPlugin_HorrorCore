@@ -17,7 +17,17 @@ class HORRORCORE_API UHorrorEventComponent final : public UActorComponent
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorrorEvent")
+	bool BindActorOverlapEvent = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorrorEvent")
+	bool BindActorEndEvent = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorrorEvent")
 	TArray<FHorrorEventInstanced> HorrorEvents;
+
 public:
-	FORCEINLINE TArray<FHorrorEventInstanced>& GetHorrorEvents() { return HorrorEvents; };
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
+	void CallHorrorEvent(const FHorrorEventStruct& Required);
 };

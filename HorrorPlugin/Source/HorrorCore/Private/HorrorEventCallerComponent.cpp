@@ -43,10 +43,7 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(Required.Object->GetComponentByClass(UHorrorEventComponent::StaticClass()));
 	if (EventComponent)
 	{
-		for (FHorrorEventInstanced& HorrorEvent : EventComponent->GetHorrorEvents())
-		{
-			CallHorrorEventByInterface(HorrorEvent.Instance, Required);
-		}
+		EventComponent->CallHorrorEvent(Required);
 	}
 }
 
