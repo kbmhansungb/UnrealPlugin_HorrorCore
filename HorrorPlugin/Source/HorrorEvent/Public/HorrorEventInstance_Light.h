@@ -8,7 +8,7 @@
 #include "HorrorEventInstance.h"
 #include "GameFramework/Actor.h"
 #include "HorrorEventInstance_Light.generated.h"
-
+ 
 class ALight;
 
 USTRUCT(BlueprintType)
