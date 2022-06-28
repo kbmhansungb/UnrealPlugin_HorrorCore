@@ -11,19 +11,19 @@ void UHorrorEventComponent::BeginPlay()
 	if (BindActorOverlapEvent)
 	{
 		FScriptDelegate OnActorBeginOverlap_Delegate;
-		OnActorBeginOverlap_Delegate.BindUFunction(this, FName("CallHorrorEvent"));
+		OnActorBeginOverlap_Delegate.BindUFunction(this, FName("Multicast_CallHorrorEvent"));
 		GetOwner()->OnActorBeginOverlap.Add(OnActorBeginOverlap_Delegate);
 	}
 
 	if (BindActorEndEvent)
 	{
 		FScriptDelegate OnActorEndOverlap_Delegate;
-		OnActorEndOverlap_Delegate.BindUFunction(this, FName("CallHorrorEvent"));
+		OnActorEndOverlap_Delegate.BindUFunction(this, FName("Multicast_CallHorrorEvent"));
 		GetOwner()->OnActorEndOverlap.Add(OnActorEndOverlap_Delegate);
 	}
 }
 
-void UHorrorEventComponent::CallHorrorEvent(const FHorrorEventStruct& Required)
+void UHorrorEventComponent::Multicast_CallHorrorEvent_Implementation(const FHorrorEventStruct& Required)
 {
 	for (FHorrorEventInstanced& HorrorEvent : HorrorEvents)
 	{

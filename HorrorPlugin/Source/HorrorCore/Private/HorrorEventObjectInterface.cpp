@@ -5,11 +5,6 @@
 
 // Add default functionality here for any IHorrorEventObjectInterface functions that are not pure virtual.
 
-bool IHorrorEventObjectInterface::isLocalEvent_Implementation(const FHorrorEventStruct& Required)
-{
-	return false;
-}
-
 bool IHorrorEventObjectInterface::IsExecuteable_Implementation(const FHorrorEventStruct& Required)
 {
 	return true; 

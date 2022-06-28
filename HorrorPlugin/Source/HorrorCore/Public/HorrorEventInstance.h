@@ -8,7 +8,7 @@
 #include "HorrorEventInstance.generated.h"
 
 /**
- * In the basic planning of Horror Event, there is only the execution of the event in one direction and the reaction accordingly.
+* In the basic planning of Horror Event, there is only the execution of the event in one direction and the reaction accordingly.
  */
 UCLASS(Abstract, ClassGroup = (HorrorEvent), Blueprintable, DefaultToInstanced, EditInlineNew)
 class HORRORCORE_API UHorrorEventInstance : public UObject
@@ -18,8 +18,6 @@ class HORRORCORE_API UHorrorEventInstance : public UObject
 
 public:
 	virtual bool IsExecuteable_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
-	virtual bool IsLocalEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
-
 	virtual void CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
 };
 

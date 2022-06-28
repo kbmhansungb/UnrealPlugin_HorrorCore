@@ -23,10 +23,6 @@ class HORRORCORE_API IHorrorEventObjectInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
-	bool IsLocalEvent(const FHorrorEventStruct& Required);
-	virtual bool isLocalEvent_Implementation(const FHorrorEventStruct& Required);
-
-	UFUNCTION(BlueprintNativeEvent)
 	bool IsExecuteable(const FHorrorEventStruct& Required);
 	virtual bool IsExecuteable_Implementation(const FHorrorEventStruct& Required);
 

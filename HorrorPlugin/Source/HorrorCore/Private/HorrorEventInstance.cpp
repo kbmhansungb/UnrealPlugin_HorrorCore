@@ -8,11 +8,6 @@ bool UHorrorEventInstance::IsExecuteable_Implementation(const FHorrorEventStruct
 	return true;
 }
 
-bool UHorrorEventInstance::IsLocalEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
-{
-	return false;
-}
-
 void UHorrorEventInstance::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
 }

@@ -51,6 +51,10 @@ public:
 	UPROPERTY(Category = "Lights", EditAnywhere, BlueprintReadWrite)
 	TArray<FHorrorLIghtStruct> Lights;
 
+private:
+	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 public:
 	FORCEINLINE bool DoesItTurnOn(bool NewOn) const
 	{
@@ -61,14 +65,32 @@ public:
 		return (MultiflyIntensity) > 0.f && (BaseColor != BaseColor.Black);
 	}
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "Horror", BlueprintCallable)
 	void SetState(bool NewOn);
 
-	UFUNCTION(BlueprintCallable, CallInEditor)
+	UFUNCTION(Category = "Horror", BlueprintCallable, CallInEditor)
 	void UpdateLight();
 	
-	UFUNCTION(BlueprintCallable, CallInEditor)
+	UFUNCTION(Category = "Horror", BlueprintCallable, CallInEditor)
 	void CatchLight();
+
+private:
+	float DestinationMultiflyIntensity;
+	float MultiflyIntensityLerpSpeed;
+
+	FLinearColor DestinationBaseColor;
+	float BaseColorLerpSpeed;
+
+protected:
+	void InitDestinationSettings();
+	void UpdateToDestination(float Deleta);
+
+public:
+	UFUNCTION(Category = "Horror", BlueprintCallable)
+	void UpdateLightColor(FLinearColor Color, float Time = 0.0f);
+	
+	UFUNCTION(Category = "Horror", BlueprintCallable)
+	void UpdateLightIntensity(float Intensity, float Time = 0.0f);
 };
 
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HorrorEventStruct.h"
 #include "HorrorEventInstance.h"
 #include "Components/ActorComponent.h"
 #include "HorrorEventComponent.generated.h"
@@ -28,6 +29,7 @@ protected:
 public:
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable, Category = "HorrorEvent")
-	void CallHorrorEvent(const FHorrorEventStruct& Required);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_CallHorrorEvent(const FHorrorEventStruct& Required);
+	void Multicast_CallHorrorEvent_Implementation(const FHorrorEventStruct& Required);
 };

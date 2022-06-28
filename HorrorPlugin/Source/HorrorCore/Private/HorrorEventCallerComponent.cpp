@@ -43,7 +43,7 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(Required.Object->GetComponentByClass(UHorrorEventComponent::StaticClass()));
 	if (EventComponent)
 	{
-		EventComponent->CallHorrorEvent(Required);
+		EventComponent->Multicast_CallHorrorEvent(Required);
 	}
 }
 
@@ -54,14 +54,7 @@ void UHorrorEventCallerComponent::CallHorrorEventByInterface(UObject* Object, co
 		return;
 	}
 
-	if (IHorrorEventObjectInterface::Execute_IsLocalEvent(Object, Required))
-	{
-		IHorrorEventObjectInterface::Execute_CallHorrorEvent(Object, Required);
-	}
-	else
-	{
-		ServerRPC_MulticastHorrorEvent(Object, Required);
-	}
+	ServerRPC_MulticastHorrorEvent(Object, Required);
 }
 
 bool UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Validate(UObject* Object, const FHorrorEventStruct& Required)
