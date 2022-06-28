@@ -34,41 +34,31 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 	}
 
 	FHorrorEventStruct Required = FHorrorEventStruct(GetOwner(), HitResult.Actor.Get(), ItemInterface, Origin, Direction);
-
-	if (HitResult.Actor.Get()->GetClass()->ImplementsInterface(UHorrorEventObjectInterface::StaticClass()))
-	{
-		CallHorrorEventByInterface(HitResult.Actor.Get(), Required);
-	}
-
-	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(Required.Object->GetComponentByClass(UHorrorEventComponent::StaticClass()));
-	if (EventComponent)
-	{
-		EventComponent->Multicast_CallHorrorEvent(Required);
-	}
+	ServerRPC_MulticastHorrorEvent(HitResult.Actor.Get(), Required);
 }
 
-void UHorrorEventCallerComponent::CallHorrorEventByInterface(UObject* Object, const FHorrorEventStruct& Required)
-{
-	if (IHorrorEventObjectInterface::Execute_IsExecuteable(Object, Required) == false)
-	{
-		return;
-	}
-
-	ServerRPC_MulticastHorrorEvent(Object, Required);
-}
-
-bool UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Validate(UObject* Object, const FHorrorEventStruct& Required)
+bool UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Validate(AActor* Actor, const FHorrorEventStruct& Required)
 {
 	return true;
 }
 
-void UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Implementation(UObject* Object, const FHorrorEventStruct& Required)
+void UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Implementation(AActor* Actor, const FHorrorEventStruct& Required)
 {
-	MulticastRPC_CallHorrorEvent(Object, Required);
+	MulticastRPC_CallHorrorEvent(Actor, Required);
 }
 
-void UHorrorEventCallerComponent::MulticastRPC_CallHorrorEvent_Implementation(UObject* Object, const FHorrorEventStruct& Required)
+void UHorrorEventCallerComponent::MulticastRPC_CallHorrorEvent_Implementation(AActor* Actor, const FHorrorEventStruct& Required)
 {
-	IHorrorEventObjectInterface::Execute_CallHorrorEvent(Object, Required);
+	if (Actor->GetClass()->ImplementsInterface(UHorrorEventObjectInterface::StaticClass()))
+	{
+		IHorrorEventObjectInterface::Execute_CallHorrorEvent(Actor, Required);
+	}
+
+	// If there is a horror event component, it invokes the horror event.
+	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(Required.Object->GetComponentByClass(UHorrorEventComponent::StaticClass()));
+	if (EventComponent)
+	{
+		EventComponent->ExecuteHorrorEvent(Required);
+	}
 }
 

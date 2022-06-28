@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "HorrorEventCallerComponent.generated.h"
 
+class AActor;
 class UHorrorEventComponent;
 class UHorrorEventCallerComponent;
 
@@ -50,16 +51,14 @@ public:
 	void CallHorrorEvent(const FVector& Origin, const FVector& Direction);
 
 protected:
-	void CallHorrorEventByInterface(UObject* Object, const FHorrorEventStruct& Required);
-
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerRPC_MulticastHorrorEvent(UObject* Object, const FHorrorEventStruct& Required);
-	bool ServerRPC_MulticastHorrorEvent_Validate(UObject* Object, const FHorrorEventStruct& Required);
-	void ServerRPC_MulticastHorrorEvent_Implementation(UObject* Object, const FHorrorEventStruct& Required);
+	void ServerRPC_MulticastHorrorEvent(AActor* Actor, const FHorrorEventStruct& Required);
+	bool ServerRPC_MulticastHorrorEvent_Validate(AActor* Actor, const FHorrorEventStruct& Required);
+	void ServerRPC_MulticastHorrorEvent_Implementation(AActor* Actor, const FHorrorEventStruct& Required);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastRPC_CallHorrorEvent(UObject* Object, const FHorrorEventStruct& Required);
-	void MulticastRPC_CallHorrorEvent_Implementation(UObject* Object, const FHorrorEventStruct& Required);
+	void MulticastRPC_CallHorrorEvent(AActor* Actor, const FHorrorEventStruct& Required);
+	void MulticastRPC_CallHorrorEvent_Implementation(AActor* Actor, const FHorrorEventStruct& Required);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

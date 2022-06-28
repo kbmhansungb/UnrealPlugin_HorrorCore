@@ -17,19 +17,18 @@ class HORRORCORE_API UHorrorEventComponent final : public UActorComponent
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorrorEvent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horror")
 	bool BindActorOverlapEvent = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorrorEvent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horror")
 	bool BindActorEndEvent = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorrorEvent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horror")
 	TArray<FHorrorEventInstanced> HorrorEvents;
 
 public:
 	virtual void BeginPlay() override;
 
-	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_CallHorrorEvent(const FHorrorEventStruct& Required);
-	void Multicast_CallHorrorEvent_Implementation(const FHorrorEventStruct& Required);
+	UFUNCTION(BlueprintCallable, Category = "Horror")
+	void ExecuteHorrorEvent(const FHorrorEventStruct& Required);
 };

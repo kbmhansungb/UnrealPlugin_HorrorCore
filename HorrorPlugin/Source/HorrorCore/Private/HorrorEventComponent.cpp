@@ -23,7 +23,7 @@ void UHorrorEventComponent::BeginPlay()
 	}
 }
 
-void UHorrorEventComponent::Multicast_CallHorrorEvent_Implementation(const FHorrorEventStruct& Required)
+void UHorrorEventComponent::ExecuteHorrorEvent(const FHorrorEventStruct& Required)
 {
 	for (FHorrorEventInstanced& HorrorEvent : HorrorEvents)
 	{
