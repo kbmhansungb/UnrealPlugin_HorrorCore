@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HorrorEventStruct.h"
-#include "HorrorEventInstance.h"
 #include "Components/ActorComponent.h"
+#include "HorrorEventInstance.h"
 #include "HorrorEventComponent.generated.h"
+
+struct FHorrorEventStruct;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FHorrorEventDelegate, const FHorrorEventStruct&);
 
 /**
  *
@@ -16,19 +19,19 @@ class HORRORCORE_API UHorrorEventComponent final : public UActorComponent
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "Horror")
+	void ExecuteHorrorEvent(const FHorrorEventStruct& Required);
+
+public:
+	FHorrorEventDelegate HorrorEventDelegate;
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horror")
-	bool BindActorOverlapEvent = false;
+	void ExecuteHorrorEventDelegate(const FHorrorEventStruct& Requried);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horror")
-	bool BindActorEndEvent = false;
-
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horror")
 	TArray<FHorrorEventInstanced> HorrorEvents;
 
 public:
 	virtual void BeginPlay() override;
-
-	UFUNCTION(BlueprintCallable, Category = "Horror")
-	void ExecuteHorrorEvent(const FHorrorEventStruct& Required);
 };

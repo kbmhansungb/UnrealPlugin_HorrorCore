@@ -6,26 +6,28 @@
 #include "Components/ActorComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ActorSequenceComponent.h"
+#include "ActorSequencePlayer.h"
 
-
-void UHorrorLightComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	InitDestinationSettings();
-}
-
-void UHorrorLightComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	UpdateToDestination(DeltaTime);
-}
-
-void UHorrorLightComponent::SetState(bool NewOn)
+void UHorrorLightComponent::SetLgiht(bool NewOn)
 {
 	IsOn = DoesItTurnOn(NewOn);
 	UpdateLight();
+
+	if (IsItUnstable())
+	{
+		TArray<UActorComponent*> Components = GetOwner()->GetComponentsByTag(UActorSequenceComponent::StaticClass(), UnstableSequenceTag);
+		for (UActorComponent* Component : Components)
+		{
+			UActorSequenceComponent* SequenceComponent = Cast<UActorSequenceComponent>(Component);
+			SequenceComponent->GetSequencePlayer()->Play();
+		}
+	}
+}
+
+void UHorrorLightComponent::ToggleLight()
+{
+	SetLgiht(!IsItOn());
 }
 
 void UHorrorLightComponent::UpdateLight()
@@ -62,67 +64,19 @@ void UHorrorLightComponent::CatchLight()
 	}
 }
 
-void UHorrorLightComponent::InitDestinationSettings()
-{
-	DestinationMultiflyIntensity = MultiflyIntensity;
-	DestinationBaseColor = BaseColor;
-}
-
-void UHorrorLightComponent::UpdateToDestination(float Deleta)
-{
-	MultiflyIntensity = UKismetMathLibrary::FInterpTo(MultiflyIntensity, DestinationMultiflyIntensity, Deleta, MultiflyIntensityLerpSpeed);
-	BaseColor = UKismetMathLibrary::CInterpTo(BaseColor, DestinationBaseColor, Deleta, BaseColorLerpSpeed);
-}
-
-void UHorrorLightComponent::UpdateLightColor(FLinearColor Color, float Time)
-{
-	if (Time < FLT_EPSILON)
-	{
-		BaseColorLerpSpeed = 1.0f / Time;
-		DestinationBaseColor = Color;
-
-		SetComponentTickEnabled(true);
-	}
-	UpdateLight();
-}
-
-void UHorrorLightComponent::UpdateLightIntensity(float Intensity, float Time)
-{
-	if (Time > FLT_EPSILON)
-	{
-		MultiflyIntensityLerpSpeed = 1.0f / Time;
-		DestinationMultiflyIntensity = Intensity;
-
-		SetComponentTickEnabled(true);
-	}
-	UpdateLight();
-}
-
-AHorrorLight::AHorrorLight()
-{
-	HorrorLightComponent = CreateDefaultSubobject<UHorrorLightComponent>(FName("HorrorLIghtComponent"));
-}
-
-void AHorrorLight::BeginPlay()
-{
-	Super::BeginPlay();
-
-	SetLight_Implementation(HorrorLightComponent->IsOn);
-}
-
-void AHorrorLight::SetLight_Implementation(bool NewOn)
-{
-	HorrorLightComponent->SetState(NewOn);
-
-	PostSetLightState();
-}
-
-void AHorrorLight::SwitchLight_Implementation()
-{
-	SetLight_Implementation(!HorrorLightComponent->IsOn);
-}
-
 void UHorrorEventInstance_LightSwitch::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
-	IHorrorLightInterface::Execute_SwitchLight(HorrorLightActor.GetObject());
+	if (!HorrorLightActor.IsValid())
+	{
+		return;
+	}
+
+	UHorrorLightComponent* LightComponent = Cast<UHorrorLightComponent>(HorrorLightActor->GetComponentByClass(UHorrorLightComponent::StaticClass()));
+
+	if (!LightComponent)
+	{
+		return;
+	}
+
+	LightComponent->ToggleLight();
 }

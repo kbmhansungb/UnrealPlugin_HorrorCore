@@ -24,14 +24,8 @@ DEFINE_LOG_CATEGORY(HorrorEventLog);
 
 
 #if !NO_CVARS
+#include "HAL/IConsoleManager.h"
 
-FAutoConsoleCommand CCmd_HorrorEvent_PrintConsoleState(
-    TEXT("HorrorEvent.PrintConsoleState"),
-    TEXT("Print HorrorEvent`s Consol state."),
-    FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Params)
-        {
-            UE_LOG(HorrorEventLog, Display, TEXT("DebugDraw : %s"), CVar_HorrorEvent_DebugDraw.GetValueOnGameThread() ? TEXT("true") : TEXT("false"));
-        }),
-    ECVF_Default);
+TAutoConsoleVariable<bool> DebugDrawEvent(TEXT("Horror.DebugDrawEventCall"), false, TEXT("Print the trace and result of HorrorEventCaller."), ECVF_Default);
 
 #endif

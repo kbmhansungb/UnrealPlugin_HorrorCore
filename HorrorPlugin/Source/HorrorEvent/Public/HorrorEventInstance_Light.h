@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Interface.h"
 #include "Components/ActorComponent.h"
 #include "HorrorEventInstance.h"
-#include "GameFramework/Actor.h"
 #include "HorrorEventInstance_Light.generated.h"
  
+class AActor;
 class ALight;
+class UCurveFloat;
 
 USTRUCT(BlueprintType)
 struct FHorrorLIghtStruct
@@ -32,7 +32,7 @@ class UHorrorLightComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:
+protected:
 	UPROPERTY(Category = "Light", EditAnywhere, BlueprintReadWrite)
 	bool IsBroke;
 
@@ -51,11 +51,18 @@ public:
 	UPROPERTY(Category = "Lights", EditAnywhere, BlueprintReadWrite)
 	TArray<FHorrorLIghtStruct> Lights;
 
-private:
-	virtual void BeginPlay() override;
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UPROPERTY(Category = "Lights", EditAnywhere, BlueprintReadWrite)
+	FName UnstableSequenceTag;
 
 public:
+	FORCEINLINE bool IsItOn() const
+	{
+		return IsOn;
+	}
+	FORCEINLINE bool IsItUnstable() const 
+	{ 
+		return IsUnstable; 
+	}
 	FORCEINLINE bool DoesItTurnOn(bool NewOn) const
 	{
 		return ((IsBroke == false) && NewOn);
@@ -64,92 +71,20 @@ public:
 	{
 		return (MultiflyIntensity) > 0.f && (BaseColor != BaseColor.Black);
 	}
+
 public:
 	UFUNCTION(Category = "Horror", BlueprintCallable)
-	void SetState(bool NewOn);
+	void SetLgiht(bool NewOn);
+
+	UFUNCTION(Category = "Horror", BlueprintCallable)
+	void ToggleLight();
 
 	UFUNCTION(Category = "Horror", BlueprintCallable, CallInEditor)
 	void UpdateLight();
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, CallInEditor)
 	void CatchLight();
-
-private:
-	float DestinationMultiflyIntensity;
-	float MultiflyIntensityLerpSpeed;
-
-	FLinearColor DestinationBaseColor;
-	float BaseColorLerpSpeed;
-
-protected:
-	void InitDestinationSettings();
-	void UpdateToDestination(float Deleta);
-
-public:
-	UFUNCTION(Category = "Horror", BlueprintCallable)
-	void UpdateLightColor(FLinearColor Color, float Time = 0.0f);
-	
-	UFUNCTION(Category = "Horror", BlueprintCallable)
-	void UpdateLightIntensity(float Intensity, float Time = 0.0f);
 };
-
-
-/*
- * It is intended to be implemented in actors that call HorrorEvent.
- */
-UINTERFACE(MinimalAPI, Blueprintable)
-class UHorrorLightInterface : public UInterface
-{
-	GENERATED_BODY()
-};
-
-class IHorrorLightInterface
-{
-	GENERATED_BODY()
-
-public:
-	/** Add interface function declarations here */
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetLight(bool NewOn);
-	virtual void SetLight_Implementation(bool NewOn) {};
-	
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SwitchLight();
-	virtual void SwitchLight_Implementation() {};
-};
-
-#pragma region HorrorLightActor
-/**
- * HorrorComponent and the use of the Light interface. It can be inherited or implemented in any actor you want to use.
- */
-UCLASS(ClassGroup = (Horror), BlueprintType, Blueprintable)
-class AHorrorLight : public AActor
-	, public IHorrorLightInterface
-{
-	GENERATED_BODY()
-
-public:
-	AHorrorLight();
-
-	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UHorrorLightComponent* HorrorLightComponent;
-
-public:
-	virtual void SetLight_Implementation(bool NewOn) override;
-	virtual void SwitchLight_Implementation() override;
-
-protected:
-	UFUNCTION(BlueprintNativeEvent)
-	void PostSetLightState();
-	virtual void PostSetLightState_Implementation() {};
-};
-
-#pragma endregion
-
-#pragma region HorrorEvents
 
 /*
  * Switch light.
@@ -161,10 +96,8 @@ class HORROREVENT_API UHorrorEventInstance_LightSwitch : public UHorrorEventInst
 
 protected:
 	UPROPERTY(Category = "HorrorEvent", EditAnywhere, BlueprintReadWrite)
-	TScriptInterface<UHorrorLightInterface> HorrorLightActor;
+	TWeakObjectPtr<AActor> HorrorLightActor;
 
 public:
 	virtual void CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
 };
-
-#pragma endregion
