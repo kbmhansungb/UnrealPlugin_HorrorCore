@@ -2,8 +2,3 @@
 
 
 #include "HorrorEventStruct.h"
-
-FHorrorEventStruct::FHorrorEventStruct(AActor* Subject, AActor* Object, TScriptInterface<IHorrorItemInterface> ItemInterface, FVector Origin, FVector Direction)
-	: Subject(Subject), Object(Object), ItemInterface(ItemInterface), Origin(Origin), Direction(Direction)
-{
-}

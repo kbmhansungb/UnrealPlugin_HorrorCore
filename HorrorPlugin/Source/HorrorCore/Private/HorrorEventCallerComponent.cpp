@@ -9,64 +9,63 @@
 #include "CollisionQueryParams.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/CollisionProfile.h"
+#include "Kismet/GameplayStatics.h"
 
 void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const FVector& Direction)
 {
 	FHitResult HitResult;
-	FCollisionObjectQueryParams ObjectQueryParams;
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(GetOwner());
+	TraceEventComponent(Origin, Direction, HitResult);
 
-	bool IsHit = GetOwner()->GetWorld()->LineTraceSingleByObjectType(HitResult, Origin, Origin + Direction * RayMaxLength, ObjectQueryParams, QueryParams);
-
-#if ENABLE_DRAW_DEBUG
-
-#if !NO_CVARS
-	static const auto DebugDrawEventCall = IConsoleManager::Get().FindConsoleVariable(TEXT("Horror.DebugDrawEventCall"));
-
-	if (DebugDrawEventCall->GetBool())
-	{
-		DrawDebugLine(GetOwner()->GetWorld(), HitResult.TraceStart,
-			IsHit ? HitResult.Location : HitResult.TraceEnd,
-			IsHit ? FColor::Green : FColor::Red,
-			false, 1.0f);
-	}
-
-#endif
-
-#endif
-
-	if (HitResult.Actor.IsValid() == false)
+	if (!HitResult.Actor.IsValid())
 	{
 		return;
 	}
 
-	FHorrorEventStruct Required = FHorrorEventStruct(GetOwner(), HitResult.Actor.Get(), ItemInterface, Origin, Direction);
-	ServerRPC_MulticastHorrorEvent(HitResult.Actor.Get(), Required);
-}
-
-bool UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Validate(AActor* Actor, const FHorrorEventStruct& Required)
-{
-	return true;
-}
-
-void UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Implementation(AActor* Actor, const FHorrorEventStruct& Required)
-{
-	MulticastRPC_CallHorrorEvent(Actor, Required);
-}
-
-void UHorrorEventCallerComponent::MulticastRPC_CallHorrorEvent_Implementation(AActor* Actor, const FHorrorEventStruct& Required)
-{
-	if (Actor->GetClass()->ImplementsInterface(UHorrorEventObjectInterface::StaticClass()))
+	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(HitResult.Actor->GetComponentByClass(UHorrorEventComponent::StaticClass()));
+	if (!EventComponent)
 	{
-		IHorrorEventObjectInterface::Execute_CallHorrorEvent(Actor, Required);
+		return;
 	}
 
-	// If there is a horror event component, it invokes the horror event.
-	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(Required.Object->GetComponentByClass(UHorrorEventComponent::StaticClass()));
-	if (EventComponent)
+	FHorrorEventStruct Required(this, EventComponent, Origin, Direction);
+	ServerRPC_MulticastHorrorEvent(Required);
+}
+
+void UHorrorEventCallerComponent::TraceEventComponent(const FVector& Origin, const FVector& Direction, FHitResult& HitResult)
+{
+#if !NO_CVARS
+	static const auto DebugDrawEventCall = IConsoleManager::Get().FindConsoleVariable(TEXT("Horror.DebugDrawEventCall"));
+#endif
+
+	TArray<AActor*> IgnoreActors;
+	if (GetOwner())
 	{
-		EventComponent->ExecuteHorrorEvent(Required);
+		IgnoreActors.Add(GetOwner());
 	}
+
+	UKismetSystemLibrary::SphereTraceSingle(this, Origin, Origin + Direction * TraceEventLength, TraceRadius, TraceChannel, TraceComplex, IgnoreActors,
+#if !NO_CVARS
+	(DebugDrawEventCall->GetBool() ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None),
+#else
+		EDrawDebugTrace::None,
+#endif
+		HitResult, false
+	);
+}
+
+bool UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Validate(const FHorrorEventStruct& Required)
+{
+	return (Required.Subject != nullptr) && (Required.Object != nullptr);
+}
+
+void UHorrorEventCallerComponent::ServerRPC_MulticastHorrorEvent_Implementation(const FHorrorEventStruct& Required)
+{
+	MulticastRPC_CallHorrorEvent(Required);
+}
+
+void UHorrorEventCallerComponent::MulticastRPC_CallHorrorEvent_Implementation(const FHorrorEventStruct& Required)
+{
+	Required.Object->ExecuteHorrorEvent(Required);
 }
 

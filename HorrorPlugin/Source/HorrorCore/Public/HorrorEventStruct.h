@@ -8,6 +8,8 @@
 
 class AActor;
 class IHorrorItemInterface;
+class UHorrorEventCallerComponent;
+class UHorrorEventComponent;
 
 /**
  * This is the struct to sent by the horror component to check the condition of the event.
@@ -22,16 +24,15 @@ struct HORRORCORE_API FHorrorEventStruct
 
 public:
 	FHorrorEventStruct() {}
-	FHorrorEventStruct(AActor* Subject, AActor* Object, TScriptInterface<IHorrorItemInterface> ItemInterface, FVector Origin, FVector Direction);
+	FHorrorEventStruct(UHorrorEventCallerComponent* Subject, UHorrorEventComponent* Object, const FVector& Origin, const FVector& Direction) 
+		: Subject(Subject), Object(Object), Origin(Origin), Direction(Direction)
+	{}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* Subject;
+	UHorrorEventCallerComponent* Subject;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* Object;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TScriptInterface<IHorrorItemInterface> ItemInterface;
+	UHorrorEventComponent* Object;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector Origin;
