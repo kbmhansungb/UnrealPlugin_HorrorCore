@@ -39,3 +39,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector Direction;
 };
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FHorrorEventDelegate, const FHorrorEventStruct&);
