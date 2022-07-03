@@ -21,10 +21,18 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 
 #if ENABLE_DRAW_DEBUG
 
-	DrawDebugLine(GetOwner()->GetWorld(), HitResult.TraceStart,
-		IsHit ? HitResult.Location : HitResult.TraceEnd,
-		IsHit ? FColor::Green : FColor::Red,
-		false, 1.0f);
+#if !NO_CVARS
+	static const auto DebugDrawEventCall = IConsoleManager::Get().FindConsoleVariable(TEXT("Horror.DebugDrawEventCall"));
+
+	if (DebugDrawEventCall->GetBool())
+	{
+		DrawDebugLine(GetOwner()->GetWorld(), HitResult.TraceStart,
+			IsHit ? HitResult.Location : HitResult.TraceEnd,
+			IsHit ? FColor::Green : FColor::Red,
+			false, 1.0f);
+	}
+
+#endif
 
 #endif
 
