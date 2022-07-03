@@ -32,7 +32,7 @@ class UHorrorLightComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:
+protected:
 	UPROPERTY(Category = "Light", EditAnywhere, BlueprintReadWrite)
 	bool IsBroke;
 
@@ -52,16 +52,16 @@ public:
 	TArray<FHorrorLIghtStruct> Lights;
 
 	UPROPERTY(Category = "Lights", EditAnywhere, BlueprintReadWrite)
-	UCurveFloat* UnstableMultifly;
-
-private:
-	virtual void BeginPlay() override;
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	FName UnstableSequenceTag;
 
 public:
 	FORCEINLINE bool IsItOn() const
 	{
 		return IsOn;
+	}
+	FORCEINLINE bool IsItUnstable() const 
+	{ 
+		return IsUnstable; 
 	}
 	FORCEINLINE bool DoesItTurnOn(bool NewOn) const
 	{
@@ -84,24 +84,6 @@ public:
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, CallInEditor)
 	void CatchLight();
-
-private:
-	float DestinationMultiflyIntensity;
-	float MultiflyIntensityLerpSpeed;
-
-	FLinearColor DestinationBaseColor;
-	float BaseColorLerpSpeed;
-
-protected:
-	void InitDestinationSettings();
-	void UpdateToDestination(float Deleta);
-
-public:
-	UFUNCTION(Category = "Horror", BlueprintCallable)
-	void UpdateLightColor(FLinearColor Color, float Time = 0.0f);
-	
-	UFUNCTION(Category = "Horror", BlueprintCallable)
-	void UpdateLightIntensity(float Intensity, float Time = 0.0f);
 };
 
 /*
