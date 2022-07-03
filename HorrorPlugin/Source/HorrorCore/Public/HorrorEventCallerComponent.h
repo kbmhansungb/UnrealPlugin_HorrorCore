@@ -3,13 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HorrorEventInstance.h"
 #include "Components/ActorComponent.h"
+#include "HorrorEventStruct.h"
 #include "HorrorEventCallerComponent.generated.h"
-
-class AActor;
-class UHorrorEventComponent;
-class UHorrorEventCallerComponent;
 
 /**
  * Purpose : Used to call a horror event that can be RPC function using a character or player controller.

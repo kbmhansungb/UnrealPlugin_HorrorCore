@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HorrorEventStruct.h"
-#include "HorrorEventInstance.h"
 #include "Components/ActorComponent.h"
+#include "HorrorEventInstance.h"
 #include "HorrorEventComponent.generated.h"
+
+struct FHorrorEventStruct;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FHorrorEventDelegate, const FHorrorEventStruct&);
 
 /**
  *

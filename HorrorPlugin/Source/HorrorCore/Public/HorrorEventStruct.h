@@ -6,8 +6,6 @@
 #include "UObject/NoExportTypes.h"
 #include "HorrorEventStruct.generated.h"
 
-class AActor;
-class IHorrorItemInterface;
 class UHorrorEventCallerComponent;
 class UHorrorEventComponent;
 
@@ -40,5 +38,3 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector Direction;
 };
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FHorrorEventDelegate, const FHorrorEventStruct&);

@@ -2,14 +2,9 @@
 
 
 #include "HorrorEventCallerComponent.h"
-#include "HorrorEventComponent.h"
-#include "HorrorEventInstance.h"
 #include "GameFramework/Actor.h"
-#include "CollisionQueryParams.h"
-#include "Engine/World.h"
-#include "DrawDebugHelpers.h"
-#include "Engine/CollisionProfile.h"
 #include "Kismet/GameplayStatics.h"
+#include "HorrorEventComponent.h"
 
 void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const FVector& Direction)
 {
