@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "HorrorEventStruct.h"
-#include "HorrorEventObjectInterface.h"
 #include "HorrorEventInstance.generated.h"
 
 /**
@@ -12,13 +11,13 @@
  */
 UCLASS(Abstract, ClassGroup = (HorrorEvent), Blueprintable, DefaultToInstanced, EditInlineNew)
 class HORRORCORE_API UHorrorEventInstance : public UObject
-	, public IHorrorEventObjectInterface
 {
 	GENERATED_BODY()
 
 public:
-	virtual bool IsExecuteable_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
-	virtual void CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	void CallHorrorEvent(const FHorrorEventStruct& HorrorEventRequired);
+	virtual void CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) {}
 };
 
 /**

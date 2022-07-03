@@ -5,7 +5,6 @@
 #include "HorrorEventComponent.h"
 #include "HorrorEventInstance.h"
 #include "GameFramework/Actor.h"
-#include "HorrorEventObjectInterface.h"
 #include "CollisionQueryParams.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"

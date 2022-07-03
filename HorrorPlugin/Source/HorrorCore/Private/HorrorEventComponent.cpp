@@ -8,7 +8,7 @@ void UHorrorEventComponent::ExecuteHorrorEvent(const FHorrorEventStruct& Require
 {
 	for (FHorrorEventInstanced& HorrorEvent : HorrorEvents)
 	{
-		IHorrorEventObjectInterface::Execute_CallHorrorEvent(HorrorEvent.Instance, Required);
+		HorrorEvent.Instance->CallHorrorEvent(Required);
 	}
 
 	ExecuteHorrorEventDelegate(Required);
