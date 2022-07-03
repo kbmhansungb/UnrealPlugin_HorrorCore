@@ -22,10 +22,15 @@ void UHorrorLightComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	UpdateToDestination(DeltaTime);
 }
 
-void UHorrorLightComponent::SetState(bool NewOn)
+void UHorrorLightComponent::SetLgiht(bool NewOn)
 {
 	IsOn = DoesItTurnOn(NewOn);
 	UpdateLight();
+}
+
+void UHorrorLightComponent::ToggleLight()
+{
+	SetLgiht(!IsItOn());
 }
 
 void UHorrorLightComponent::UpdateLight()
@@ -98,31 +103,19 @@ void UHorrorLightComponent::UpdateLightIntensity(float Intensity, float Time)
 	UpdateLight();
 }
 
-AHorrorLight::AHorrorLight()
-{
-	HorrorLightComponent = CreateDefaultSubobject<UHorrorLightComponent>(FName("HorrorLIghtComponent"));
-}
-
-void AHorrorLight::BeginPlay()
-{
-	Super::BeginPlay();
-
-	SetLight_Implementation(HorrorLightComponent->IsOn);
-}
-
-void AHorrorLight::SetLight_Implementation(bool NewOn)
-{
-	HorrorLightComponent->SetState(NewOn);
-
-	PostSetLightState();
-}
-
-void AHorrorLight::SwitchLight_Implementation()
-{
-	SetLight_Implementation(!HorrorLightComponent->IsOn);
-}
-
 void UHorrorEventInstance_LightSwitch::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
-	IHorrorLightInterface::Execute_SwitchLight(HorrorLightActor.GetObject());
+	if (!HorrorLightActor.IsValid())
+	{
+		return;
+	}
+
+	UHorrorLightComponent* LightComponent = Cast<UHorrorLightComponent>(HorrorLightActor->GetComponentByClass(UHorrorLightComponent::StaticClass()));
+
+	if (!LightComponent)
+	{
+		return;
+	}
+
+	LightComponent->ToggleLight();
 }
