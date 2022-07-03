@@ -10,34 +10,34 @@
 
 void UHorrorEventInstance_PlaySequence::CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired)
 {
-	TScriptInterface<UHorrorSequenceInterface> HorrorSequenceInterface;
-	if (ALevelSequenceActor * LevelSequenceActor = Cast<ALevelSequenceActor>(SequenceActor))
+	if (!SequenceActor)
 	{
-		LevelSequenceActor->GetSequencePlayer()->Play();
-		HorrorSequenceInterface = LevelSequenceActor->GetSequence()->GetDirectorBlueprint();
-	}
-	else
-	{
-		TArray<UActorSequenceComponent*> Components;
-		SequenceActor->GetComponents<UActorSequenceComponent>(Components);
-
-		UActorSequenceComponent** Component = Components.FindByPredicate(
-			[DesireName = SequenceName](const UActorComponent* Component) -> bool
-			{
-				return Component->GetFName().IsEqual(DesireName);
-			}
-		);
-
-		if (Component != nullptr)
-		{
-			(*Component)->GetSequencePlayer()->Play();
-		}
-
-		HorrorSequenceInterface = SequenceActor;
+		return;
 	}
 
-	if (HorrorSequenceInterface.GetInterface())
+	if (ALevelSequenceActor * Sequence = Cast<ALevelSequenceActor>(SequenceActor))
 	{
-		IHorrorSequenceInterface::Execute_PlaySequence(HorrorSequenceInterface.GetObject(), HorrorEventRequired);
+		Sequence->GetSequencePlayer()->Play();
+		
+		//UBlueprint* Director = Sequence->GetSequence()->GetDirectorBlueprint();
+		//if (Director->GetClass()->ImplementsInterface(UHorrorSequenceInterface::StaticClass()))
+		//{
+		//	IHorrorSequenceInterface::Execute_PlaySequence(Director, HorrorEventRequired);
+		//}
+	}
+
+
+	TArray<UActorComponent*> Components = SequenceActor->GetComponentsByTag(UActorSequenceComponent::StaticClass(), SequenceTag);
+	for (UActorComponent* Component : Components)
+	{
+		UActorSequenceComponent* Sequence = Cast<UActorSequenceComponent>(Component);
+
+		Sequence->GetSequencePlayer()->Play();
+
+		//UBlueprint* Director = Sequence->GetSequence()->GetParentBlueprint();
+		//if (Director->GetClass()->ImplementsInterface(UHorrorSequenceInterface::StaticClass()))
+		//{
+		//	IHorrorSequenceInterface::Execute_PlaySequence(Director, HorrorEventRequired);
+		//}
 	}
 }

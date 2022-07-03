@@ -44,7 +44,7 @@ public:
 	AActor* SequenceActor;
 
 	UPROPERTY(Category = "HorrorEvent", EditAnywhere, BlueprintReadWrite)
-	FName SequenceName;
+	FName SequenceTag;
 
 	virtual void CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) override;
 };
