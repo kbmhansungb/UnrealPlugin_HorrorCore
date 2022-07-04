@@ -13,7 +13,6 @@ void UHorrorEventComponent::ExecuteHorrorEvent(const FHorrorEventStruct& Require
 
 	ExecuteHorrorEventDelegate(Required);
 }
-
 void UHorrorEventComponent::ExecuteHorrorEventDelegate(const FHorrorEventStruct& Requried)
 {
 	if (HorrorEventDelegate.IsBound())
