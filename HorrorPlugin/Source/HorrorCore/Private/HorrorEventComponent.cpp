@@ -21,6 +21,21 @@ void UHorrorEventComponent::ExecuteHorrorEvent(const FHorrorEventStruct& Require
 
 	ExecuteHorrorEventDelegate(Required);
 }
+bool UHorrorEventComponent::BindHorrorEvent(UHorrorEventComponent* HorrorEventComponent)
+{
+	if (DelegateHandle.IsValid())
+	{
+		return false;
+	}
+
+	DelegateHandle = HorrorEventDelegate.AddUObject(HorrorEventComponent, &UHorrorEventComponent::ExecuteHorrorEvent);
+	return DelegateHandle.IsValid();
+}
+void UHorrorEventComponent::UnbindHorrorEvent(UHorrorEventComponent* HorrorEventComponent)
+{
+	HorrorEventDelegate.Remove(DelegateHandle);
+	DelegateHandle.Reset();
+}
 void UHorrorEventComponent::ExecuteHorrorEventDelegate(const FHorrorEventStruct& Requried)
 {
 	if (HorrorEventDelegate.IsBound())

@@ -21,12 +21,19 @@ class HORRORCORE_API UHorrorEventComponent final : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Horror")
+	UFUNCTION(Category = "Horror", BlueprintCallable)
 	void ExecuteHorrorEvent(const FHorrorEventStruct& Required);
 
-public:
+	UFUNCTION(Category = "Horror", BlueprintCallable)
+	bool BindHorrorEvent(UHorrorEventComponent* HorrorEventComponent);
+
+	UFUNCTION(Category = "Horror", BlueprintCallable)
+	void UnbindHorrorEvent(UHorrorEventComponent* HorrorEventComponent);
+
+private:
 	FHorrorEventDelegate HorrorEventDelegate;
-protected:
+	FDelegateHandle DelegateHandle;
+
 	void ExecuteHorrorEventDelegate(const FHorrorEventStruct& Requried);
 
 protected:

@@ -16,13 +16,17 @@ void UHorrorEventCallerComponent::CallHorrorEvent(const FVector& Origin, const F
 		return;
 	}
 
-	UHorrorEventComponent* EventComponent = Cast<UHorrorEventComponent>(HitResult.Actor->GetComponentByClass(UHorrorEventComponent::StaticClass()));
-	if (!EventComponent)
+	FHorrorEventStruct Required(this, nullptr, Origin, Direction);
+
+	TArray<UHorrorEventComponent*> Components;
+	HitResult.Actor->GetComponents<UHorrorEventComponent>(Components);
+	for (UHorrorEventComponent* Component : Components)
 	{
-		return;
+		Required.Object = Component;
+
+		Component->ExecuteHorrorEvent(Required);
 	}
 
-	FHorrorEventStruct Required(this, EventComponent, Origin, Direction);
 	ServerRPC_MulticastHorrorEvent(Required);
 }
 
