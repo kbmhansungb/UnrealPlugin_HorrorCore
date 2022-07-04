@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "HorrorEventInstance.h"
+#include "HorrorEventCondition.h"
 #include "HorrorEventComponent.generated.h"
 
 struct FHorrorEventStruct;
@@ -29,8 +30,11 @@ protected:
 	void ExecuteHorrorEventDelegate(const FHorrorEventStruct& Requried);
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horror")
-	TArray<FHorrorEventInstanced> HorrorEvents;
+	UPROPERTY(Category = "Horror", Instanced, EditAnywhere, BlueprintReadWrite)
+	TArray<UHorrorEventCondition*> Conditions;
+
+	UPROPERTY(Category = "Horror", Instanced, EditAnywhere, BlueprintReadWrite)
+	TArray<UHorrorEventInstance*> Events;
 
 public:
 	virtual void BeginPlay() override;

@@ -6,9 +6,17 @@
 
 void UHorrorEventComponent::ExecuteHorrorEvent(const FHorrorEventStruct& Required)
 {
-	for (FHorrorEventInstanced& HorrorEvent : HorrorEvents)
+	for (UHorrorEventCondition* Condition : Conditions)
 	{
-		HorrorEvent.Instance->CallHorrorEvent(Required);
+		if (Condition->IsItCallable(Required) == false)
+		{
+			return;
+		}
+	}
+
+	for (UHorrorEventInstance* Event : Events)
+	{
+		Event->CallHorrorEvent(Required);
 	}
 
 	ExecuteHorrorEventDelegate(Required);

@@ -20,16 +20,3 @@ public:
 	void CallHorrorEvent(const FHorrorEventStruct& HorrorEventRequired);
 	virtual void CallHorrorEvent_Implementation(const FHorrorEventStruct& HorrorEventRequired) {}
 };
-
-/**
- *
- */
-USTRUCT(BlueprintType)
-struct HORRORCORE_API FHorrorEventInstanced
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
-	UHorrorEventInstance* Instance;
-};
