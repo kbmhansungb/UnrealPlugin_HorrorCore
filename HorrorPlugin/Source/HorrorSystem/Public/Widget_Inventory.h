@@ -6,34 +6,39 @@
 #include "Blueprint/UserWidget.h"
 #include "Widget_Inventory.generated.h"
 
+class UCanvasPanel;
+class UWidget_ItemList;
+
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class HORRORSYSTEM_API UWidget_Inventory : public UUserWidget
 {
 	GENERATED_BODY()
 	
 public:
-	//virtual void NativePreConstruct() override
-	//{
-	//	Super::NativePreConstruct();
-	//}
+	virtual void NativePreConstruct() override;
+
+protected:
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* MainCanvas;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UWidget_ItemList> ItemListClass;
+
+	UPROPERTY(BlueprintReadOnly)
+	UWidget_ItemList* ItemList;
+
+protected:
+	void CreateItemList();
+
+protected:
+	UFUNCTION(BlueprintCallable)
+	void ReceiveInventoryChange();
 
 	UFUNCTION(BlueprintCallable)
-	void ReceiveInventoryChange()
-	{
-	}
-
-	UFUNCTION(BlueprintCallable)
-	void ReceiveItemChange()
-	{
-	}
-
-	void ChangeKey()
-	{
-
-	}
+	void ReceiveItemChange();
 
 protected:
     UPROPERTY(Meta = (BindWidgetAnim), Transient)
