@@ -29,9 +29,11 @@ void UHorrorHandComponent::Hold(const EHandType Type, AActor* Actor)
 	{
 	case EHandType::LEFT:
 		LeftHand.HoldItem = Actor;
+		SetStart(EHandType::LEFT, LeftHand.HoldItem);
 		break;
 	case EHandType::RIGHT:
 		RightHand.HoldItem = Actor;
+		SetStart(EHandType::RIGHT, RightHand.HoldItem);
 		break;
 	default:
 		check(false && "Need add case");
