@@ -1,6 +1,7 @@
 // 2022 06    Bum moo, Kim    Free copyright
 
 #include "HorrorHandComponent.h"
+#include "HorrorItemActorInterface.h"
 #include <GameFramework/Actor.h>
 #include <Kismet/KismetMathLibrary.h>
 
@@ -23,22 +24,23 @@ void UHorrorHandComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Lerp(DeltaTime);
 }
 
+bool UHorrorHandComponent::IsHoldable(const EHandType Type, AActor* Actor)
+{
+	if (
+		(GetHoldStruct(Type)->HoldItem == nullptr) && 
+		(Actor->GetClass()->ImplementsInterface(UHorrorItemActorInterface::StaticClass()))
+		)
+	{
+		return IHorrorItemActorInterface::Execute_IsHoldable(Actor, this);
+	}
+	return false;
+}
+
 void UHorrorHandComponent::Hold(const EHandType Type, AActor* Actor)
 {
-	switch (Type)
-	{
-	case EHandType::LEFT:
-		LeftHand.HoldItem = Actor;
-		SetStart(EHandType::LEFT, LeftHand.HoldItem);
-		break;
-	case EHandType::RIGHT:
-		RightHand.HoldItem = Actor;
-		SetStart(EHandType::RIGHT, RightHand.HoldItem);
-		break;
-	default:
-		check(false && "Need add case");
-		return;
-	}
+	FHoldStruct* HandStruct = GetHoldStruct(Type);
+	HandStruct->HoldItem = Actor;
+	SetStart(Type, Actor);
 }
 
 void UHorrorHandComponent::Swap()
@@ -60,18 +62,8 @@ void UHorrorHandComponent::Swap()
 
 void UHorrorHandComponent::Put(const EHandType Type)
 {
-	switch (Type)
-	{
-	case EHandType::LEFT:
-		LeftHand.HoldItem = nullptr;
-		break;
-	case EHandType::RIGHT:
-		RightHand.HoldItem = nullptr;
-		break;
-	default:
-		check(false && "Need add case");
-		return;
-	}
+	FHoldStruct* HandStruct = GetHoldStruct(Type);
+	HandStruct->HoldItem = nullptr;
 }
 
 void UHorrorHandComponent::Lerp(float Deleta)

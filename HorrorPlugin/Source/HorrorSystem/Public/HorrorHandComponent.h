@@ -6,6 +6,8 @@
 #include "Components/SceneComponent.h"
 #include "HorrorHandComponent.generated.h"
 
+class IHorrorItemActorInterface;
+
 UENUM(BlueprintType)
 enum EHandType
 {
@@ -54,7 +56,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float LerpSpeed = 5.0f;
 
+	FORCEINLINE FHoldStruct* GetHoldStruct(const EHandType Type);
+
 public:
+	UFUNCTION(BlueprintCallable)
+	bool IsHoldable(const EHandType Type, AActor* Actor);
+
 	UFUNCTION(BlueprintCallable)
 	void Hold(const EHandType Type, AActor* Actor);
 
@@ -68,3 +75,19 @@ public:
 	void Lerp(float Deleta);
 	void SetStart(const EHandType Type, AActor* Actor);
 };
+
+FORCEINLINE FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type)
+{
+	switch (Type)
+	{
+	case EHandType::LEFT:
+		return &LeftHand;
+		break;
+	case EHandType::RIGHT:
+		return &RightHand;
+		break;
+	default:
+		check(false && "Need add case");
+		return nullptr;
+	}
+}
