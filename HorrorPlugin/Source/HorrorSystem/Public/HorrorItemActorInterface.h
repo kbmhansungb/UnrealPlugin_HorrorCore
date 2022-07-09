@@ -10,7 +10,7 @@ class IHorrorItemInterface;
 class UHorrorHandComponent;
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, BlueprintType)
 class UHorrorItemActorInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -27,20 +27,16 @@ public:
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	TScriptInterface<IHorrorItemInterface> GetItemInterface();
 	virtual TScriptInterface<IHorrorItemInterface> GetItemInterface_Implementation() { return TScriptInterface<IHorrorItemInterface>(); }
-	
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	bool IsHoldable(UHorrorHandComponent* HandComponent);
-	virtual bool IsHoldable_Implementation(UHorrorHandComponent* HandComponent);
 
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	void DoHold(UHorrorHandComponent* HandComponent);
-	virtual void DoHold_Implementation(UHorrorHandComponent* HandComponent) {}
+	void HoldItemActor(UHorrorHandComponent* HandComponent);
+	virtual void HoldItemActor_Implementation(UHorrorHandComponent* HandComponent) {}
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	void DoPut(UHorrorHandComponent* HandComponent);
-	virtual void DoPut_Implementation(UHorrorHandComponent* HandComponent) {}
+	void ReleaseItemActor(UHorrorHandComponent* HandComponent);
+	virtual void ReleaseItemActor_Implementation(UHorrorHandComponent* HandComponent) {}
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	void PutWorld();
-	virtual void PutWorld_Implementation() {};
+	//UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	//void PutWorld();
+	//virtual void PutWorld_Implementation() {};
 };

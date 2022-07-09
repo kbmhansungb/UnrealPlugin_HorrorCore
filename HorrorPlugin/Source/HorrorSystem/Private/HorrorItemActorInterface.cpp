@@ -5,7 +5,3 @@
 
 // Add default functionality here for any IHorrorItemActorInterface functions that are not pure virtual.
 
-bool IHorrorItemActorInterface::IsHoldable_Implementation(UHorrorHandComponent* HandComponent) 
-{ 
-	return true; 
-}

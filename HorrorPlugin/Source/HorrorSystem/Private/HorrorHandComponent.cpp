@@ -1,7 +1,7 @@
 // 2022 06    Bum moo, Kim    Free copyright
 
 #include "HorrorHandComponent.h"
-#include "HorrorItemActorInterface.h"
+#include "HorrorHoldableInterface.h"
 #include <GameFramework/Actor.h>
 #include <Kismet/KismetMathLibrary.h>
 
@@ -24,23 +24,26 @@ void UHorrorHandComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Lerp(DeltaTime);
 }
 
-bool UHorrorHandComponent::IsHoldable(const EHandType Type, AActor* Actor)
+bool UHorrorHandComponent::IsDominanceHand_Implementation() const
 {
-	if (
-		(GetHoldStruct(Type)->HoldItem == nullptr) && 
-		(Actor->GetClass()->ImplementsInterface(UHorrorItemActorInterface::StaticClass()))
-		)
-	{
-		return IHorrorItemActorInterface::Execute_IsHoldable(Actor, this);
-	}
-	return false;
+	return true;
 }
 
-void UHorrorHandComponent::Hold(const EHandType Type, AActor* Actor)
+TScriptInterface<IHorrorHoldableInterface> UHorrorHandComponent::GetHoldable_Implementation() const
 {
-	FHoldStruct* HandStruct = GetHoldStruct(Type);
-	HandStruct->HoldItem = Actor;
-	SetStart(Type, Actor);
+	return GetHoldStruct(HandDominance)->HoldItem;
+}
+
+bool UHorrorHandComponent::IsEmptyHand(const EHandType Type)
+{
+	return GetHoldStruct(Type)->HoldItem.GetObject() == nullptr;
+}
+
+void UHorrorHandComponent::Hold(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable)
+{
+	GetHoldStruct(Type)->HoldItem = Holdable;
+
+	SetStart(Type, Holdable);
 }
 
 void UHorrorHandComponent::Swap()
@@ -49,18 +52,18 @@ void UHorrorHandComponent::Swap()
 	RightHand.HoldItem = LeftHand.HoldItem;
 	LeftHand.HoldItem = Temp;
 
-	if (RightHand.HoldItem)
+	if (RightHand.HoldItem.GetObject())
 	{
 		SetStart(EHandType::RIGHT, RightHand.HoldItem);
 	}
 
-	if (LeftHand.HoldItem)
+	if (LeftHand.HoldItem.GetObject())
 	{
 		SetStart(EHandType::LEFT, LeftHand.HoldItem);
 	}
 }
 
-void UHorrorHandComponent::Put(const EHandType Type)
+void UHorrorHandComponent::Release(const EHandType Type)
 {
 	FHoldStruct* HandStruct = GetHoldStruct(Type);
 	HandStruct->HoldItem = nullptr;
@@ -68,34 +71,21 @@ void UHorrorHandComponent::Put(const EHandType Type)
 
 void UHorrorHandComponent::Lerp(float Deleta)
 {
-	if (RightHand.HoldItem)
+	if (RightHand.HoldItem.GetObject())
 	{
-		RightHand.HoldItem->SetActorTransform(UKismetMathLibrary::TInterpTo(RightHand.HoldItem->GetActorTransform(), FTransform(RightHand.RelativePosition) * GetComponentTransform(), Deleta, LerpSpeed));
+		IHorrorHoldableInterface::Execute_LerpHoldableTransform(RightHand.HoldItem.GetObject(), FTransform(RightHand.RelativePosition) * GetComponentTransform());
 	}
 
-	if (LeftHand.HoldItem)
+	if (LeftHand.HoldItem.GetObject())
 	{
-		LeftHand.HoldItem->SetActorTransform(UKismetMathLibrary::TInterpTo(LeftHand.HoldItem->GetActorTransform(), FTransform(LeftHand.RelativePosition) * GetComponentTransform(), Deleta, LerpSpeed));
+		IHorrorHoldableInterface::Execute_LerpHoldableTransform(LeftHand.HoldItem.GetObject(), FTransform(LeftHand.RelativePosition) * GetComponentTransform());
 	}
 }
 
-void UHorrorHandComponent::SetStart(const EHandType Type, AActor* Actor)
+void UHorrorHandComponent::SetStart(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable)
 {
 	FTransform Transform = GetComponentTransform();
+	Transform = FTransform(GetHoldStruct(Type)->RelativePosition + StartOffset) * Transform;
 
-	switch (Type)
-	{
-	case EHandType::LEFT:
-		Transform = FTransform(LeftHand.RelativePosition + StartOffset) * Transform;
-		break;
-	case EHandType::RIGHT:
-		Transform = FTransform(RightHand.RelativePosition + StartOffset) * Transform;
-		break;
-	default:
-		check(false && "Need add case");
-		return;
-	}
-
-	Actor->SetActorTransform(Transform);
+	IHorrorHoldableInterface::Execute_SetHoldableTransform(Holdable.GetObject(), Transform);
 }
-
