@@ -3,8 +3,12 @@
 
 #include "HorrorItem.h"
 
-FName UHorrorItem::GetItemName_Implementation() { return Name; }
+FName UHorrorItem::GetItemName_Implementation() const { return Name; }
 
-int32 UHorrorItem::GetItemMaxStack_Implementation() { return StackSize; }
+int32 UHorrorItem::GetItemMaxStack_Implementation() const { return StackSize; }
 
-AActor* UHorrorItem::GetItemActor_Implementation() { return Actor; }
+TSubclassOf<AActor> UHorrorItem::GetItemActor_Implementation() const { return ActorClass; }
+
+FIntSize2D UHorrorItem::GetSize_Implementation() const { return Size; }
+
+FSlateBrush UHorrorItem::GetIconBrush_Implementation() const { return IconBrush; }

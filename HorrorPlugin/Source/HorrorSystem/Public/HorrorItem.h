@@ -7,6 +7,8 @@
 #include "HorrorItemInterface.h"
 #include "HorrorItem.generated.h"
 
+class AActor;
+
 /**
  * 
  */
@@ -17,17 +19,25 @@ class HORRORSYSTEM_API UHorrorItem : public UPrimaryDataAsset
 	GENERATED_BODY()
 	
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName Name;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 StackSize;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AActor* Actor;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<AActor> ActorClass;
 
-private:
-	virtual FName GetItemName_Implementation() override;
-	virtual int32 GetItemMaxStack_Implementation() override;
-	virtual AActor* GetItemActor_Implementation() override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FIntSize2D Size = FIntSize2D(1, 1);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FSlateBrush IconBrush;
+
+public:
+	virtual FName GetItemName_Implementation() const override;
+	virtual int32 GetItemMaxStack_Implementation() const override;
+	virtual TSubclassOf<AActor> GetItemActor_Implementation() const override;
+	virtual FIntSize2D GetSize_Implementation() const override;
+	virtual FSlateBrush GetIconBrush_Implementation() const override;
 };

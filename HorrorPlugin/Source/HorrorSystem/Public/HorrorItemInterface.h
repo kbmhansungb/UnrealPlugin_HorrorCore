@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "UObject/NoExportTypes.h"
+#include "GameFramework/Actor.h"
+#include "Styling/SlateBrush.h"
 #include "HorrorItemInterface.generated.h"
-
-class AActor;
 
 USTRUCT(BlueprintType)
 struct FIntSize2D
@@ -26,7 +26,7 @@ public:
 };
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, BlueprintType)
 class UHorrorItemInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -41,21 +41,25 @@ class HORRORSYSTEM_API IHorrorItemInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
-	FName GetItemName();
-	virtual FName GetItemName_Implementation();;
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	FName GetItemName() const;
+	virtual FName GetItemName_Implementation() const;
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
-	int32 GetItemMaxStack();
-	virtual int32 GetItemMaxStack_Implementation();;
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	int32 GetItemMaxStack() const;
+	virtual int32 GetItemMaxStack_Implementation() const;
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
-	AActor* GetItemActor();
-	virtual AActor* GetItemActor_Implementation();
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	TSubclassOf<AActor> GetItemActor() const;
+	virtual TSubclassOf<AActor> GetItemActor_Implementation() const;
 	
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
-	FIntSize2D GetSizePoint();
-	virtual FIntSize2D GetSizePoint_Implementation();
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	FIntSize2D GetSize() const;
+	virtual FIntSize2D GetSize_Implementation() const;
+
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	FSlateBrush GetIconBrush() const;
+	virtual FSlateBrush GetIconBrush_Implementation() const;
 };
 
 

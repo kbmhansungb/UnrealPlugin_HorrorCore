@@ -24,23 +24,23 @@ class HORRORSYSTEM_API IHorrorItemActorInterface
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	TScriptInterface<IHorrorItemInterface> GetItemInterface();
 	virtual TScriptInterface<IHorrorItemInterface> GetItemInterface_Implementation() { return TScriptInterface<IHorrorItemInterface>(); }
 	
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	bool IsHoldable(UHorrorHandComponent* HandComponent);
 	virtual bool IsHoldable_Implementation(UHorrorHandComponent* HandComponent);
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void DoHold(UHorrorHandComponent* HandComponent);
 	virtual void DoHold_Implementation(UHorrorHandComponent* HandComponent) {}
 	
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void DoPut(UHorrorHandComponent* HandComponent);
 	virtual void DoPut_Implementation(UHorrorHandComponent* HandComponent) {}
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void PutWorld();
 	virtual void PutWorld_Implementation() {};
 };
