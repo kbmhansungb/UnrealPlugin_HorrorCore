@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "Widget_ItemSlot.generated.h"
 
+class UImage;
+class IHorrorInventoryInterface;
+
 /**
  * 
  */
@@ -15,6 +18,15 @@ class HORRORSYSTEM_API UWidget_ItemSlot : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
+	TScriptInterface<IHorrorInventoryInterface> Inventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
 	FIntPoint Index;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
+	float SquareSize = 90.f;
+
+	UPROPERTY(BlueprintReadWrite, Meta = (BindWidget))
+	UImage* Icon;
 };

@@ -8,6 +8,7 @@
 
 class UCanvasPanel;
 class UWidget_ItemList;
+class IHorrorInventoryInterface;
 
 /**
  * 
@@ -16,31 +17,17 @@ UCLASS(Abstract)
 class HORRORSYSTEM_API UWidget_Inventory : public UUserWidget
 {
 	GENERATED_BODY()
-	
-public:
-	virtual void NativePreConstruct() override;
 
-protected:
-	UPROPERTY(meta = (BindWidget))
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
+	TScriptInterface<IHorrorInventoryInterface> Inventory;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UWidget_ItemList* ItemList;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UCanvasPanel* MainCanvas;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UWidget_ItemList> ItemListClass;
-
-	UPROPERTY(BlueprintReadOnly)
-	UWidget_ItemList* ItemList;
-
-protected:
-	void CreateItemList();
-
-protected:
-	UFUNCTION(BlueprintCallable)
-	void ReceiveInventoryChange();
-
-	UFUNCTION(BlueprintCallable)
-	void ReceiveItemChange();
-
-protected:
     UPROPERTY(Meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* ActiveAnimation;
 };

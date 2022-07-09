@@ -8,7 +8,7 @@
 #include "HorrorItemInterface.h"
 #include "Widget_ItemList.generated.h"
 
-class UWidget_Inventory;
+class IHorrorInventoryInterface;
 class UImage;
 class UWidget_ItemSlot;
 class UCanvasPanel;
@@ -24,7 +24,7 @@ public:
 	TSubclassOf<UWidget_ItemSlot> Class;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float LengthOfSide = 90;
+	float SquareSize = 90;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Padding;
@@ -37,64 +37,52 @@ UCLASS(Abstract)
 class HORRORSYSTEM_API UWidget_ItemList : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 public:
-	virtual void NativePreConstruct() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
+	TScriptInterface<IHorrorInventoryInterface> Inventory;
 
-protected:
-	UPROPERTY(Meta = (BindWidget))
-	UCanvasPanel* MainCanvas;
-
-	UPROPERTY(Meta = (BindWidget))
-	UImage* Background;
-	
-    UPROPERTY(Meta = (BindWidgetAnim), Transient)
-    UWidgetAnimation* ActiveAnimation;
-
-protected:
-	void CreateItemList();
-
-protected:
-	UWidget_Inventory* Inventory;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIntSize2D ItemListSize{1, 1};
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FItemSlotForm ItemSlotForm;
+
+	UPROPERTY(BlueprintReadWrite, Meta = (BindWidget))
+	UCanvasPanel* MainCanvas;
+
+	UPROPERTY(BlueprintReadWrite, Meta = (BindWidget))
+	UImage* Background;
+	
+    UPROPERTY(BlueprintReadWrite, Meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* ActiveAnimation;
 	
 public:
-
-public:
-	FORCEINLINE int32 GetSlotOffset(const int32 SlotIndex);
-	FORCEINLINE FVector2D GetSlotOffset(const int32 X, const int32 Y);
-	FORCEINLINE FVector2D GetSlotSize(const int32 X, const int32 Y);
-	FORCEINLINE FVector2D GetSlotSize();;
-
-protected:
-	void ReceiveInventoryChange();
-	void ReceiveItemChange();
+	FORCEINLINE int32 GetSlotOffset(const int32 SlotIndex) const;
+	FORCEINLINE FVector2D GetSlotOffset(const int32 X, const int32 Y) const;
+	FORCEINLINE FVector2D GetCanvasSize(const int32 X, const int32 Y) const;
+	FORCEINLINE FVector2D GetCanvasSize() const;
 };
 
-int32 UWidget_ItemList::GetSlotOffset(const int32 SlotIndex)
+int32 UWidget_ItemList::GetSlotOffset(const int32 SlotIndex) const
 {
-	return SlotIndex * ItemSlotForm.LengthOfSide + (SlotIndex + 1) * ItemSlotForm.Padding;
+	return SlotIndex * ItemSlotForm.SquareSize + (SlotIndex + 1) * ItemSlotForm.Padding;
 }
 
-FVector2D UWidget_ItemList::GetSlotOffset(const int32 X, const int32 Y)
+FVector2D UWidget_ItemList::GetSlotOffset(const int32 X, const int32 Y) const
 {
 	return FVector2D(GetSlotOffset(X), GetSlotOffset(Y));
 }
 
-FVector2D UWidget_ItemList::GetSlotSize(const int32 X, const int32 Y)
+FVector2D UWidget_ItemList::GetCanvasSize(const int32 X, const int32 Y) const
 {
 	return FVector2D(
-		X * ItemSlotForm.LengthOfSide + (X + 1) * ItemSlotForm.Padding,
-		Y * ItemSlotForm.LengthOfSide + (Y + 1) * ItemSlotForm.Padding
+		X * ItemSlotForm.SquareSize + (X + 1) * ItemSlotForm.Padding,
+		Y * ItemSlotForm.SquareSize + (Y + 1) * ItemSlotForm.Padding
 	);
 }
 
-FVector2D UWidget_ItemList::GetSlotSize()
+FVector2D UWidget_ItemList::GetCanvasSize() const
 {
-	return GetSlotSize(ItemListSize.X, ItemListSize.Y);
+	return GetCanvasSize(ItemListSize.X, ItemListSize.Y);
 }
