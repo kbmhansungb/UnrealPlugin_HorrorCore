@@ -7,6 +7,7 @@
 #include "UObject/NoExportTypes.h"
 #include "GameFramework/Actor.h"
 #include "Styling/SlateBrush.h"
+#include "HorrorHoldableInterface.h"
 #include "HorrorItemInterface.generated.h"
 
 USTRUCT(BlueprintType)

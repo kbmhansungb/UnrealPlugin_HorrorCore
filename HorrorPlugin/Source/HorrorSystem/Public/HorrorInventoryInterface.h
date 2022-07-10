@@ -60,10 +60,6 @@ public:
 	TScriptInterface<IHorrorItemInterface> TakeItem(FIntPoint Index);
 	virtual TScriptInterface<IHorrorItemInterface> TakeItem_Implementation(FIntPoint Index) { return TScriptInterface<IHorrorItemInterface>(); }
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	TScriptInterface<IHorrorItemInterface> GetHoldItem() const;
-	virtual TScriptInterface<IHorrorItemInterface> GetHoldItem_Implementation() const { return TScriptInterface<IHorrorItemInterface>(); }
-
 public:
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	FIntSize2D GetInventorySize() const;

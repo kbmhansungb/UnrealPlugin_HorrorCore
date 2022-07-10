@@ -11,23 +11,23 @@ UHorrorInventoryComponent::UHorrorInventoryComponent()
 	Space = EWidgetSpace::World;
 }
 
-
-// Called when the game starts
 void UHorrorInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
 void UHorrorInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (CameraManager == nullptr)
-	{
-		CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
-	}
 }
+
+void UHorrorInventoryComponent::InitWidget()
+{
+	Super::InitWidget();
+
+	InventoryWidget = Cast<UWidget_Inventory>(GetWidget());
+	InventoryWidget->Inventory = this;
+}
+
+FIntSize2D UHorrorInventoryComponent::GetInventorySize_Implementation() const { return InventorySize; }
 

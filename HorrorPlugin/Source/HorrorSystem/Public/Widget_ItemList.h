@@ -13,6 +13,7 @@ class UImage;
 class UWidget_ItemSlot;
 class UCanvasPanel;
 class UTextureRenderTarget2D;
+class UWidget_Inventory;
 
 USTRUCT(BlueprintType)
 struct FItemSlotForm
@@ -40,7 +41,7 @@ class HORRORSYSTEM_API UWidget_ItemList : public UUserWidget
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
-	TScriptInterface<IHorrorInventoryInterface> Inventory;
+	UWidget_Inventory* Inventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIntSize2D ItemListSize{1, 1};
@@ -56,7 +57,10 @@ public:
 	
     UPROPERTY(BlueprintReadWrite, Meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* ActiveAnimation;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<UWidget_ItemSlot*> ItemSlots;
+
 public:
 	FORCEINLINE int32 GetSlotOffset(const int32 SlotIndex) const;
 	FORCEINLINE FVector2D GetSlotOffset(const int32 X, const int32 Y) const;
