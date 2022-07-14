@@ -21,11 +21,11 @@ public:
 	void ApplyAxisMovealbe(USceneComponent* Target, const FVector2D& MouseInput);
 	virtual void ApplyAxisMovealbe_Implementation(USceneComponent* Target, const FVector2D& MouseInput);
 	
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	void StartAxisMovealbe(USceneComponent* Target);
-	virtual void StartAxisMovealbe_Implementation(USceneComponent* Target) {}
+	//UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	//void StartAxisMovealbe(USceneComponent* Target);
+	//virtual void StartAxisMovealbe_Implementation(USceneComponent* Target) {}
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	void EndAxisMovealbe(USceneComponent* Target);
-	virtual void EndAxisMovealbe_Implementation(USceneComponent* Target) {}
+	//UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	//void EndAxisMovealbe(USceneComponent* Target);
+	//virtual void EndAxisMovealbe_Implementation(USceneComponent* Target) {}
 };
