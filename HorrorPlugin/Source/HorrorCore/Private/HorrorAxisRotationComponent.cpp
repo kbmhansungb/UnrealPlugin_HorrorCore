@@ -9,50 +9,98 @@
 
 #include "DrawDebugHelpers.h"
 
-// Sets default values for this component's properties
 UHorrorAxisRotationComponent::UHorrorAxisRotationComponent()
 {
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UHorrorAxisRotationComponent::ApplyAxisMovealbe_Implementation(USceneComponent* Target, const FVector2D& Deleta)
+void UHorrorAxisRotationComponent::BeginPlay()
 {
-	APlayerCameraManager* PCM = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager;
-	UPrimitiveComponent* Primitive = Cast<UPrimitiveComponent>(Target);
+	Super::BeginPlay();
 
-	const FVector& Pos = Target->GetComponentLocation();
-	const FQuat& OldQuat = Target->GetComponentQuat();
-	const FQuat& DeletaQuat = FQuat(PCM->GetActorUpVector(), -Deleta.X) * FQuat(PCM->GetActorRightVector(), -Deleta.Y);
-	FQuat NewQuat = DeletaQuat * OldQuat;
-	
-	TArray<FHitResult> HitResults;
-	FComponentQueryParams Parms(FName(), Target->GetOwner());
-	auto Sweep = [&]() -> void 
+	TArray<USceneComponent*> Children;
+	GetChildrenComponents(true, Children);
+
+	for (USceneComponent* Child : Children)
 	{
-		this->GetWorld()->ComponentSweepMulti(HitResults, Primitive, Pos, Pos, NewQuat, Parms);
-	};
-	Sweep();
-
-	if (HitResults.Num())
-	{
-		for (const auto& Hit : HitResults)
+		if (UPrimitiveComponent* Primitive = Cast<UPrimitiveComponent>(Child))
 		{
-			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 2.0f, 16, FColor::Red);
-			
-			const FVector& R = Hit.ImpactPoint - Pos;
-			const FQuat& Adjust = FRotationMatrix::MakeFromX(R).ToQuat() * FRotationMatrix::MakeFromX(R + Hit.Normal * Hit.PenetrationDepth).ToQuat().Inverse();
-			NewQuat *= Adjust;
+			FScriptDelegate ClickedMouse;
+			ClickedMouse.BindUFunction(this, FName("ClickedMouse"));
+			Primitive->OnClicked.Add(ClickedMouse);
+
+			FScriptDelegate ReleaseMouse;
+			ReleaseMouse.BindUFunction(this, FName("ReleasedMouse"));
+			Primitive->OnReleased.Add(ReleaseMouse);
 		}
-
-		Sweep();
-
-		if (HitResults.Num())
-		{
-			NewQuat = OldQuat;
-		}
-
-		return;
 	}
 
-	Target->SetWorldRotation(NewQuat);
+	SetComponentTickEnabled(false);
+}
+
+void UHorrorAxisRotationComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	FRay Ray;
+	FVector2D MousePosition;
+	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	PC->GetMousePosition(MousePosition.X, MousePosition.Y);
+	UGameplayStatics::DeprojectScreenToWorld(PC, MousePosition, Ray.Origin, Ray.Direction);
+
+	FSphere Sphere;
+	Sphere.Center = GetComponentLocation();
+	Sphere.W = SphereRadius;
+
+	FVector OutClosedPoint;
+	FMath::SphereDistToLine(Sphere.Center, Sphere.W, Ray.Origin, Ray.Direction, OutClosedPoint);
+	DrawDebugSphere(GetWorld(), OutClosedPoint, 5.0f, 16, FColor::Green);
+
+	FTransform NewVirtualTransform = FTransform(UKismetMathLibrary::FindLookAtRotation(GetComponentLocation(), OutClosedPoint), OutClosedPoint).GetRelativeTransform(GetComponentTransform());
+	ActiveComponent->SetRelativeTransform(RelativeTransform * NewVirtualTransform);
+
+	if ( !(PC->GetInputAnalogKeyState(Key) > 0.f) )
+	{
+		SetComponentTickEnabled(false);
+	}
+}
+
+void UHorrorAxisRotationComponent::ClickedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
+{
+	SetComponentTickEnabled(true);
+
+	FRay Ray;
+	FVector2D MousePosition;
+	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	PC->GetMousePosition(MousePosition.X, MousePosition.Y);
+	UGameplayStatics::DeprojectScreenToWorld(PC, MousePosition, Ray.Origin, Ray.Direction);
+
+	FHitResult Hit;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(PC->GetPawn());
+	GetWorld()->LineTraceSingleByChannel(Hit, Ray.Origin, Ray.Origin + Ray.Direction * 1000.f, ECollisionChannel::ECC_Camera, Params);
+	DrawDebugSphere(GetWorld(), Hit.Location, 5.0f, 16, FColor::Blue, false, 5.0f);
+
+	ActiveComponent = Hit.Component.Get();
+	Key = ButtonPressed;
+	SphereRadius = (Hit.Location - GetComponentLocation()).Size();
+
+	FSphere Sphere;
+	Sphere.Center = GetComponentLocation();
+	Sphere.W = SphereRadius;
+
+	FVector OutClosedPoint;
+	FMath::SphereDistToLine(Sphere.Center, Sphere.W, Ray.Origin, Ray.Direction, OutClosedPoint);
+	DrawDebugSphere(GetWorld(), OutClosedPoint, 5.0f, 16, FColor::Green);
+
+	VirtualTransform = FTransform(UKismetMathLibrary::FindLookAtRotation(GetComponentLocation(), OutClosedPoint), OutClosedPoint).GetRelativeTransform(GetComponentTransform());
+	RelativeTransform = FTransform(ActiveComponent->GetRelativeTransform().GetRelativeTransform(VirtualTransform));
+}
+
+void UHorrorAxisRotationComponent::ReleasedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
+{
+	SetComponentTickEnabled(false);
+}
+
+void UHorrorAxisRotationComponent::ApplyAxisMovealbe_Implementation(USceneComponent* Target, const FVector2D&)
+{
 }
 
