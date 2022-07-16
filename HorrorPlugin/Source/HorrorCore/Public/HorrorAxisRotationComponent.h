@@ -19,6 +19,7 @@ public:
 	UHorrorAxisRotationComponent();
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void SetComponentTickEnabled(bool bEnabled) override;
 	
 	UFUNCTION(BlueprintCallable)
 	void ClickedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
@@ -26,13 +27,27 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ReleasedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
 
+public:
+	// IHorrorAxisMoveableInterface에서 상속됨
+
+	void PreAxisMoveable()
+	{
+	}
+	void PostAixsMoveable()
+	{
+	}
+	FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction);
+
+	FRay GetNowMouseRay(APlayerController* PC);
+
+	FTransform GetVirtualTransform(const FVector& OutClosestPoint);
+
+
 private:
 	UPrimitiveComponent* ActiveComponent;
 	FKey Key;
 	float SphereRadius;
+	FVector FirstClosestPoint;
 	FTransform VirtualTransform;
 	FTransform RelativeTransform;
-
-	// IHorrorAxisMoveableInterface에서 상속됨
-	virtual void ApplyAxisMovealbe_Implementation(USceneComponent* Target, const FVector2D&) override;
 };

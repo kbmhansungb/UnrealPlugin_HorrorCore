@@ -28,5 +28,5 @@ public:
 
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	TScriptInterface<IHorrorHoldableInterface> GetHoldable() const;
-	virtual TScriptInterface<IHorrorHoldableInterface> GetHoldable_Implementation() const { return TScriptInterface<IHorrorHoldableInterface>(); }
+	virtual TScriptInterface<IHorrorHoldableInterface> GetHoldable_Implementation() const;
 };

@@ -9,4 +9,3 @@
 #include "Blueprint/WidgetTree.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Widget_ItemSlot.h"
-

@@ -9,6 +9,7 @@
 class UImage;
 class IHorrorInventoryInterface;
 class IHorrorItemInterface;
+class UWidget_Inventory;
 
 /**
  * 
@@ -20,7 +21,7 @@ class HORRORSYSTEM_API UWidget_ItemWidget : public UUserWidget
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
-	TScriptInterface<IHorrorInventoryInterface> Inventory;
+	UWidget_Inventory* Inventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
 	FIntPoint Index;
