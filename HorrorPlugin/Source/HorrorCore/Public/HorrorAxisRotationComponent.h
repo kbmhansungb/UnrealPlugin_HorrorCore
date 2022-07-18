@@ -43,6 +43,7 @@ public:
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction);
 	virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint);
 	virtual FTransform ClampTransform(const FTransform& Transform);
+	virtual FTransform AdjustTransform(const FTransform& Transform);
 
 private:
 	FKey Key;
