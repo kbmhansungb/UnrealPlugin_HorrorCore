@@ -56,8 +56,7 @@ void UHorrorAxisRotationComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	FRay Ray = GetNowMouseRay(PC);
 	FVector OutClosestPoint = GetIntersectionPoint(Ray.Origin, Ray.Direction);
 
-	FTransform NewVirtualTransform = GetVirtualTransform(OutClosestPoint);
-	ActiveComponent->SetRelativeTransform(RelativeTransform * NewVirtualTransform);
+	SetRelativeTransform(GetNewReleativeTransform(OutClosestPoint));
 
 	if ( Key.IsValid() && !(PC->GetInputAnalogKeyState(Key) > 0.f))
 	{
@@ -78,28 +77,15 @@ void UHorrorAxisRotationComponent::ClickedMouse(UPrimitiveComponent* TouchedComp
 	Params.AddIgnoredActor(PC->GetPawn());
 	GetWorld()->LineTraceSingleByChannel(Hit, Ray.Origin, Ray.Origin + Ray.Direction * 1000.f, ECollisionChannel::ECC_Camera, Params);
 
-	ActiveComponent = Hit.Component.Get();
 	SphereRadius = (Hit.Location - GetComponentLocation()).Size();
 	FirstClosestPoint = GetIntersectionPoint(Ray.Origin, Ray.Direction);
 
-	VirtualTransform = GetVirtualTransform(FirstClosestPoint);
-	RelativeTransform = FTransform(ActiveComponent->GetRelativeTransform().GetRelativeTransform(VirtualTransform));
+	OriginalRelativeTransform = GetRelativeTransform();
 }
 
 void UHorrorAxisRotationComponent::ReleasedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
 {
 	SetComponentTickEnabled(false);
-}
-
-FVector UHorrorAxisRotationComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction)
-{
-	FVector OutClosestPoint;
-
-	FMath::SphereDistToLine(GetComponentLocation(), SphereRadius, Origin, Direction, OutClosestPoint);
-	DrawDebugSphere(GetWorld(), FirstClosestPoint, 5.0f, 16, FColor::Blue);
-	DrawDebugSphere(GetWorld(), OutClosestPoint, 5.0f, 16, FColor::Green);
-
-	return OutClosestPoint;
 }
 
 FRay UHorrorAxisRotationComponent::GetNowMouseRay(APlayerController* PC)
@@ -113,14 +99,27 @@ FRay UHorrorAxisRotationComponent::GetNowMouseRay(APlayerController* PC)
 	return Ray;
 }
 
-FTransform UHorrorAxisRotationComponent::GetVirtualTransform(const FVector& OutClosestPoint)
+FVector UHorrorAxisRotationComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction)
 {
-	FVector V = (OutClosestPoint - GetComponentLocation()).GetSafeNormal();
-	V = GetComponentRotation().UnrotateVector(V);
+	FVector OutClosestPoint;
 
-	const FVector& Axis = (V ^ FVector::UpVector).GetSafeNormal();
-	const float& Rad = -FMath::Acos(V | FVector::UpVector);
-	FQuat Quat = FQuat(Axis, Rad);
+	FMath::SphereDistToLine(GetComponentLocation(), SphereRadius, Origin, Direction, OutClosestPoint);
+	DrawDebugSphere(GetWorld(), FirstClosestPoint, 5.0f, 16, FColor::Blue);
+	DrawDebugSphere(GetWorld(), OutClosestPoint, 5.0f, 16, FColor::Green);
 
-	return FTransform(Quat);
+	return OutClosestPoint;
+}
+
+FTransform UHorrorAxisRotationComponent::GetNewReleativeTransform(const FVector& OutClosestPoint)
+{
+	const FVector& VO = FirstClosestPoint.GetSafeNormal();
+	const FVector& V1 = (OutClosestPoint - GetComponentLocation()).GetSafeNormal();
+
+	const FVector& Axis = (VO ^ V1).GetSafeNormal();
+	const float& Rad = FMath::Acos(V1 | VO);
+	const FQuat& Quat = FQuat(Axis, Rad);
+	
+	UE_LOG(LogTemp, Display, TEXT("OutClosest : %s,  FirstClosest : %s, Rad : %f"), *V1.ToString(), *FirstClosestPoint.ToString(), Rad);
+
+	return FTransform(Quat * OriginalRelativeTransform.GetRotation(), OriginalRelativeTransform.GetLocation(), OriginalRelativeTransform.GetScale3D());
 }

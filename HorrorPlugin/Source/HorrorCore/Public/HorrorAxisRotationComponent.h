@@ -29,25 +29,14 @@ public:
 
 public:
 	// IHorrorAxisMoveableInterface에서 상속됨
-
-	void PreAxisMoveable()
-	{
-	}
-	void PostAixsMoveable()
-	{
-	}
-	FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction);
-
-	FRay GetNowMouseRay(APlayerController* PC);
-
-	FTransform GetVirtualTransform(const FVector& OutClosestPoint);
+	virtual FRay GetNowMouseRay(APlayerController* PC);
+	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction);
+	virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint);
 
 
 private:
-	UPrimitiveComponent* ActiveComponent;
 	FKey Key;
 	float SphereRadius;
 	FVector FirstClosestPoint;
-	FTransform VirtualTransform;
-	FTransform RelativeTransform;
+	FTransform OriginalRelativeTransform;
 };
