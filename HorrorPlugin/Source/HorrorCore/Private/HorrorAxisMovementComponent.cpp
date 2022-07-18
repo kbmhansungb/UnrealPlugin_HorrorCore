@@ -18,63 +18,42 @@ void UHorrorAxisMovementComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UHorrorAxisMovementComponent::ApplyAxisMovealbe_Implementation(USceneComponent* Target, const FVector2D&)
+void UHorrorAxisMovementComponent::PreAxisMoveable(const FHitResult& HitResult)
 {
-	FVector2D MousePosition;
-	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-	PC->GetMousePosition(MousePosition.X, MousePosition.Y);
-
-	FVector WorldPosition, WorldDirection;
-	
-	UGameplayStatics::DeprojectScreenToWorld(PC, MousePosition, WorldPosition, WorldDirection);
-	FVector HitPos = FMath::RayPlaneIntersection(WorldPosition, WorldDirection, FPlane(GetComponentLocation(), GetUpVector()));
-
-	DrawDebugSphere(GetWorld(), HitPos, 5.0f, 8, FColor::Green);
-
-	ApplyAxisMoveableToChild(Target, FVector2D(GetComponentTransform().InverseTransformPosition(HitPos)));
+	FirsColsestPoint = GetIntersectionPoint(HitResult.TraceStart, (HitResult.TraceEnd - HitResult.TraceStart).GetSafeNormal());
 }
 
-void UHorrorAxisMovementComponent::ApplyAxisMoveableToChild(USceneComponent* Target, const FVector2D& RelativePos)
+void UHorrorAxisMovementComponent::ApplyAxisMoveable(const FVector& Origin, const FVector& Direction)
 {
-	FHitResult HitResult;
+	const FVector& OutClosestPoint = GetIntersectionPoint(Origin, Direction);
+	SetRelativeTransform(GetNewReleativeTransform(OutClosestPoint));
+}
 
-	const FVector& Location = Target->GetRelativeLocation();
-	FVector2D Vector = RelativePos - FVector2D(Location);
-	float Size = Vector.Size();
-	
-	float Multifly = FMath::Min(Size, MaxStepSize) / Size;
-	const FVector2D& Step = (Size > FLT_EPSILON) ? FVector2D(Location) + (Vector * Multifly) : RelativePos;
+FVector UHorrorAxisMovementComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const
+{
+	return FMath::RayPlaneIntersection(Origin, Direction, FPlane(GetComponentLocation(), GetUpVector()));
+}
 
-	Target->SetRelativeLocation(FVector(
-		FMath::Clamp(Step.X, XRange.X, XRange.Y),
-		FMath::Clamp(Step.Y, YRange.X, YRange.Y),
-		Location.Z
-	), true, &HitResult);
+FTransform UHorrorAxisMovementComponent::GetNewReleativeTransform(const FVector& OutClosestPoint) const
+{
+	FTransform Transform;
+	Transform = AdjustTransform(Transform);
+	Transform = ClampTransform(Transform);
+	return Transform;
+}
 
-	if (!HitResult.bBlockingHit)
-	{
-		return;
-	}
+FTransform UHorrorAxisMovementComponent::ClampTransform(const FTransform& Transform) const
+{
+	const FVector& Loc = Transform.GetLocation();
+	FVector Location = FVector(
+		FMath::Clamp(Loc.X, XRange.X, XRange.Y),
+		FMath::Clamp(Loc.Y, YRange.X, YRange.Y),
+		Loc.Z
+	);
+	return FTransform(Transform.GetRotation(), Loc, Transform.GetScale3D());
+}
 
-	FVector2D Normal = FVector2D(GetComponentRotation().GetInverse().RotateVector(HitResult.Normal));
-	Normal.Normalize();
-
-	const FVector2D& Adjust = Normal * ((Vector | Normal) - FLT_EPSILON);
-	Vector -= Adjust;
-
-	const FVector2D& Step2 = FVector2D(Location) + Vector;
-
-	Target->SetRelativeLocation(FVector(
-		FMath::Clamp(Step2.X, XRange.X, XRange.Y),
-		FMath::Clamp(Step2.Y, YRange.X, YRange.Y),
-		Location.Z
-	), true, &HitResult);
-
-	if (!HitResult.bBlockingHit)
-	{
-		return;
-	}
-
-	Target->SetWorldLocation(HitResult.Location);
-	//Target->SetRelativeLocation(Location);
+FTransform UHorrorAxisMovementComponent::AdjustTransform(const FTransform& Transform) const
+{
+	return Transform;
 }

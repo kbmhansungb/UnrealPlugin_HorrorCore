@@ -103,7 +103,7 @@ void UHorrorAxisRotationComponent::PreAxisMoveable(const FHitResult& HitResult)
 
 void UHorrorAxisRotationComponent::ApplyAxisMoveable(const FVector& Origin, const FVector& Direction)
 {
-	FVector OutClosestPoint = GetIntersectionPoint(Origin, Direction);
+	const FVector& OutClosestPoint = GetIntersectionPoint(Origin, Direction);
 	SetRelativeTransform(GetNewReleativeTransform(OutClosestPoint));
 }
 
@@ -132,8 +132,8 @@ FTransform UHorrorAxisRotationComponent::GetNewReleativeTransform(const FVector&
 
 	//FTransform NewTransform = FTransform(Quat * OriginalRelativeTransform.GetRotation(), OriginalRelativeTransform.GetLocation(), OriginalRelativeTransform.GetScale3D());
 	FTransform NewTransform = FTransform(Quat * GetRelativeRotation().Quaternion(), GetRelativeLocation(), GetRelativeScale3D());
-	NewTransform = ClampTransform(NewTransform);
 	NewTransform = AdjustTransform(NewTransform);
+	NewTransform = ClampTransform(NewTransform);
 	return NewTransform;
 }
 
@@ -141,9 +141,9 @@ FTransform UHorrorAxisRotationComponent::ClampTransform(const FTransform& Transf
 {
 	const FRotator& Rot = Transform.GetRotation().Rotator();
 	FRotator ClampRot = FRotator(
-		FMath::Clamp(Rot.Pitch,		PitchArange.X,		PitchArange.Y),
-		FMath::Clamp(Rot.Yaw,		YawArange.X,		YawArange.Y),
-		FMath::Clamp(Rot.Roll,		RollArange.X,		RollArange.Y)
+		FMath::Clamp(Rot.Pitch,		PitchRange.X,		PitchRange.Y),
+		FMath::Clamp(Rot.Yaw,		YawRange.X,		YawRange.Y),
+		FMath::Clamp(Rot.Roll,		RollRange.X,		RollRange.Y)
 	);
 	return FTransform(ClampRot, Transform.GetLocation(), Transform.GetScale3D());
 }

@@ -28,8 +28,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxStepSize = 10.0f;
 
+protected:
 	// IHorrorAxisMoveableInterface에서 상속됨
-	virtual void ApplyAxisMovealbe_Implementation(USceneComponent* Target, const FVector2D&) override;
+	virtual void PreAxisMoveable(const FHitResult& HitResult) override;
+	virtual void ApplyAxisMoveable(const FVector& Origin, const FVector& Direction) override;
 
-	void ApplyAxisMoveableToChild(USceneComponent* Target, const FVector2D& RelativePos);
+	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override;
+
+	virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint) const override;
+	virtual FTransform ClampTransform(const FTransform& Transform) const override;
+	virtual FTransform AdjustTransform(const FTransform& Transform) const override;
+
+private:
+	FVector FirsColsestPoint;
 };

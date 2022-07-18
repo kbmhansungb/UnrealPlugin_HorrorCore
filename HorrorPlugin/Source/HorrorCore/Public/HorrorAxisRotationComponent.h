@@ -22,13 +22,13 @@ public:
 	virtual void SetComponentTickEnabled(bool bEnabled) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D PitchArange = FVector2D(-60.0f, 60.0f);
+	FVector2D PitchRange = FVector2D(-60.0f, 60.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D YawArange = FVector2D(-60.0f, 60.0f);
+	FVector2D YawRange = FVector2D(-60.0f, 60.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D RollArange = FVector2D(-60.0f, 60.0f);
+	FVector2D RollRange = FVector2D(-60.0f, 60.0f);
 
 	UFUNCTION(BlueprintCallable)
 	void ClickedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
