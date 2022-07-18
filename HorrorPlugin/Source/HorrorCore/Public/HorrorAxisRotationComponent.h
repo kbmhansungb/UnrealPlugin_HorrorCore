@@ -22,13 +22,13 @@ public:
 	virtual void SetComponentTickEnabled(bool bEnabled) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D PitchArange;
+	FVector2D PitchArange = FVector2D(-60.0f, 60.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D YawArange = FVector2D(-30.0f, 30.0f);
+	FVector2D YawArange = FVector2D(-60.0f, 60.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D RollArange = FVector2D(-30.0f, 30.0f);
+	FVector2D RollArange = FVector2D(-60.0f, 60.0f);
 
 	UFUNCTION(BlueprintCallable)
 	void ClickedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
@@ -39,11 +39,18 @@ public:
 public:
 	virtual FRay GetNowMouseRay(APlayerController* PC);
 	
+protected:
 	// IHorrorAxisMoveableInterface에서 상속됨
-	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction);
-	virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint);
-	virtual FTransform ClampTransform(const FTransform& Transform);
-	virtual FTransform AdjustTransform(const FTransform& Transform);
+	virtual void PreAxisMoveable(const FHitResult& HitResult) override;
+	virtual void ApplyAxisMoveable(const FVector& Origin, const FVector& Direction) override;
+
+	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override;
+
+	virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint) const override;
+	virtual FTransform ClampTransform(const FTransform& Transform) const override;
+	virtual FTransform AdjustTransform(const FTransform& Transform) const override;
+
+
 
 private:
 	FKey Key;
