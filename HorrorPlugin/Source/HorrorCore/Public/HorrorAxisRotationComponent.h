@@ -20,7 +20,16 @@ public:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void SetComponentTickEnabled(bool bEnabled) override;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector2D PitchArange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector2D YawArange = FVector2D(-30.0f, 30.0f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector2D RollArange = FVector2D(-30.0f, 30.0f);
+
 	UFUNCTION(BlueprintCallable)
 	void ClickedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
 
@@ -28,11 +37,12 @@ public:
 	void ReleasedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
 
 public:
-	// IHorrorAxisMoveableInterface에서 상속됨
 	virtual FRay GetNowMouseRay(APlayerController* PC);
+	
+	// IHorrorAxisMoveableInterface에서 상속됨
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction);
 	virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint);
-
+	virtual FTransform ClampTransform(const FTransform& Transform);
 
 private:
 	FKey Key;

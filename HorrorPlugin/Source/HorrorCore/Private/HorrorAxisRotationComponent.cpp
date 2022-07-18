@@ -121,5 +121,17 @@ FTransform UHorrorAxisRotationComponent::GetNewReleativeTransform(const FVector&
 	
 	UE_LOG(LogTemp, Display, TEXT("OutClosest : %s,  FirstClosest : %s, Rad : %f"), *V1.ToString(), *FirstClosestPoint.ToString(), Rad);
 
-	return FTransform(Quat * OriginalRelativeTransform.GetRotation(), OriginalRelativeTransform.GetLocation(), OriginalRelativeTransform.GetScale3D());
+	const FTransform& NewTransform = FTransform(Quat * OriginalRelativeTransform.GetRotation(), OriginalRelativeTransform.GetLocation(), OriginalRelativeTransform.GetScale3D());
+	return ClampTransform(NewTransform);
+}
+
+FTransform UHorrorAxisRotationComponent::ClampTransform(const FTransform& Transform)
+{
+	const FRotator& Rot = Transform.GetRotation().Rotator();
+	FRotator ClampRot = FRotator(
+		FMath::Clamp(Rot.Pitch,		PitchArange.X,		PitchArange.Y),
+		FMath::Clamp(Rot.Yaw,		YawArange.X,		YawArange.Y),
+		FMath::Clamp(Rot.Roll,		RollArange.X,		RollArange.Y)
+	);
+	return FTransform(ClampRot, Transform.GetLocation(), Transform.GetScale3D());
 }
