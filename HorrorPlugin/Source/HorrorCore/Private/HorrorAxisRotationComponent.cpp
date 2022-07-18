@@ -118,41 +118,9 @@ FTransform UHorrorAxisRotationComponent::GetVirtualTransform(const FVector& OutC
 	FVector V = (OutClosestPoint - GetComponentLocation()).GetSafeNormal();
 	V = GetComponentRotation().UnrotateVector(V);
 
-	const FVector& XZ_YPlane = FVector(V.X, 0.0f, V.Z).GetSafeNormal();
-	const FVector& XY_ZPlane = FVector(V.X, V.Y, 0.0f).GetSafeNormal();
+	const FVector& Axis = (V ^ FVector::UpVector).GetSafeNormal();
+	const float& Rad = -FMath::Acos(V | FVector::UpVector);
+	FQuat Quat = FQuat(Axis, Rad);
 
-	FRotator Rot = FRotator(
-		FMath::RadiansToDegrees(acosf(FVector::DotProduct(XZ_YPlane, FVector::ForwardVector))), // Pitch가 먼저 적용되고, 
-		FMath::RadiansToDegrees(acosf(FVector::DotProduct(XZ_YPlane, V))), // Yaw가 남은 만큼 적용된다.
-		0.0f
-	);
-	Rot.Normalize();
-
-	if ((XZ_YPlane | FVector::UpVector) < 0.f)
-	{
-		Rot.Pitch = -Rot.Pitch;
-	}
-	if ((XY_ZPlane | FVector::RightVector) < 0.f)
-	{
-		Rot.Yaw = -Rot.Yaw;
-	}
-
-	FVector Forward = Rot.RotateVector(FVector::ForwardVector);
-	FVector Right = Rot.RotateVector(FVector::RightVector);
-	FVector Up = Rot.RotateVector(FVector::UpVector);
-
-	UE_LOG(LogTemp, Display, TEXT("Rad: %f, %f / Rot: %f, %f, %f "), FVector::DotProduct(XZ_YPlane, FVector::ForwardVector), FVector::DotProduct(XY_ZPlane, FVector::ForwardVector), Rot.Pitch, Rot.Yaw, Rot.Roll);
-
-	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + XZ_YPlane * SphereRadius, FColor::Orange, false, -1.0f, 1U, 1.0f);
-	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + V * SphereRadius, FColor::Magenta, false, -1.0f, 1U, 1.0f);
-
-	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + GetForwardVector() * SphereRadius, FColor::Red, false, -1.0f, 1U, 1.0f);
-	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + GetRightVector() * SphereRadius, FColor::Green, false, -1.0f, 1U, 1.0f);
-	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + GetUpVector() * SphereRadius, FColor::Blue, false, -1.0f, 1U, 1.0f);
-
-	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + Forward * SphereRadius, FColor::Red, false, -1.0f, 1U, 1.0f);
-	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + Right * SphereRadius, FColor::Green, false, -1.0f, 1U, 1.0f);
-	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + Up * SphereRadius, FColor::Blue, false, -1.0f, 1U, 1.0f);
-
-	return FTransform(Rot);
+	return FTransform(Quat);
 }
