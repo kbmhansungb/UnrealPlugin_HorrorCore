@@ -136,20 +136,27 @@ FTransform UHorrorAxisRotationComponent::GetNewReleativeTransform(const FVector&
 
 FTransform UHorrorAxisRotationComponent::ClampTransform(const FTransform& Transform) const
 {
-	// Swing Twist Decomposition를 공부후 만들어야 함.
-	//const FVector& Axis = Transform.GetRotation().GetUpVector();
+	if (!GetAttachParent())
+	{
+		return Transform;
+	}
+	const FVector& Axis = GetAttachParent()->GetUpVector();
+	
+	FQuat Swing, Twist;
+	Transform.GetRotation().ToSwingTwist(Axis, Swing, Twist);
 
-	//FQuat Swing, Twist;
-	//Transform.GetRotation().ToSwingTwist(Axis, Swing, Twist);
-	//
-	//DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + Axis * (SphereRadius + 10.0f), FColor::Blue);
-	//const float& TwistAngle = Twist.GetAngle();
-	//const FQuat& LimitedTwist = FQuat(Axis, FMath::Clamp(TwistAngle, FMath::DegreesToRadians(TwistLimit.X), FMath::DegreesToRadians(TwistLimit.Y))); // 음.. 개선해야할 부분이 많음...
-	//UE_LOG(LogTemp, Display, TEXT("Twist : %s, Angle : %f, Limited Twist : %s"), *Twist.ToString(), TwistAngle , *LimitedTwist.ToString());
+	float TwistAngle = FMath::RadiansToDegrees((Twist.Z > 0.f) ? Twist.GetAngle() : -Twist.GetAngle());
+	TwistAngle = FMath::Clamp(TwistAngle, TwistLimit.X, TwistLimit.Y);
 
-	//return FTransform(Twist, Transform.GetLocation(), Transform.GetScale3D());
+	const FQuat& LimitedTwist = FQuat(Axis, FMath::DegreesToRadians(TwistAngle));
 
-	return Transform;
+	DrawDebugLine(GetWorld(), GetComponentLocation(), GetComponentLocation() + Axis * (SphereRadius + 10.0f), FColor::Blue);
+	UE_LOG(LogTemp, Display, TEXT("Twist : %s, Angle : %f, Limited Twist : %s"), *Twist.ToString(), TwistAngle , *LimitedTwist.ToString());
+
+	
+	return FTransform(LimitedTwist * Swing, Transform.GetLocation(), Transform.GetScale3D());
+
+	//return Transform;
 }
 
 FTransform UHorrorAxisRotationComponent::AdjustTransform(const FTransform& Transform) const
