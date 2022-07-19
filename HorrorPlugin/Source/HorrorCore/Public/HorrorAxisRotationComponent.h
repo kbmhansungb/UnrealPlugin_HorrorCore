@@ -21,14 +21,14 @@ public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void SetComponentTickEnabled(bool bEnabled) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D PitchRange = FVector2D(-60.0f, 60.0f);
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//FVector2D Swing1Limit;// = FVector2D(-60.0f, 60.0f);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D YawRange = FVector2D(-60.0f, 60.0f);
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//FVector2D Swing2Limit;// = FVector2D(-60.0f, 60.0f);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D RollRange = FVector2D(-60.0f, 60.0f);
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//FVector2D TwistLimit = FVector2D(-10.0f, 10.0f);
 
 	UFUNCTION(BlueprintCallable)
 	void ClickedMouse(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
