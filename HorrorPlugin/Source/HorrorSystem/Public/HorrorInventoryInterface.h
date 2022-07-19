@@ -23,7 +23,7 @@ struct FInventoryStruct
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FHorrorItemStruct> Items;
+	TArray<FHorrorItemStack> Items;
 		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FInventoryRowData> Data;

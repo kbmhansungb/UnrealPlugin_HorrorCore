@@ -59,7 +59,7 @@ public:
  *
  */
 USTRUCT(BlueprintType)
-struct FHorrorItemStruct
+struct FHorrorItemStack
 {
 	GENERATED_BODY()
 
@@ -67,9 +67,45 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TScriptInterface<UHorrorItemInterface> Type;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Stack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = 0, UIMin = 0))
+	int32 Count;
 
 public:
-
+	FORCEINLINE void PutIn();
+	FORCEINLINE void TakeOut();
+	FORCEINLINE bool IsEmpty() const;
+	FORCEINLINE bool CanTakeOut() const;
+	FORCEINLINE bool CanPutIn() const;
+	FORCEINLINE IHorrorItemInterface* GetItemInterface() const;
 };
+
+
+FORCEINLINE void FHorrorItemStack::PutIn()
+{
+	Count += 1;
+}
+
+FORCEINLINE void FHorrorItemStack::TakeOut()
+{
+	Count -= 1;
+}
+
+FORCEINLINE bool FHorrorItemStack::IsEmpty() const
+{
+	return 0 == Count;
+}
+
+FORCEINLINE bool FHorrorItemStack::CanTakeOut() const
+{
+	return Count > 0;
+}
+
+FORCEINLINE bool FHorrorItemStack::CanPutIn() const
+{
+	return GetItemInterface()->GetItemMaxStack() > Count;
+}
+
+FORCEINLINE IHorrorItemInterface* FHorrorItemStack::GetItemInterface() const
+{
+	return static_cast<IHorrorItemInterface*>(Type.GetInterface());
+}
