@@ -13,8 +13,8 @@ class AActor;
  * 
  */
 UCLASS()
-class HORRORSYSTEM_API UHorrorItem : public UPrimaryDataAsset
-	, public IHorrorItemInterface
+class HORRORSYSTEM_API UHorrorItem : public UPrimaryDataAsset, 
+	public IHorrorItemInterface
 {
 	GENERATED_BODY()
 	
@@ -34,10 +34,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FSlateBrush IconBrush;
 
+	// IHorrorItemInterface에서 상속됨
 public:
-	virtual FName GetItemName_Implementation() const override;
-	virtual int32 GetItemMaxStack_Implementation() const override;
-	virtual TSubclassOf<AActor> GetItemActor_Implementation() const override;
-	virtual FIntSize2D GetSize_Implementation() const override;
-	virtual FSlateBrush GetIconBrush_Implementation() const override;
+	virtual const FName& GetItemName() const override { return Name; }
+	virtual int32 GetItemMaxStack() const override { return StackSize; }
+	virtual const TSubclassOf<AActor>& GetItemActorClass() const override { return ActorClass; }
+	virtual const FIntSize2D& GetIconSize() const override { return Size; }
+	virtual const FSlateBrush& GetIconBrush() const override { return IconBrush; }
 };

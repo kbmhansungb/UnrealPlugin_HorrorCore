@@ -2,16 +2,18 @@
 
 
 #include "HorrorItemInterface.h"
+#include "Kismet/GameplayStatics.h"
 
-// Add default functionality here for any IHorrorItemInterface functions that are not pure virtual.
+AActor* IHorrorItemInterface::SpawnItemActor(AActor* ContextObject, const FTransform& Transform, bool bNoCollisionFail, AActor* Owner) const
+{
+	const TSubclassOf<AActor>& ActorClass = GetItemActorClass();
+	if (!ActorClass.Get())
+	{
+		return nullptr;
+	}
 
-FName IHorrorItemInterface::GetItemName_Implementation() const { return FName(); }
+	return UGameplayStatics::BeginSpawningActorFromClass(ContextObject, ActorClass, Transform, bNoCollisionFail, Owner);
+}
 
-int32 IHorrorItemInterface::GetItemMaxStack_Implementation() const { return 0; }
-
-TSubclassOf<AActor> IHorrorItemInterface::GetItemActor_Implementation() const { return TSubclassOf<AActor>(); }
-
-FIntSize2D IHorrorItemInterface::GetSize_Implementation() const { return FIntSize2D(1, 1); }
-
-FSlateBrush IHorrorItemInterface::GetIconBrush_Implementation() const { return FSlateBrush(); }
+// 유효하면 아이템으로 스폰될 수 있고 그렇지 않으면 스폰될 수 없습니다
 

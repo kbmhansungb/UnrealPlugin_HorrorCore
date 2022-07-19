@@ -40,27 +40,18 @@ class HORRORSYSTEM_API IHorrorItemInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	FName GetItemName() const;
-	virtual FName GetItemName_Implementation() const;
+	virtual AActor* SpawnItemActor(AActor* ContextObject, const FTransform& Transform, bool bNoCollisionFail = false, AActor* Owner = nullptr) const;
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	int32 GetItemMaxStack() const;
-	virtual int32 GetItemMaxStack_Implementation() const;
+public:
+	virtual const FName& GetItemName() const = 0;
+	virtual int32 GetItemMaxStack() const = 0;
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	TSubclassOf<AActor> GetItemActor() const;
-	virtual TSubclassOf<AActor> GetItemActor_Implementation() const;
-	
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	FIntSize2D GetSize() const;
-	virtual FIntSize2D GetSize_Implementation() const;
+	// 유효하면 아이템으로 스폰될 수 있는 아이템이고 그렇지 않으면 스폰될 수 없는 아이템입니다.
+	virtual const TSubclassOf<AActor>& GetItemActorClass() const = 0;
 
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	FSlateBrush GetIconBrush() const;
-	virtual FSlateBrush GetIconBrush_Implementation() const;
+	virtual const FIntSize2D& GetIconSize() const = 0;
+	virtual const FSlateBrush& GetIconBrush() const = 0;
 };
 
 
@@ -78,4 +69,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Stack;
+
+public:
+
 };
