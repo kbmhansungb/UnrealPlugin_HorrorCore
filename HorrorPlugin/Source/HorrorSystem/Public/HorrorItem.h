@@ -22,8 +22,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 StackSize;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 1, UIMin = 1))
+	int32 StackSize = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AActor> ActorClass;
