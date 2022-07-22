@@ -18,7 +18,7 @@ class HORRORSYSTEM_API UHorrorItem : public UPrimaryDataAsset,
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName Name;
 
@@ -28,7 +28,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AActor> ActorClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 1, UIMin = 1))
 	FIntSize2D Size = FIntSize2D(1, 1);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

@@ -24,7 +24,23 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Y;
+
+public:
+	FORCEINLINE bool operator == (const FIntSize2D& Other) const
+	{
+		return (X == Other.X) && (Y == Other.Y);
+	}
+
+	FORCEINLINE bool operator != (const FIntSize2D& Other) const
+	{
+		return (X != Other.X) || (Y != Other.Y);
+	}
 };
+
+FORCEINLINE FIntPoint operator+(const FIntPoint& Point, const FIntSize2D& Size)
+{
+	return FIntPoint(Point.X + Size.X, Point.Y + Size.Y);
+}
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, BlueprintType)
@@ -64,48 +80,23 @@ struct FHorrorItemStack
 	GENERATED_BODY()
 
 public:
+	FHorrorItemStack() = default;
+	FHorrorItemStack(const TScriptInterface<IHorrorItemInterface>& TypeInterface, int32 Count)
+		: TypeInterface(TypeInterface), Count(Count) 
+	{
+	}
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TScriptInterface<UHorrorItemInterface> Type;
+	TScriptInterface<IHorrorItemInterface> TypeInterface;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = 0, UIMin = 0))
 	int32 Count;
 
 public:
-	FORCEINLINE void PutIn();
-	FORCEINLINE void TakeOut();
-	FORCEINLINE bool IsEmpty() const;
-	FORCEINLINE bool CanTakeOut() const;
-	FORCEINLINE bool CanPutIn() const;
-	FORCEINLINE IHorrorItemInterface* GetItemInterface() const;
+	void PutIn();
+	void TakeOut();
+	bool IsEmpty() const;
+	bool CanTakeOut() const;
+	bool CanPutIn() const;
 };
-
-
-FORCEINLINE void FHorrorItemStack::PutIn()
-{
-	Count += 1;
-}
-
-FORCEINLINE void FHorrorItemStack::TakeOut()
-{
-	Count -= 1;
-}
-
-FORCEINLINE bool FHorrorItemStack::IsEmpty() const
-{
-	return 0 == Count;
-}
-
-FORCEINLINE bool FHorrorItemStack::CanTakeOut() const
-{
-	return Count > 0;
-}
-
-FORCEINLINE bool FHorrorItemStack::CanPutIn() const
-{
-	return GetItemInterface()->GetItemMaxStack() > Count;
-}
-
-FORCEINLINE IHorrorItemInterface* FHorrorItemStack::GetItemInterface() const
-{
-	return static_cast<IHorrorItemInterface*>(Type.GetInterface());
-}

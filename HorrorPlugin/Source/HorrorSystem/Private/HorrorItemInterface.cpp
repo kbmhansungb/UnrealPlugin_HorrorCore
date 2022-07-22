@@ -15,5 +15,28 @@ AActor* IHorrorItemInterface::SpawnItemActor(AActor* ContextObject, const FTrans
 	return UGameplayStatics::BeginSpawningActorFromClass(ContextObject, ActorClass, Transform, bNoCollisionFail, Owner);
 }
 
-// 유효하면 아이템으로 스폰될 수 있고 그렇지 않으면 스폰될 수 없습니다
 
+void FHorrorItemStack::PutIn()
+{
+	Count += 1;
+}
+
+void FHorrorItemStack::TakeOut()
+{
+	Count -= 1;
+}
+
+bool FHorrorItemStack::IsEmpty() const
+{
+	return 0 == Count;
+}
+
+bool FHorrorItemStack::CanTakeOut() const
+{
+	return Count > 0;
+}
+
+bool FHorrorItemStack::CanPutIn() const
+{
+	return TypeInterface->GetItemMaxStack() > Count;
+}
