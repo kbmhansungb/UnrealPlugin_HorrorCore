@@ -14,11 +14,11 @@ struct FHorrorItem2DInventoryData
 
 public:
 	FHorrorItem2DInventoryData() = default;
-	FHorrorItem2DInventoryData(const FHorrorItemStack& ItemStack, const FIntPoint& StartIndex);
+	FHorrorItem2DInventoryData(const FHorrorItemBundle& ItemStack, const FIntPoint& StartIndex);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FHorrorItemStack ItemStack;
+	FHorrorItemBundle ItemStack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = 0, UIMin = 0))
 	FIntPoint StartIndex;
@@ -60,8 +60,8 @@ private:
 	void TakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& ItemType);
 
 public:
-	void TrySetSize(const FIntSize2D& NewSize, TArray<FHorrorItemStack>& OutItemStacks);
-	void OutInvalidItems(TArray<FHorrorItemStack>& OutItemStacks);
+	void TrySetSize(const FIntSize2D& NewSize, TArray<FHorrorItemBundle>& OutItemStacks);
+	void OutInvalidItems(TArray<FHorrorItemBundle>& OutItemStacks);
 private:
 	void SetSize(const FIntSize2D& NewSize);
 };

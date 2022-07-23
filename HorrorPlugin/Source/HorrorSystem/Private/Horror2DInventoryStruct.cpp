@@ -1,7 +1,7 @@
 #include "Horror2DInventoryStruct.h"
 
 
-FHorrorItem2DInventoryData::FHorrorItem2DInventoryData(const FHorrorItemStack& ItemStack, const FIntPoint& StartIndex)
+FHorrorItem2DInventoryData::FHorrorItem2DInventoryData(const FHorrorItemBundle& ItemStack, const FIntPoint& StartIndex)
 	: ItemStack(ItemStack), StartIndex(StartIndex) {}
 
 bool FHorrorItem2DInventoryData::IsIntersect(const FIntPoint& Int) const
@@ -111,7 +111,7 @@ void FHorror2DInventoryStruct::StoreItem(const TScriptInterface<IHorrorItemInter
 
 	if (!ItemStack)
 	{
-		const int32& ElumIndex = Items.Add(FHorrorItem2DInventoryData(FHorrorItemStack(Iteminterface, 1), Index));
+		const int32& ElumIndex = Items.Add(FHorrorItem2DInventoryData(FHorrorItemBundle(Iteminterface, 1), Index));
 		ItemStack = &Items[ElumIndex];
 	}
 	else
@@ -161,13 +161,13 @@ void FHorror2DInventoryStruct::TakeItem(const FIntPoint& Index, TScriptInterface
 	}
 }
 
-void FHorror2DInventoryStruct::TrySetSize(const FIntSize2D& NewSize, TArray<FHorrorItemStack>& OutItemStacks)
+void FHorror2DInventoryStruct::TrySetSize(const FIntSize2D& NewSize, TArray<FHorrorItemBundle>& OutItemStacks)
 {
 	SetSize(NewSize);
 	OutInvalidItems(OutItemStacks);
 }
 
-void FHorror2DInventoryStruct::OutInvalidItems(TArray<FHorrorItemStack>& OutItemStacks)
+void FHorror2DInventoryStruct::OutInvalidItems(TArray<FHorrorItemBundle>& OutItemStacks)
 {
 	OutItemStacks.Empty();
 	
