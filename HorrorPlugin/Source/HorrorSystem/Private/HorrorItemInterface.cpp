@@ -2,41 +2,16 @@
 
 
 #include "HorrorItemInterface.h"
-#include "Kismet/GameplayStatics.h"
 
-AActor* IHorrorItemInterface::SpawnItemActor(AActor* ContextObject, const FTransform& Transform, bool bNoCollisionFail, AActor* Owner) const
-{
-	const TSubclassOf<AActor>& ActorClass = GetItemActorClass();
-	if (!ActorClass.Get())
-	{
-		return nullptr;
-	}
+// Add default functionality here for any IHorrorItemInterface functions that are not pure virtual.
 
-	return UGameplayStatics::BeginSpawningActorFromClass(ContextObject, ActorClass, Transform, bNoCollisionFail, Owner);
-}
+FName IHorrorItemInterface::GetItemName_Implementation() const { return FName(); }
 
+int32 IHorrorItemInterface::GetItemMaxStack_Implementation() const { return 0; }
 
-void FHorrorItemStack::PutIn()
-{
-	Count += 1;
-}
+TSubclassOf<AActor> IHorrorItemInterface::GetItemActor_Implementation() const { return TSubclassOf<AActor>(); }
 
-void FHorrorItemStack::TakeOut()
-{
-	Count -= 1;
-}
+FIntSize2D IHorrorItemInterface::GetSize_Implementation() const { return FIntSize2D(1, 1); }
 
-bool FHorrorItemStack::IsEmpty() const
-{
-	return 0 == Count;
-}
+FSlateBrush IHorrorItemInterface::GetIconBrush_Implementation() const { return FSlateBrush(); }
 
-bool FHorrorItemStack::CanTakeOut() const
-{
-	return Count > 0;
-}
-
-bool FHorrorItemStack::CanPutIn() const
-{
-	return TypeInterface->GetItemMaxStack() > Count;
-}

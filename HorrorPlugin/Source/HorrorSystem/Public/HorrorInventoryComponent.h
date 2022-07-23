@@ -34,7 +34,7 @@ protected:
 	UWidget_Inventory* InventoryWidget = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FHorrorItemStack> Items;
+	TArray<FHorrorItemStruct> Items;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIntSize2D InventorySize;

@@ -27,7 +27,7 @@ public:
 	FIntPoint Index;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
-	int32 Count;
+	int32 Stack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
 	float SquareSize = 90.f;
