@@ -7,11 +7,12 @@
 #include "HorrorItemInterface.h"
 #include "HorrorInventoryInterface.h"
 #include "Widget_Inventory.h"
+#include "Horror2DInventoryStruct.h"
 #include "HorrorInventoryComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class HORRORSYSTEM_API UHorrorInventoryComponent : public UWidgetComponent
-	, public IHorrorInventoryInterface
+class HORRORSYSTEM_API UHorrorInventoryComponent : public UWidgetComponent, 
+	public IHorrorInventoryInterface
 {
 	GENERATED_BODY()
 
@@ -20,22 +21,21 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FHorror2DInventoryStruct Inventory;
 
-protected:
+public:
 	virtual void InitWidget() override;
 
-	virtual bool IsStorable_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const override { return false; }
-	virtual void StoreItem_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) override {}
-	virtual bool IsTakable_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const override { return false; }
-	virtual TScriptInterface<IHorrorItemInterface> TakeItem_Implementation(FIntPoint Index) override { return TScriptInterface<IHorrorItemInterface>(); }
-	virtual FIntSize2D GetInventorySize_Implementation() const override;
+	// IHorrorInventoryInterface에서 상속함
+public:
+	virtual bool IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const override;
+	virtual bool StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) override;
+	virtual bool IsTakable(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const override;
+	virtual bool TakeItem(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) override;
+	virtual const FIntSize2D& GetInventorySize() const override;;
 
 protected:
 	UWidget_Inventory* InventoryWidget = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FHorrorItemStruct> Items;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FIntSize2D InventorySize;
 };
