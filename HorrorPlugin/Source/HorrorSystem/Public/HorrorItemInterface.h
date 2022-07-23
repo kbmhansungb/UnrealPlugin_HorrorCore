@@ -75,13 +75,13 @@ public:
  *
  */
 USTRUCT(BlueprintType)
-struct FHorrorItemStack
+struct FHorrorItemBundle
 {
 	GENERATED_BODY()
 
 public:
-	FHorrorItemStack() = default;
-	FHorrorItemStack(const TScriptInterface<IHorrorItemInterface>& TypeInterface, int32 Count)
+	FHorrorItemBundle() = default;
+	FHorrorItemBundle(const TScriptInterface<IHorrorItemInterface>& TypeInterface, int32 Count)
 		: TypeInterface(TypeInterface), Count(Count) 
 	{
 	}

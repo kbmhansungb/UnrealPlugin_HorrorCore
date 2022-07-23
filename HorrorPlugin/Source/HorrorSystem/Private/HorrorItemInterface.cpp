@@ -16,27 +16,27 @@ AActor* IHorrorItemInterface::SpawnItemActor(AActor* ContextObject, const FTrans
 }
 
 
-void FHorrorItemStack::PutIn()
+void FHorrorItemBundle::PutIn()
 {
 	Count += 1;
 }
 
-void FHorrorItemStack::TakeOut()
+void FHorrorItemBundle::TakeOut()
 {
 	Count -= 1;
 }
 
-bool FHorrorItemStack::IsEmpty() const
+bool FHorrorItemBundle::IsEmpty() const
 {
 	return 0 == Count;
 }
 
-bool FHorrorItemStack::CanTakeOut() const
+bool FHorrorItemBundle::CanTakeOut() const
 {
 	return Count > 0;
 }
 
-bool FHorrorItemStack::CanPutIn() const
+bool FHorrorItemBundle::CanPutIn() const
 {
 	return TypeInterface->GetItemMaxStack() > Count;
 }
