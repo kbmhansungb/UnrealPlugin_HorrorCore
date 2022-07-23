@@ -29,7 +29,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct F2DInventoryStruct
+struct FHorror2DInventoryStruct
 {
 	GENERATED_BODY()
 

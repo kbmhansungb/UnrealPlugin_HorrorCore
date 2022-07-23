@@ -19,14 +19,14 @@ bool FHorrorItem2DInventoryData::IsEqualItem(const TScriptInterface<IHorrorItemI
 	return Iteminterface == ItemStack.TypeInterface;
 }
 
-bool F2DInventoryStruct::IsValidIndex(const FIntPoint& Index) const
+bool FHorror2DInventoryStruct::IsValidIndex(const FIntPoint& Index) const
 {
 	return
 		InventorySize.X > Index.X && Index.X >= 0 &&
 		InventorySize.Y > Index.Y && Index.Y >= 0;
 }
 
-bool F2DInventoryStruct::IsNotExceed(const FIntPoint& Index, const TScriptInterface<IHorrorItemInterface>& Iteminterface) const
+bool FHorror2DInventoryStruct::IsNotExceed(const FIntPoint& Index, const TScriptInterface<IHorrorItemInterface>& Iteminterface) const
 {
 	const FIntPoint& MaxPoint = Index + Iteminterface->GetIconSize();
 
@@ -35,7 +35,7 @@ bool F2DInventoryStruct::IsNotExceed(const FIntPoint& Index, const TScriptInterf
 		InventorySize.Y >= MaxPoint.Y;
 }
 
-FHorrorItem2DInventoryData* F2DInventoryStruct::GetItemStackPtr(const FIntPoint& Index)
+FHorrorItem2DInventoryData* FHorror2DInventoryStruct::GetItemStackPtr(const FIntPoint& Index)
 {
 	return Items.FindByPredicate(
 		[&](const FHorrorItem2DInventoryData& Elum)
@@ -44,7 +44,7 @@ FHorrorItem2DInventoryData* F2DInventoryStruct::GetItemStackPtr(const FIntPoint&
 		});
 }
 
-const FHorrorItem2DInventoryData* F2DInventoryStruct::GetItemStackPtr(const FIntPoint& Index) const
+const FHorrorItem2DInventoryData* FHorror2DInventoryStruct::GetItemStackPtr(const FIntPoint& Index) const
 {
 	return Items.FindByPredicate(
 		[&](const FHorrorItem2DInventoryData& Elum)
@@ -53,7 +53,7 @@ const FHorrorItem2DInventoryData* F2DInventoryStruct::GetItemStackPtr(const FInt
 		});
 }
 
-int32 F2DInventoryStruct::GetItemStackIndex(const FIntPoint& Index) const
+int32 FHorror2DInventoryStruct::GetItemStackIndex(const FIntPoint& Index) const
 {
 	return Items.IndexOfByPredicate(
 		[&](const FHorrorItem2DInventoryData& Elum)
@@ -62,7 +62,7 @@ int32 F2DInventoryStruct::GetItemStackIndex(const FIntPoint& Index) const
 		});
 }
 
-bool F2DInventoryStruct::IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index) const
+bool FHorror2DInventoryStruct::IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index) const
 {
 	if (IsValidIndex(Index) == false)
 	{
@@ -93,7 +93,7 @@ bool F2DInventoryStruct::IsStorable(const TScriptInterface<IHorrorItemInterface>
 	return true;
 }
 
-bool F2DInventoryStruct::TryStoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index)
+bool FHorror2DInventoryStruct::TryStoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index)
 {
 	if (IsStorable(Iteminterface, Index) == false)
 	{
@@ -105,7 +105,7 @@ bool F2DInventoryStruct::TryStoreItem(const TScriptInterface<IHorrorItemInterfac
 	return true;
 }
 
-void F2DInventoryStruct::StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index)
+void FHorror2DInventoryStruct::StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index)
 {
 	FHorrorItem2DInventoryData* ItemStack = GetItemStackPtr(Index);
 
@@ -120,7 +120,7 @@ void F2DInventoryStruct::StoreItem(const TScriptInterface<IHorrorItemInterface>&
 	}
 }
 
-bool F2DInventoryStruct::IsTakable(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
+bool FHorror2DInventoryStruct::IsTakable(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
 {
 	if (IsValidIndex(Index) == false)
 	{
@@ -137,7 +137,7 @@ bool F2DInventoryStruct::IsTakable(const FIntPoint& Index, TScriptInterface<IHor
 	return ItemStack->ItemStack.CanTakeOut();
 }
 
-bool F2DInventoryStruct::TryTakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& Iteminterface)
+bool FHorror2DInventoryStruct::TryTakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& Iteminterface)
 {
 	if (IsTakable(Index, Iteminterface) == false)
 	{
@@ -149,7 +149,7 @@ bool F2DInventoryStruct::TryTakeItem(const FIntPoint& Index, TScriptInterface<IH
 	return true;
 }
 
-void F2DInventoryStruct::TakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& ItemType)
+void FHorror2DInventoryStruct::TakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& ItemType)
 {
 	FHorrorItem2DInventoryData* ItemStack = GetItemStackPtr(Index);
 
@@ -161,13 +161,13 @@ void F2DInventoryStruct::TakeItem(const FIntPoint& Index, TScriptInterface<IHorr
 	}
 }
 
-void F2DInventoryStruct::TrySetSize(const FIntSize2D& NewSize, TArray<FHorrorItemStack>& OutItemStacks)
+void FHorror2DInventoryStruct::TrySetSize(const FIntSize2D& NewSize, TArray<FHorrorItemStack>& OutItemStacks)
 {
 	SetSize(NewSize);
 	OutInvalidItems(OutItemStacks);
 }
 
-void F2DInventoryStruct::OutInvalidItems(TArray<FHorrorItemStack>& OutItemStacks)
+void FHorror2DInventoryStruct::OutInvalidItems(TArray<FHorrorItemStack>& OutItemStacks)
 {
 	OutItemStacks.Empty();
 	
@@ -187,7 +187,7 @@ void F2DInventoryStruct::OutInvalidItems(TArray<FHorrorItemStack>& OutItemStacks
 	}
 }
 
-void F2DInventoryStruct::SetSize(const FIntSize2D& NewSize)
+void FHorror2DInventoryStruct::SetSize(const FIntSize2D& NewSize)
 {
 	InventorySize = NewSize;
 }

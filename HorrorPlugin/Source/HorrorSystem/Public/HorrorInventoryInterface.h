@@ -23,10 +23,10 @@ class HORRORSYSTEM_API IHorrorInventoryInterface
 
 public:
 	virtual bool IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const = 0;
-	virtual void StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) = 0;
+	virtual bool StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) = 0;
 	
-	virtual bool IsTakable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const = 0;
-	virtual const TScriptInterface<IHorrorItemInterface>& TakeItem(FIntPoint Index) = 0;
+	virtual bool IsTakable(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& ItemInterface) const = 0;
+	virtual bool TakeItem(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& ItemInterface) = 0;
 
 	virtual const FIntSize2D& GetInventorySize() const = 0;
 };

@@ -67,7 +67,7 @@ namespace INSERT_TEST
 			Item->Size = ItemSize;
 			Item->StackSize = ItemStackSize;
 
-			F2DInventoryStruct Inventory;
+			FHorror2DInventoryStruct Inventory;
 			Inventory.InventorySize = InventorySize;
 
 			//bool Result = true;

@@ -29,5 +29,27 @@ void UHorrorInventoryComponent::InitWidget()
 	InventoryWidget->Inventory = this;
 }
 
-FIntSize2D UHorrorInventoryComponent::GetInventorySize_Implementation() const { return InventorySize; }
+bool UHorrorInventoryComponent::IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const
+{
+	return Inventory.IsStorable(Iteminterface, Index);
+}
 
+bool UHorrorInventoryComponent::StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index)
+{
+	return Inventory.TryStoreItem(Iteminterface, Index);
+}
+
+bool UHorrorInventoryComponent::IsTakable(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
+{
+	return Inventory.IsTakable(Index, Iteminterface);;
+}
+
+bool UHorrorInventoryComponent::TakeItem(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface)
+{
+	return Inventory.TryTakeItem(Index, Iteminterface);
+}
+
+const FIntSize2D& UHorrorInventoryComponent::GetInventorySize() const
+{
+	return Inventory.InventorySize;
+}
