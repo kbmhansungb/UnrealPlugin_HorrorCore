@@ -1,6 +1,9 @@
 #include "Horror2DInventoryStruct.h"
 
 
+FHorrorItem2DInventoryData::FHorrorItem2DInventoryData(const FHorrorItemStack& ItemStack, const FIntPoint& StartIndex)
+	: ItemStack(ItemStack), StartIndex(StartIndex) {}
+
 bool FHorrorItem2DInventoryData::IsIntersect(const FIntPoint& Int) const
 {
 	const FIntSize2D& Size = ItemStack.TypeInterface->GetIconSize();
@@ -156,5 +159,36 @@ void F2DInventoryStruct::TakeItem(const FIntPoint& Index, TScriptInterface<IHorr
 	{
 		Items.RemoveAt(GetItemStackIndex(Index));
 	}
+}
+
+void F2DInventoryStruct::TrySetSize(const FIntSize2D& NewSize, TArray<FHorrorItemStack>& OutItemStacks)
+{
+	SetSize(NewSize);
+	OutInvalidItems(OutItemStacks);
+}
+
+void F2DInventoryStruct::OutInvalidItems(TArray<FHorrorItemStack>& OutItemStacks)
+{
+	OutItemStacks.Empty();
+	
+	for (int i = 0; i < Items.Num();)
+	{
+		const auto& Item = Items[i];
+		if (IsNotExceed(Item.StartIndex, Item.ItemStack.TypeInterface) == false)
+		{
+			OutItemStacks.Add(Item.ItemStack);
+
+			Items.RemoveAt(i);
+		}
+		else
+		{
+			++i;
+		}
+	}
+}
+
+void F2DInventoryStruct::SetSize(const FIntSize2D& NewSize)
+{
+	InventorySize = NewSize;
 }
 
