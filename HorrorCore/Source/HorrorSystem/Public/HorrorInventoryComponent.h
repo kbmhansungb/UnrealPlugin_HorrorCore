@@ -35,7 +35,7 @@ public:
 	virtual bool IsTakable(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const override;
 	virtual bool TakeItem(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) override;
 	virtual const FIntSize2D& GetInventorySize() const override;;
-
+	
 protected:
 	UWidget_Inventory* InventoryWidget = nullptr;
 };

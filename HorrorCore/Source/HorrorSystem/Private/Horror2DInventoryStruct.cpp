@@ -1,0 +1,1 @@
+#include "Horror2DInventoryStruct.h"

@@ -2,8 +2,8 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "HorrorPlugin",
-	"Description": "",
+	"FriendlyName": "HorrorCoreEditor",
+	"Description": "HorrorCore`s editor plugin",
 	"Category": "Other",
 	"CreatedBy": "KBM",
 	"CreatedByURL": "",
@@ -11,23 +11,13 @@
 	"MarketplaceURL": "",
 	"SupportURL": "",
 	"CanContainContent": true,
-	"IsBetaVersion": true,
+	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "HorrorCore",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "HorrorEvent",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "HorrorSystem",
-			"Type": "Runtime",
+			"Name": "HorrorCoreEditor",
+			"Type": "Editor",
 			"LoadingPhase": "Default"
 		}
 	]

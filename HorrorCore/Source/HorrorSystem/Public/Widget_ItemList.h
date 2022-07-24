@@ -62,31 +62,16 @@ public:
 	TArray<UWidget_ItemSlot*> ItemSlots;
 
 public:
-	FORCEINLINE int32 GetSlotOffset(const int32 SlotIndex) const;
-	FORCEINLINE FVector2D GetSlotOffset(const int32 X, const int32 Y) const;
-	FORCEINLINE FVector2D GetCanvasSize(const int32 X, const int32 Y) const;
-	FORCEINLINE FVector2D GetCanvasSize() const;
+	UFUNCTION(BlueprintCallable)
+	int32 GetSlotOffset(const int32 SlotIndex) const;
+
+	UFUNCTION(BlueprintCallable)
+	FVector2D GetSlotOffset2D(const int32 X, const int32 Y) const;
+
+	UFUNCTION(BlueprintCallable)
+	FVector2D GetCanvasSize(const int32 X, const int32 Y) const;
+
+	UFUNCTION(BlueprintCallable)
+	FVector2D GetCanvasSize() const;
 };
 
-int32 UWidget_ItemList::GetSlotOffset(const int32 SlotIndex) const
-{
-	return SlotIndex * ItemSlotForm.SquareSize + (SlotIndex + 1) * ItemSlotForm.Padding;
-}
-
-FVector2D UWidget_ItemList::GetSlotOffset(const int32 X, const int32 Y) const
-{
-	return FVector2D(GetSlotOffset(X), GetSlotOffset(Y));
-}
-
-FVector2D UWidget_ItemList::GetCanvasSize(const int32 X, const int32 Y) const
-{
-	return FVector2D(
-		X * ItemSlotForm.SquareSize + (X + 1) * ItemSlotForm.Padding,
-		Y * ItemSlotForm.SquareSize + (Y + 1) * ItemSlotForm.Padding
-	);
-}
-
-FVector2D UWidget_ItemList::GetCanvasSize() const
-{
-	return GetCanvasSize(ItemListSize.X, ItemListSize.Y);
-}

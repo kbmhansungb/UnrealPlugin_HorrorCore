@@ -82,9 +82,7 @@ struct FHorrorItemBundle
 public:
 	FHorrorItemBundle() = default;
 	FHorrorItemBundle(const TScriptInterface<IHorrorItemInterface>& TypeInterface, int32 Count)
-		: TypeInterface(TypeInterface), Count(Count) 
-	{
-	}
+		: TypeInterface(TypeInterface), Count(Count) {}
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -94,9 +92,34 @@ public:
 	int32 Count;
 
 public:
-	void PutIn();
-	void TakeOut();
-	bool IsEmpty() const;
-	bool CanTakeOut() const;
-	bool CanPutIn() const;
+	inline void PutIn();
+	inline void TakeOut();
+	inline bool IsEmpty() const;
+	inline bool CanTakeOut() const;
+	inline bool CanPutIn() const;
 };
+
+inline void FHorrorItemBundle::PutIn()
+{
+	Count += 1;
+}
+
+inline void FHorrorItemBundle::TakeOut()
+{
+	Count -= 1;
+}
+
+inline bool FHorrorItemBundle::IsEmpty() const
+{
+	return 0 == Count;
+}
+
+inline bool FHorrorItemBundle::CanTakeOut() const
+{
+	return Count > 0;
+}
+
+inline bool FHorrorItemBundle::CanPutIn() const
+{
+	return TypeInterface->GetItemMaxStack() > Count;
+}

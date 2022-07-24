@@ -2,6 +2,7 @@
 
 
 #include "HorrorInventoryComponent.h"
+#include "HorrorCore.h"
 #include <Kismet/GameplayStatics.h>
 
 UHorrorInventoryComponent::UHorrorInventoryComponent()
@@ -26,7 +27,14 @@ void UHorrorInventoryComponent::InitWidget()
 	Super::InitWidget();
 
 	InventoryWidget = Cast<UWidget_Inventory>(GetWidget());
-	InventoryWidget->Inventory = this;
+	if (InventoryWidget)
+	{
+		InventoryWidget->Inventory = this;
+	}
+	else
+	{
+		UE_LOG(HorrorEventLog, Error, TEXT("Cannot cast to UWidget_Inventory."));
+	}
 }
 
 bool UHorrorInventoryComponent::IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const
