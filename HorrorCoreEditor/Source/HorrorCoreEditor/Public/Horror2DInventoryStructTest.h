@@ -34,7 +34,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FInventory2DInsertTest : public FTableRowBase
+struct FHorrorInventory2DInsertTest : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -46,5 +46,8 @@ public:
 	FHorror2DInventoryStruct InventoryInfo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FWorkUnit> WorkUnit;
+	TArray<FWorkUnit> WorkUnits;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Desire;
 };
