@@ -23,6 +23,7 @@ struct FWorkUnit
 	GENERATED_BODY()
 
 public:
+	// 저장할 때는, 저장하는 아이템을, 꺼낼때는 기대하는 아이템을 나타냅니다.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UHorrorItem* HorrorItem;
 
@@ -39,9 +40,6 @@ struct FHorrorInventory2DInsertTest : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString TestName;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHorror2DInventoryStruct InventoryInfo;
 
