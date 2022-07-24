@@ -14,29 +14,3 @@ AActor* IHorrorItemInterface::SpawnItemActor(AActor* ContextObject, const FTrans
 
 	return UGameplayStatics::BeginSpawningActorFromClass(ContextObject, ActorClass, Transform, bNoCollisionFail, Owner);
 }
-
-
-void FHorrorItemBundle::PutIn()
-{
-	Count += 1;
-}
-
-void FHorrorItemBundle::TakeOut()
-{
-	Count -= 1;
-}
-
-bool FHorrorItemBundle::IsEmpty() const
-{
-	return 0 == Count;
-}
-
-bool FHorrorItemBundle::CanTakeOut() const
-{
-	return Count > 0;
-}
-
-bool FHorrorItemBundle::CanPutIn() const
-{
-	return TypeInterface->GetItemMaxStack() > Count;
-}
