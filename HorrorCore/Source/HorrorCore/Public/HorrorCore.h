@@ -14,4 +14,4 @@ public:
 	virtual void ShutdownModule() override;
 };
 
-DECLARE_LOG_CATEGORY_EXTERN(HorrorEventLog, Log, All)
+HORRORCORE_API DECLARE_LOG_CATEGORY_EXTERN(HorrorEventLog, Log, All);
