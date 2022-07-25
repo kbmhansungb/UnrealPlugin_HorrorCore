@@ -28,7 +28,7 @@ public:
 	float SquareSize = 90;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Padding;
+		float Padding;
 };
 
 /**
@@ -72,6 +72,6 @@ public:
 	FVector2D GetCanvasSize(const int32 X, const int32 Y) const;
 
 	UFUNCTION(BlueprintCallable)
-	FVector2D GetCanvasSize() const;
+	FVector2D GetCanvasSize2D() const;
 };
 

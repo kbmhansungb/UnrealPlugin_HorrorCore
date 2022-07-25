@@ -28,7 +28,8 @@ FVector2D UWidget_ItemList::GetCanvasSize(const int32 X, const int32 Y) const
 	);
 }
 
-FVector2D UWidget_ItemList::GetCanvasSize() const
+FVector2D UWidget_ItemList::GetCanvasSize2D() const
 {
 	return GetCanvasSize(ItemListSize.X, ItemListSize.Y);
 }
+
