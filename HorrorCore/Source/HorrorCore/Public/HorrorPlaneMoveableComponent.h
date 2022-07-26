@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SceneComponent.h"
+#include "Components/PrimitiveComponent.h"
 #include "HorrorMoveableInterface.h"
 #include "HorrorPlaneMoveableComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class HORRORCORE_API UHorrorAxisMovementComponent : public USceneComponent,
+class HORRORCORE_API UHorrorAxisMovementComponent : public UPrimitiveComponent,
 	public IHorrorMoveableInterface
 {
 	GENERATED_BODY()
@@ -39,47 +39,8 @@ public:
 		return FTransform(); 
 	}
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override;
-	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override 
-	{ 
-		return FTransform(); 
-	}
+	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
 
 private:
 	FTransform VirtualRelativeTransform;
-	//virtual void PreAxisMoveable(const FHitResult& HitResult) override
-	//{
-	//	FirsColsestPoint = GetIntersectionPoint(HitResult.TraceStart, (HitResult.TraceEnd - HitResult.TraceStart).GetSafeNormal());
-	//}
-	//virtual void ApplyAxisMoveable(const FVector& Origin, const FVector& Direction) override
-	//{
-	//	const FVector& OutClosestPoint = GetIntersectionPoint(Origin, Direction);
-	//	SetRelativeTransform(GetNewReleativeTransform(OutClosestPoint));
-	//}
-
-	//virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override
-	//{
-	//	return FMath::RayPlaneIntersection(Origin, Direction, FPlane(GetComponentLocation(), GetUpVector()));
-	//}
-
-	//virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint) const override
-	//{
-	//	FTransform Transform;
-	//	Transform = AdjustTransform(Transform);
-	//	Transform = ClampTransform(Transform);
-	//	return Transform;
-	//}
-	//virtual FTransform ClampTransform(const FTransform& Transform) const override
-	//{
-	//	const FVector& Loc = Transform.GetLocation();
-	//	FVector Location = FVector(
-	//		FMath::Clamp(Loc.X, XRange.X, XRange.Y),
-	//		FMath::Clamp(Loc.Y, YRange.X, YRange.Y),
-	//		Loc.Z
-	//	);
-	//	return FTransform(Transform.GetRotation(), Loc, Transform.GetScale3D());
-	//}
-	//virtual FTransform AdjustTransform(const FTransform& Transform) const override
-	//{
-	//	return Transform;
-	//}
 };

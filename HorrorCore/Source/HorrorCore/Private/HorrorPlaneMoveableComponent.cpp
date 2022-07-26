@@ -4,7 +4,7 @@
 #include "HorrorPlaneMoveableComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-
+#include <Engine/World.h>
 #include "DrawDebugHelpers.h"
 
 // IHorrorAxisMoveableInterface에서 상속됨
@@ -22,8 +22,6 @@ FVector UHorrorAxisMovementComponent::GetIntersectionPoint(const FVector& Origin
 	return FMath::RayPlaneIntersection(Origin, Direction, FPlane(GetComponentLocation(), GetUpVector()));
 }
 
-// FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
-
 void UHorrorAxisMovementComponent::SetFirstIntersectionPoint(const FHitResult& HitLocation)
 {
 	const FVector& FirstIntersectionPoint = GetIntersectionPoint(HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal());
@@ -38,20 +36,47 @@ void UHorrorAxisMovementComponent::ApplyMoving(const FVector& IntersectionLocati
 	// RT = RT` * V
 	FTransform ResultRelativeTransform = VirtualRelativeTransform * GetNewVirtualTransform(IntersectionLocation);
 
+	ResultRelativeTransform = ClampNewRelativeTransform(ResultRelativeTransform);
+	ResultRelativeTransform = AdjustNewRelativeTransform(ResultRelativeTransform);
+	
 	SetRelativeTransform(ResultRelativeTransform);
 }
 
 FTransform UHorrorAxisMovementComponent::ClampNewRelativeTransform(const FTransform& Transform) const
 {
 	const FQuat& Quat = Transform.GetRotation();
+	const FVector& Scale = Transform.GetScale3D();
 	FVector Location = Transform.GetLocation();
 	Location.X = FMath::Clamp(Location.X, XRange.X, XRange.Y);
 	Location.Y = FMath::Clamp(Location.Y, XRange.X, XRange.Y);
 	Location.Z = 0.0f;
-	const FVector& Scale = Transform.GetScale3D();
 
 	return FTransform( Quat, Location, Scale );
 }
 
-// FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
+FTransform UHorrorAxisMovementComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
+{
+	TArray<FHitResult> OutHits;
+
+	FComponentQueryParams Params(SCENE_QUERY_STAT(MoveComponent), GetOwner());
+	FCollisionResponseParams ResponseParam;
+	InitSweepCollisionParams(Params, ResponseParam);
+
+	const UPrimitiveComponent* Primitive = this;
+	if (GetWorld()->ComponentSweepMulti(OutHits, const_cast<UPrimitiveComponent*>(Primitive), GetComponentLocation(), Transform.GetLocation(), Transform.GetRotation(), Params))
+	{
+		int a = 3;
+	}
+
+	const FQuat& Quat = Transform.GetRotation();
+	const FVector& Scale = Transform.GetScale3D();
+	FVector Location = Transform.GetLocation();
+
+	for (const auto& Hit : OutHits)
+	{
+		Location -= Hit.ImpactNormal * Hit.Distance;
+	}
+
+	return FTransform(Quat, Location, Scale);
+}
 
