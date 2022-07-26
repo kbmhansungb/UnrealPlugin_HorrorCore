@@ -21,7 +21,7 @@ public:
 	virtual void PreMoveable() {}
 	virtual void PostMoveable() {}
 
-	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direct) const = 0;
+	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const = 0;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) = 0;
 
 	virtual FTransform GetNewRelativeTransform(const FVector& IntersectionLocation) const = 0;

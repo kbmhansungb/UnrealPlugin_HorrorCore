@@ -44,7 +44,7 @@ protected:
 	virtual void PreMoveable() override {}
 	virtual void PostMoveable() override {}
 
-	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direct) const override { return FVector(); }
+	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override { return FVector(); }
 	virtual void ApplyMoving(const FVector& IntersectionLocation) override {}
 
 	virtual FTransform GetNewRelativeTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
