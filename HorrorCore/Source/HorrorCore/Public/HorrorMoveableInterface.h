@@ -19,6 +19,7 @@ class HORRORCORE_API IHorrorMoveableInterface
 
 public:
 	virtual void PreMoveable() {}
+	virtual void PostMoveable() {}
 
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direct) const = 0;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) = 0;
@@ -27,5 +28,4 @@ public:
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const = 0;
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const = 0;
 
-	virtual void PostMoveable() {}
 };

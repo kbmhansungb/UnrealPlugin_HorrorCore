@@ -29,7 +29,17 @@ public:
 	float MaxStepSize = 10.0f;
 
 protected:
-	//// IHorrorAxisMoveableInterface에서 상속됨
+	// IHorrorAxisMoveableInterface에서 상속됨
+	virtual void PreMoveable() override {}
+	virtual void PostMoveable() override {}
+
+	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direct) const override { return FVector(); }
+	virtual void ApplyMoving(const FVector& IntersectionLocation) override {}
+
+	virtual FTransform GetNewRelativeTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
+	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
+	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
+
 	//virtual void PreAxisMoveable(const FHitResult& HitResult) override
 	//{
 	//	FirsColsestPoint = GetIntersectionPoint(HitResult.TraceStart, (HitResult.TraceEnd - HitResult.TraceStart).GetSafeNormal());
