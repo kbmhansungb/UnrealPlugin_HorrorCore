@@ -22,24 +22,26 @@ public:
 	FVector2D YRange;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxStepSize = 10.0f;
+		float MaxStepSize = 10.0f;
 
-public:
 	// IHorrorAxisMoveableInterface에서 상속됨
+public:
 	virtual void PreMoveable() override;
 	virtual void PostMoveable() override;
 
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override;
-	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override 
+	// FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
+	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override;
+	virtual void ApplyMoving(const FVector& IntersectionLocation) override 
 	{
-
 	}
-	virtual void ApplyMoving(const FVector& IntersectionLocation) override {}
 
-	virtual FTransform GetNewRelativeTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
+	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
 
+private:
+	FTransform VirtualRelativeTransform;
 	//virtual void PreAxisMoveable(const FHitResult& HitResult) override
 	//{
 	//	FirsColsestPoint = GetIntersectionPoint(HitResult.TraceStart, (HitResult.TraceEnd - HitResult.TraceStart).GetSafeNormal());
@@ -76,7 +78,4 @@ public:
 	//{
 	//	return Transform;
 	//}
-
-private:
-	FVector FirsColsestPoint;
 };

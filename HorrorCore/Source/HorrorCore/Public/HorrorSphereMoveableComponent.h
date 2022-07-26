@@ -48,7 +48,7 @@ protected:
 	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override {}
 	virtual void ApplyMoving(const FVector& IntersectionLocation) override {}
 
-	virtual FTransform GetNewRelativeTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
+	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
 

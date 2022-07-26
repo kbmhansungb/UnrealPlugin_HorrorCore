@@ -25,7 +25,7 @@ public:
 	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) = 0;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) = 0;
 
-	virtual FTransform GetNewRelativeTransform(const FVector& IntersectionLocation) const = 0;
+	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const = 0;
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const = 0;
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const = 0;
 
