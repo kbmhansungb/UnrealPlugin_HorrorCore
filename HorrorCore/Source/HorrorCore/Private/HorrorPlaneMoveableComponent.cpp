@@ -20,3 +20,8 @@ void UHorrorAxisMovementComponent::PreMoveable()
 void UHorrorAxisMovementComponent::PostMoveable()
 {
 }
+
+FVector UHorrorAxisMovementComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const
+{
+	return FMath::RayPlaneIntersection(Origin, Direction, FPlane(GetComponentLocation(), GetUpVector()));
+}
