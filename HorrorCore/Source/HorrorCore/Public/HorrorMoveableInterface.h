@@ -23,9 +23,9 @@ public:
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direct) const = 0;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) = 0;
 
-	virtual void PostMoveable() {}
+	virtual FTransform GetNewRelativeTransform(const FVector& IntersectionLocation) const = 0;
+	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const = 0;
+	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const = 0;
 
-	//virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint) const { return FTransform(); }
-	//virtual FTransform ClampTransform(const FTransform& Transform) const { return FTransform(); }
-	//virtual FTransform AdjustTransform(const FTransform& Transform) const { return FTransform(); }
+	virtual void PostMoveable() {}
 };
