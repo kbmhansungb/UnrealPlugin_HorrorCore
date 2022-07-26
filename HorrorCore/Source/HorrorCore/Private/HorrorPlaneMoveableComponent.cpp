@@ -33,5 +33,13 @@ void UHorrorAxisMovementComponent::SetFirstIntersectionPoint(const FHitResult& H
 	VirtualRelativeTransform = UKismetMathLibrary::MakeRelativeTransform(GetRelativeTransform(), NewVirtualTransform);
 }
 
+void UHorrorAxisMovementComponent::ApplyMoving(const FVector& IntersectionLocation)
+{
+	// RT = RT` * V
+	FTransform ResultRelativeTransform = VirtualRelativeTransform * GetNewVirtualTransform(IntersectionLocation);
+
+	SetRelativeTransform(ResultRelativeTransform);
+}
+
 // FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
 

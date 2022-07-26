@@ -34,6 +34,10 @@ public:
 	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) override 
 	{
+		// RT = RT` * V
+		FTransform ResultRelativeTransform = VirtualRelativeTransform * GetNewVirtualTransform(IntersectionLocation);
+
+		SetRelativeTransform(ResultRelativeTransform);
 	}
 
 	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
