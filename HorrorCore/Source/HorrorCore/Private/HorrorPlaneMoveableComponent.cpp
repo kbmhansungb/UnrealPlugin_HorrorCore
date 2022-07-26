@@ -42,6 +42,20 @@ void UHorrorAxisMovementComponent::ApplyMoving(const FVector& IntersectionLocati
 	SetRelativeTransform(ResultRelativeTransform);
 }
 
+FTransform UHorrorAxisMovementComponent::GetNewVirtualTransform(const FVector& IntersectionLocation) const
+{
+	// W = R * PW
+	// W = R` * V * PW
+
+	// V = VT * VR * VS * v
+	// VR = VS = I
+	// V = VT * v
+
+	// W = R` * VT * PW
+
+	return FTransform(IntersectionLocation);
+}
+
 FTransform UHorrorAxisMovementComponent::ClampNewRelativeTransform(const FTransform& Transform) const
 {
 	const FQuat& Quat = Transform.GetRotation();

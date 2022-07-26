@@ -36,7 +36,16 @@ public:
 
 	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override 
 	{ 
-		return FTransform(); 
+		// W = R * PW
+		// W = R` * V * PW
+
+		// V = VT * VR * VS * v
+		// VR = VS = I
+		// V = VT * v
+
+		// W = R` * VT * PW
+
+		return FTransform(IntersectionLocation); 
 	}
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override;
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
