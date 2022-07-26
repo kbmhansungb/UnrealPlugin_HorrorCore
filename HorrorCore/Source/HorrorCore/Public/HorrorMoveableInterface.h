@@ -18,8 +18,8 @@ class HORRORCORE_API IHorrorMoveableInterface
 	GENERATED_BODY()
 
 public:
-	//virtual void PreAxisMoveable(const FHitResult& HitResult) = 0;
-	//virtual void PostAxisMoveable() = 0;
+	virtual void PreMoveable() {}
+	virtual void PostMoveable() {}
 
 	//virtual void ApplyAxisMovealbe(USceneComponent* Target, const FVector2D& MouseInput) = 0;
 	//
