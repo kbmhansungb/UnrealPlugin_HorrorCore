@@ -22,6 +22,7 @@ public:
 	virtual void PostMoveable() {}
 
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const = 0;
+	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) = 0;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) = 0;
 
 	virtual FTransform GetNewRelativeTransform(const FVector& IntersectionLocation) const = 0;
