@@ -41,5 +41,17 @@ void UHorrorAxisMovementComponent::ApplyMoving(const FVector& IntersectionLocati
 	SetRelativeTransform(ResultRelativeTransform);
 }
 
+FTransform UHorrorAxisMovementComponent::ClampNewRelativeTransform(const FTransform& Transform) const
+{
+	const FQuat& Quat = Transform.GetRotation();
+	FVector Location = Transform.GetLocation();
+	Location.X = FMath::Clamp(Location.X, XRange.X, XRange.Y);
+	Location.Y = FMath::Clamp(Location.Y, XRange.X, XRange.Y);
+	Location.Z = 0.0f;
+	const FVector& Scale = Transform.GetScale3D();
+
+	return FTransform( Quat, Location, Scale );
+}
+
 // FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
 

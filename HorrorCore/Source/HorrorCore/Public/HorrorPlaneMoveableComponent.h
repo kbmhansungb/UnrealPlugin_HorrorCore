@@ -32,17 +32,17 @@ public:
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override;
 	// FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
 	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override;
-	virtual void ApplyMoving(const FVector& IntersectionLocation) override 
-	{
-		// RT = RT` * V
-		FTransform ResultRelativeTransform = VirtualRelativeTransform * GetNewVirtualTransform(IntersectionLocation);
+	virtual void ApplyMoving(const FVector& IntersectionLocation) override;
 
-		SetRelativeTransform(ResultRelativeTransform);
+	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override 
+	{ 
+		return FTransform(); 
 	}
-
-	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
-	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
-	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
+	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override;
+	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override 
+	{ 
+		return FTransform(); 
+	}
 
 private:
 	FTransform VirtualRelativeTransform;
