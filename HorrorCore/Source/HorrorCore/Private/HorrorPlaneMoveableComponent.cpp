@@ -9,12 +9,14 @@
 
 // IHorrorAxisMoveableInterface에서 상속됨
 
-UHorrorAxisMovementComponent::UHorrorAxisMovementComponent()
+// IHorrorAxisMoveableInterface에서 상속됨
+
+// IHorrorAxisMoveableInterface에서 상속됨
+
+void UHorrorAxisMovementComponent::PreMoveable()
 {
 }
 
-void UHorrorAxisMovementComponent::BeginPlay()
+void UHorrorAxisMovementComponent::PostMoveable()
 {
-	Super::BeginPlay();
 }
-

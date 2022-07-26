@@ -14,11 +14,7 @@ class HORRORCORE_API UHorrorAxisMovementComponent : public USceneComponent,
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	UHorrorAxisMovementComponent();
-	virtual void BeginPlay() override;
-
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector2D XRange;
 
@@ -28,10 +24,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxStepSize = 10.0f;
 
-protected:
+public:
 	// IHorrorAxisMoveableInterface에서 상속됨
-	virtual void PreMoveable() override {}
-	virtual void PostMoveable() override {}
+	virtual void PreMoveable() override;
+	virtual void PostMoveable() override
+	{
+	}
 
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direct) const override { return FVector(); }
 	virtual void ApplyMoving(const FVector& IntersectionLocation) override {}
