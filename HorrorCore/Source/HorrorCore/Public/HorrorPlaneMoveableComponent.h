@@ -22,7 +22,7 @@ public:
 	FVector2D YRange;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float MaxStepSize = 10.0f;
+	float MaxStepSize = 10.0f;
 
 	// IHorrorAxisMoveableInterface에서 상속됨
 public:
@@ -34,19 +34,7 @@ public:
 	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) override;
 
-	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override 
-	{ 
-		// W = R * PW
-		// W = R` * V * PW
-
-		// V = VT * VR * VS * v
-		// VR = VS = I
-		// V = VT * v
-
-		// W = R` * VT * PW
-
-		return FTransform(IntersectionLocation); 
-	}
+	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override;
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override;
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
 

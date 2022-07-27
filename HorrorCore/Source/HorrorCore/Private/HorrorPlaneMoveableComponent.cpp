@@ -70,27 +70,29 @@ FTransform UHorrorAxisMovementComponent::ClampNewRelativeTransform(const FTransf
 
 FTransform UHorrorAxisMovementComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
 {
-	TArray<FHitResult> OutHits;
+	//TArray<FHitResult> OutHits;
 
-	FComponentQueryParams Params(SCENE_QUERY_STAT(MoveComponent), GetOwner());
-	FCollisionResponseParams ResponseParam;
-	InitSweepCollisionParams(Params, ResponseParam);
+	//FComponentQueryParams Params(SCENE_QUERY_STAT(MoveComponent), GetOwner());
+	//FCollisionResponseParams ResponseParam;
+	//InitSweepCollisionParams(Params, ResponseParam);
 
-	const UPrimitiveComponent* Primitive = this;
-	if (GetWorld()->ComponentSweepMulti(OutHits, const_cast<UPrimitiveComponent*>(Primitive), GetComponentLocation(), Transform.GetLocation(), Transform.GetRotation(), Params))
-	{
-		int a = 3;
-	}
+	//const UPrimitiveComponent* Primitive = this;
+	//if (GetWorld()->ComponentSweepMulti(OutHits, const_cast<UPrimitiveComponent*>(Primitive), GetComponentLocation(), Transform.GetLocation(), Transform.GetRotation(), Params))
+	//{
+	//	int a = 3;
+	//}
 
-	const FQuat& Quat = Transform.GetRotation();
-	const FVector& Scale = Transform.GetScale3D();
-	FVector Location = Transform.GetLocation();
+	//const FQuat& Quat = Transform.GetRotation();
+	//const FVector& Scale = Transform.GetScale3D();
+	//FVector Location = Transform.GetLocation();
 
-	for (const auto& Hit : OutHits)
-	{
-		Location -= Hit.ImpactNormal * Hit.Distance;
-	}
+	//for (const auto& Hit : OutHits)
+	//{
+	//	Location -= Hit.ImpactNormal * Hit.Distance;
+	//}
 
-	return FTransform(Quat, Location, Scale);
+	//return FTransform(Quat, Location, Scale);
+
+	return Transform;
 }
 
