@@ -10,19 +10,6 @@
 
 #include "DrawDebugHelpers.h"
 
-void UHorrorAxisRotationComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-
-	FRay Ray = GetNowMouseRay(PC);
-	//ApplyAxisMoveable(Ray.Origin, Ray.Direction);
-
-	if ( Key.IsValid() && !(PC->GetInputAnalogKeyState(Key) > 0.f))
-	{
-		SetComponentTickEnabled(false);
-	}
-}
-
 void UHorrorAxisRotationComponent::PreMoveable() 
 {
 }
@@ -49,8 +36,8 @@ void UHorrorAxisRotationComponent::SetFirstIntersectionPoint(const FHitResult& H
 void UHorrorAxisRotationComponent::ApplyMoving(const FVector& IntersectionLocation)
 {
 	FTransform NewRelativeTransform = GetNewVirtualTransform(IntersectionLocation);
-	NewRelativeTransform = ClampNewRelativeTransform(NewRelativeTransform);
-	NewRelativeTransform = AdjustNewRelativeTransform(NewRelativeTransform);
+	//NewRelativeTransform = ClampNewRelativeTransform(NewRelativeTransform);
+	//NewRelativeTransform = AdjustNewRelativeTransform(NewRelativeTransform);
 
 	SetRelativeTransform(NewRelativeTransform);
 }
@@ -65,6 +52,11 @@ FTransform UHorrorAxisRotationComponent::GetNewVirtualTransform(const FVector& I
 	const FQuat& Quat = FQuat(Axis, Rad);
 
 	return FTransform(Quat * OriginalRelativeTransform.GetRotation(), OriginalRelativeTransform.GetLocation(), OriginalRelativeTransform.GetScale3D());
+}
+
+FTransform UHorrorAxisRotationComponent::ClampNewRelativeTransform(const FTransform& Transform) const
+{
+	return Transform;
 }
 
 FTransform UHorrorAxisRotationComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
