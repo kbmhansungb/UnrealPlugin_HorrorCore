@@ -17,6 +17,7 @@ class HORRORCORE_API UHorrorAxisRotationComponent : public USceneComponent,
 
 public:
 
+
 	// IHorrorAxisMoveableInterface에서 상속됨
 protected:
 	virtual void PreMoveable() override;
@@ -25,10 +26,13 @@ protected:
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override;
 	// FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
 	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override;
-	virtual void ApplyMoving(const FVector& IntersectionLocation) override {}
+	virtual void ApplyMoving(const FVector& IntersectionLocation) override;
 
 	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override;
-	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
+	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override
+	{
+		return Transform;
+	}
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
 
 private:

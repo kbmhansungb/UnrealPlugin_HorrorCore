@@ -46,6 +46,15 @@ void UHorrorAxisRotationComponent::SetFirstIntersectionPoint(const FHitResult& H
 	OriginalRelativeTransform = GetRelativeTransform();
 }
 
+void UHorrorAxisRotationComponent::ApplyMoving(const FVector& IntersectionLocation)
+{
+	FTransform NewRelativeTransform = GetNewVirtualTransform(IntersectionLocation);
+	NewRelativeTransform = ClampNewRelativeTransform(NewRelativeTransform);
+	NewRelativeTransform = AdjustNewRelativeTransform(NewRelativeTransform);
+
+	SetRelativeTransform(NewRelativeTransform);
+}
+
 FTransform UHorrorAxisRotationComponent::GetNewVirtualTransform(const FVector& IntersectionLocation) const
 {
 	const FVector& VO = (FirstIntersectionPoint - GetComponentLocation()).GetSafeNormal();
