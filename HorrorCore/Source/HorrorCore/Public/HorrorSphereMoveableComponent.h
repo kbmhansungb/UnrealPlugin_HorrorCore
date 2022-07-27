@@ -50,7 +50,7 @@ protected:
 
 	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
-	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
+	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
 
 private:
 	float SphereRadius;
@@ -106,12 +106,6 @@ private:
 
 	//	//return Transform;
 	//}
-	//virtual FTransform AdjustTransform(const FTransform& Transform) const override
-	//{
-	//	return Transform;
-	//}
-
-
 
 private:
 	FKey Key;

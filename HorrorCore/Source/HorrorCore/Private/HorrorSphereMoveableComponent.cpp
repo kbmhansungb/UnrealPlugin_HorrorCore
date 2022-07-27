@@ -115,3 +115,8 @@ void UHorrorAxisRotationComponent::SetFirstIntersectionPoint(const FHitResult& H
 	SphereRadius = (HitLocation.Location - GetComponentLocation()).Size();
 }
 
+FTransform UHorrorAxisRotationComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
+{
+	return Transform;
+}
+
