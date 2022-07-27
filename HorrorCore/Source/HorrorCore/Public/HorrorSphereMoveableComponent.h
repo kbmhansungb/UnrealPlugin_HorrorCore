@@ -39,8 +39,8 @@ public:
 public:
 	virtual FRay GetNowMouseRay(APlayerController* PC);
 	
-protected:
 	// IHorrorAxisMoveableInterface에서 상속됨
+protected:
 	virtual void PreMoveable() override {}
 	virtual void PostMoveable() override {}
 

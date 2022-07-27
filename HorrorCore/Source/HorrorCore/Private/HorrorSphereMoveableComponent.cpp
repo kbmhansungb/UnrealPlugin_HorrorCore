@@ -94,3 +94,11 @@ FRay UHorrorAxisRotationComponent::GetNowMouseRay(APlayerController* PC)
 	return Ray;
 }
 
+void UHorrorAxisRotationComponent::PreMoveable() 
+{
+}
+
+void UHorrorAxisRotationComponent::PostMoveable() 
+{
+}
+
