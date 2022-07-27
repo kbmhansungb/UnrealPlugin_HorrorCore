@@ -10,17 +10,12 @@
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class HORRORCORE_API UHorrorAxisRotationComponent : public USceneComponent,
+class HORRORCORE_API UHorrorSphereMoveableComponent : public USceneComponent,
 	public IHorrorMoveableInterface
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D SwingLimit;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D TwistLimit;
 
 	// IHorrorAxisMoveableInterface에서 상속됨
 protected:

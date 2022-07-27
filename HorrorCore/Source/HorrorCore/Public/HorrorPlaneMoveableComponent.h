@@ -9,7 +9,7 @@
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class HORRORCORE_API UHorrorAxisMovementComponent : public UPrimitiveComponent,
+class HORRORCORE_API UHorrorPlaneMoveableComponent : public UPrimitiveComponent,
 	public IHorrorMoveableInterface
 {
 	GENERATED_BODY()

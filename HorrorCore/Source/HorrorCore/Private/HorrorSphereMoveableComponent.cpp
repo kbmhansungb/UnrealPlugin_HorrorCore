@@ -10,15 +10,15 @@
 
 #include "DrawDebugHelpers.h"
 
-void UHorrorAxisRotationComponent::PreMoveable() 
+void UHorrorSphereMoveableComponent::PreMoveable() 
 {
 }
 
-void UHorrorAxisRotationComponent::PostMoveable() 
+void UHorrorSphereMoveableComponent::PostMoveable() 
 {
 }
 
-FVector UHorrorAxisRotationComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const
+FVector UHorrorSphereMoveableComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const
 {
 	FVector Result;
 	FMath::SphereDistToLine(GetComponentLocation(), SphereRadius, Origin, Direction, Result);
@@ -26,14 +26,14 @@ FVector UHorrorAxisRotationComponent::GetIntersectionPoint(const FVector& Origin
 	return Result;
 }
 
-void UHorrorAxisRotationComponent::SetFirstIntersectionPoint(const FHitResult& HitLocation)
+void UHorrorSphereMoveableComponent::SetFirstIntersectionPoint(const FHitResult& HitLocation)
 {
 	SphereRadius = (HitLocation.Location - GetComponentLocation()).Size();
 	FirstIntersectionPoint = GetIntersectionPoint(HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal());
 	OriginalRelativeTransform = GetRelativeTransform();
 }
 
-void UHorrorAxisRotationComponent::ApplyMoving(const FVector& IntersectionLocation)
+void UHorrorSphereMoveableComponent::ApplyMoving(const FVector& IntersectionLocation)
 {
 	FTransform NewRelativeTransform = GetNewVirtualTransform(IntersectionLocation);
 	//NewRelativeTransform = ClampNewRelativeTransform(NewRelativeTransform);
@@ -42,7 +42,7 @@ void UHorrorAxisRotationComponent::ApplyMoving(const FVector& IntersectionLocati
 	SetRelativeTransform(NewRelativeTransform);
 }
 
-FTransform UHorrorAxisRotationComponent::GetNewVirtualTransform(const FVector& IntersectionLocation) const
+FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform(const FVector& IntersectionLocation) const
 {
 	const FVector& VO = (FirstIntersectionPoint - GetComponentLocation()).GetSafeNormal();
 	const FVector& V1 = (IntersectionLocation - GetComponentLocation()).GetSafeNormal();
@@ -54,12 +54,12 @@ FTransform UHorrorAxisRotationComponent::GetNewVirtualTransform(const FVector& I
 	return FTransform(Quat * OriginalRelativeTransform.GetRotation(), OriginalRelativeTransform.GetLocation(), OriginalRelativeTransform.GetScale3D());
 }
 
-FTransform UHorrorAxisRotationComponent::ClampNewRelativeTransform(const FTransform& Transform) const
+FTransform UHorrorSphereMoveableComponent::ClampNewRelativeTransform(const FTransform& Transform) const
 {
 	return Transform;
 }
 
-FTransform UHorrorAxisRotationComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
+FTransform UHorrorSphereMoveableComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
 {
 	return Transform;
 }

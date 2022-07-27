@@ -9,20 +9,20 @@
 
 // IHorrorAxisMoveableInterface에서 상속됨
 
-void UHorrorAxisMovementComponent::PreMoveable()
+void UHorrorPlaneMoveableComponent::PreMoveable()
 {
 }
 
-void UHorrorAxisMovementComponent::PostMoveable()
+void UHorrorPlaneMoveableComponent::PostMoveable()
 {
 }
 
-FVector UHorrorAxisMovementComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const
+FVector UHorrorPlaneMoveableComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const
 {
 	return FMath::RayPlaneIntersection(Origin, Direction, FPlane(GetComponentLocation(), GetUpVector()));
 }
 
-void UHorrorAxisMovementComponent::SetFirstIntersectionPoint(const FHitResult& HitLocation)
+void UHorrorPlaneMoveableComponent::SetFirstIntersectionPoint(const FHitResult& HitLocation)
 {
 	const FVector& FirstIntersectionPoint = GetIntersectionPoint(HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal());
 	const FTransform& NewVirtualTransform = GetNewVirtualTransform(FirstIntersectionPoint);
@@ -31,7 +31,7 @@ void UHorrorAxisMovementComponent::SetFirstIntersectionPoint(const FHitResult& H
 	VirtualRelativeTransform = UKismetMathLibrary::MakeRelativeTransform(GetRelativeTransform(), NewVirtualTransform);
 }
 
-void UHorrorAxisMovementComponent::ApplyMoving(const FVector& IntersectionLocation)
+void UHorrorPlaneMoveableComponent::ApplyMoving(const FVector& IntersectionLocation)
 {
 	// RT = RT` * V
 	FTransform ResultRelativeTransform = VirtualRelativeTransform * GetNewVirtualTransform(IntersectionLocation);
@@ -42,7 +42,7 @@ void UHorrorAxisMovementComponent::ApplyMoving(const FVector& IntersectionLocati
 	SetRelativeTransform(ResultRelativeTransform);
 }
 
-FTransform UHorrorAxisMovementComponent::GetNewVirtualTransform(const FVector& IntersectionLocation) const
+FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform(const FVector& IntersectionLocation) const
 {
 	// W = R * PW
 	// W = R` * V * PW
@@ -56,7 +56,7 @@ FTransform UHorrorAxisMovementComponent::GetNewVirtualTransform(const FVector& I
 	return FTransform(IntersectionLocation);
 }
 
-FTransform UHorrorAxisMovementComponent::ClampNewRelativeTransform(const FTransform& Transform) const
+FTransform UHorrorPlaneMoveableComponent::ClampNewRelativeTransform(const FTransform& Transform) const
 {
 	const FQuat& Quat = Transform.GetRotation();
 	const FVector& Scale = Transform.GetScale3D();
@@ -68,7 +68,7 @@ FTransform UHorrorAxisMovementComponent::ClampNewRelativeTransform(const FTransf
 	return FTransform( Quat, Location, Scale );
 }
 
-FTransform UHorrorAxisMovementComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
+FTransform UHorrorPlaneMoveableComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
 {
 	//TArray<FHitResult> OutHits;
 
