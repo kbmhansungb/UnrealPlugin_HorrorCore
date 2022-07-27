@@ -45,42 +45,23 @@ protected:
 	virtual void PostMoveable() override;
 
 	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override;
+	// FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
 	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) override {}
 
-	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
+	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override;
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
 
 private:
 	float SphereRadius;
+	FVector FirstIntersectionPoint;
+	FTransform OriginalRelativeTransform;
 
-	//virtual void PreAxisMoveable(const FHitResult& HitResult) override
-	//{
-	//	SphereRadius = (HitResult.Location - GetComponentLocation()).Size();
-	//	FirstClosestPoint = GetIntersectionPoint(HitResult.TraceStart, (HitResult.TraceEnd - HitResult.TraceStart).GetSafeNormal());
-	//	OriginalRelativeTransform = GetRelativeTransform();
-	//}
 	//virtual void ApplyAxisMoveable(const FVector& Origin, const FVector& Direction) override
 	//{
 	//	const FVector& OutClosestPoint = GetIntersectionPoint(Origin, Direction);
 	//	SetRelativeTransform(GetNewReleativeTransform(OutClosestPoint));
-	//}
-
-	//virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint) const override
-	//{
-	//	const FVector& VO = FirstClosestPoint.GetSafeNormal();
-	//	const FVector& V1 = (OutClosestPoint - GetComponentLocation()).GetSafeNormal();
-
-	//	// 개선할 수 있음.
-	//	const FVector& Axis = (VO ^ V1).GetSafeNormal();
-	//	const float& Rad = FMath::Acos(V1 | VO);
-	//	const FQuat& Quat = FQuat(Axis, Rad);
-
-	//	FTransform NewTransform = FTransform(Quat * OriginalRelativeTransform.GetRotation(), OriginalRelativeTransform.GetLocation(), OriginalRelativeTransform.GetScale3D());
-	//	NewTransform = AdjustTransform(NewTransform);
-	//	NewTransform = ClampTransform(NewTransform);
-	//	return NewTransform;
 	//}
 	//virtual FTransform ClampTransform(const FTransform& Transform) const override
 	//{
@@ -106,9 +87,4 @@ private:
 
 	//	//return Transform;
 	//}
-
-private:
-	FKey Key;
-	FVector FirstClosestPoint;
-	FTransform OriginalRelativeTransform;
 };
