@@ -41,16 +41,19 @@ public:
 	
 	// IHorrorAxisMoveableInterface에서 상속됨
 protected:
-	virtual void PreMoveable() override {}
-	virtual void PostMoveable() override {}
+	virtual void PreMoveable() override;
+	virtual void PostMoveable() override;
 
-	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override { return FVector(); }
-	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override {}
+	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override;
+	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override;
 	virtual void ApplyMoving(const FVector& IntersectionLocation) override {}
 
 	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override { return FTransform(); }
 	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
 	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override { return FTransform(); }
+
+private:
+	float SphereRadius;
 
 	//virtual void PreAxisMoveable(const FHitResult& HitResult) override
 	//{
@@ -62,17 +65,6 @@ protected:
 	//{
 	//	const FVector& OutClosestPoint = GetIntersectionPoint(Origin, Direction);
 	//	SetRelativeTransform(GetNewReleativeTransform(OutClosestPoint));
-	//}
-
-	//virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override
-	//{
-	//	FVector OutClosestPoint;
-
-	//	FMath::SphereDistToLine(GetComponentLocation(), SphereRadius, Origin, Direction, OutClosestPoint);
-	//	DrawDebugSphere(GetWorld(), FirstClosestPoint, 5.0f, 16, FColor::Blue);
-	//	DrawDebugSphere(GetWorld(), OutClosestPoint, 5.0f, 16, FColor::Green);
-
-	//	return OutClosestPoint;
 	//}
 
 	//virtual FTransform GetNewReleativeTransform(const FVector& OutClosestPoint) const override
@@ -123,7 +115,6 @@ protected:
 
 private:
 	FKey Key;
-	float SphereRadius;
 	FVector FirstClosestPoint;
 	FTransform OriginalRelativeTransform;
 };

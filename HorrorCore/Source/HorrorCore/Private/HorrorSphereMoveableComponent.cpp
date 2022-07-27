@@ -102,3 +102,16 @@ void UHorrorAxisRotationComponent::PostMoveable()
 {
 }
 
+FVector UHorrorAxisRotationComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const
+{
+	FVector Result;
+	FMath::SphereDistToLine(GetComponentLocation(), SphereRadius, Origin, Direction, Result);
+
+	return Result;
+}
+
+void UHorrorAxisRotationComponent::SetFirstIntersectionPoint(const FHitResult& HitLocation)
+{
+	SphereRadius = (HitLocation.Location - GetComponentLocation()).Size();
+}
+
