@@ -75,13 +75,13 @@ FTransform UHorrorPlaneMoveableComponent::AdjustNewRelativeTransform(const FTran
 	//FComponentQueryParams Params(SCENE_QUERY_STAT(MoveComponent), GetOwner());
 	//FCollisionResponseParams ResponseParam;
 	//InitSweepCollisionParams(Params, ResponseParam);
-
+	AActor
 	//const UPrimitiveComponent* Primitive = this;
-	//if (GetWorld()->ComponentSweepMulti(OutHits, const_cast<UPrimitiveComponent*>(Primitive), GetComponentLocation(), Transform.GetLocation(), Transform.GetRotation(), Params))
+	if (GetWorld()->ComponentSweepMulti(OutHits, const_cast<UPrimitiveComponent*>(Primitive), GetComponentLocation(), Transform.GetLocation(), Transform.GetRotation(), Params))
 	//{
 	//	int a = 3;
 	//}
-
+	
 	//const FQuat& Quat = Transform.GetRotation();
 	//const FVector& Scale = Transform.GetScale3D();
 	//FVector Location = Transform.GetLocation();
