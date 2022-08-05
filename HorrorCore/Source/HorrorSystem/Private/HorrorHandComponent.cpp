@@ -89,3 +89,45 @@ void UHorrorHandComponent::SetStart(const EHandType Type, const TScriptInterface
 
 	IHorrorHoldableInterface::Execute_SetHoldableTransform(Holdable.GetObject(), Transform);
 }
+
+const FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type) const
+{
+	switch (Type)
+	{
+	case EHandType::LEFT:
+		return &LeftHand;
+		break;
+	case EHandType::RIGHT:
+		return &RightHand;
+		break;
+	default:
+		check(false && "Need add case");
+		return nullptr;
+	}
+}
+
+FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type)
+{
+	switch (Type)
+	{
+	case EHandType::LEFT:
+		return &LeftHand;
+		break;
+	case EHandType::RIGHT:
+		return &RightHand;
+		break;
+	default:
+		check(false && "Need add case");
+		return nullptr;
+	}
+}
+
+const FHoldStruct& UHorrorHandComponent::GetRightStruct() const
+{
+	return RightHand;
+}
+
+const FHoldStruct& UHorrorHandComponent::GetLeftStruct() const
+{
+	return LeftHand;
+}

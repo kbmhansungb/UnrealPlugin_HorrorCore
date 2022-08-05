@@ -45,26 +45,7 @@ protected:
 public:
 	virtual bool IsDominanceHand_Implementation() const override;
 	virtual TScriptInterface<IHorrorHoldableInterface> GetHoldable_Implementation() const override;
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<EHandType> HandDominance = EHandType::RIGHT;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FHoldStruct RightHand = FHoldStruct(FVector(0.f, 20.f, 0.f));
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FHoldStruct LeftHand = FHoldStruct(FVector(0.f, -20.f, 0.f));
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector StartOffset = FVector(0.f, 0.f, -30.f);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float LerpSpeed = 5.0f;
-
-	FORCEINLINE const FHoldStruct* GetHoldStruct(const EHandType Type) const;
-	FORCEINLINE FHoldStruct* GetHoldStruct(const EHandType Type);
-
 public:
 	UFUNCTION(BlueprintCallable)
 	bool IsEmptyHand(const EHandType Type);
@@ -81,36 +62,27 @@ public:
 public:
 	void Lerp(float Deleta);
 	void SetStart(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable);
+	
+	const FHoldStruct* GetHoldStruct(const EHandType Type) const;
+	FHoldStruct* GetHoldStruct(const EHandType Type);
+
+	const FHoldStruct& GetRightStruct() const;
+	const FHoldStruct& GetLeftStruct() const;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<EHandType> HandDominance = EHandType::RIGHT;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FHoldStruct RightHand = FHoldStruct(FVector(0.f, 20.f, 0.f));
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FHoldStruct LeftHand = FHoldStruct(FVector(0.f, -20.f, 0.f));
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector StartOffset = FVector(0.f, 0.f, -30.f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float LerpSpeed = 5.0f;
 };
 
-FORCEINLINE const FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type) const
-{
-	switch (Type)
-	{
-	case EHandType::LEFT:
-		return &LeftHand;
-		break;
-	case EHandType::RIGHT:
-		return &RightHand;
-		break;
-	default:
-		check(false && "Need add case");
-		return nullptr;
-	}
-}
-
-FORCEINLINE FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type)
-{
-	switch (Type)
-	{
-	case EHandType::LEFT:
-		return &LeftHand;
-		break;
-	case EHandType::RIGHT:
-		return &RightHand;
-		break;
-	default:
-		check(false && "Need add case");
-		return nullptr;
-	}
-}
