@@ -39,11 +39,17 @@ bool UHorrorHandComponent::IsEmptyHand(const EHandType Type)
 	return GetHoldStruct(Type)->HoldItem.GetObject() == nullptr;
 }
 
-void UHorrorHandComponent::Hold(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable)
+bool UHorrorHandComponent::Hold(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable)
 {
-	GetHoldStruct(Type)->HoldItem = Holdable;
+	if (GetHoldStruct(Type)->HoldItem == nullptr)
+	{
+		GetHoldStruct(Type)->HoldItem = Holdable;
+		SetStart(Type, Holdable);
 
-	SetStart(Type, Holdable);
+		return true;
+	}
+
+	return false;
 }
 
 void UHorrorHandComponent::Swap()
@@ -69,7 +75,7 @@ void UHorrorHandComponent::Release(const EHandType Type)
 	HandStruct->HoldItem = nullptr;
 }
 
-void UHorrorHandComponent::Lerp(float Deleta)
+void UHorrorHandComponent::Lerp_Implementation(float Deleta)
 {
 	if (RightHand.HoldItem.GetObject())
 	{
@@ -89,3 +95,51 @@ void UHorrorHandComponent::SetStart(const EHandType Type, const TScriptInterface
 
 	IHorrorHoldableInterface::Execute_SetHoldableTransform(Holdable.GetObject(), Transform);
 }
+
+const FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type) const
+{
+	switch (Type)
+	{
+	case EHandType::LEFT:
+		return &LeftHand;
+		break;
+	case EHandType::RIGHT:
+		return &RightHand;
+		break;
+	default:
+		check(false && "Need add case");
+		return nullptr;
+	}
+}
+
+FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type)
+{
+	switch (Type)
+	{
+	case EHandType::LEFT:
+		return &LeftHand;
+		break;
+	case EHandType::RIGHT:
+		return &RightHand;
+		break;
+	default:
+		check(false && "Need add case");
+		return nullptr;
+	}
+}
+
+const FHoldStruct& UHorrorHandComponent::GetRightStruct() const
+{
+	return RightHand;
+}
+
+const FHoldStruct& UHorrorHandComponent::GetLeftStruct() const
+{
+	return LeftHand;
+}
+
+bool UHorrorHandComponent::CompareHoldedObject(IHorrorHoldableInterface* LeftObject, IHorrorHoldableInterface* RightObject) const
+{
+	return LeftHand.HoldItem == LeftObject && RightHand.HoldItem == RightObject;
+}
+
