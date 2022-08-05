@@ -8,7 +8,7 @@
 #include "HorrorHandComponent.generated.h"
 
 UENUM(BlueprintType)
-enum EHandType
+enum class EHandType : uint8
 {
 	RIGHT,
 	LEFT,
@@ -51,7 +51,7 @@ public:
 	bool IsEmptyHand(const EHandType Type);
 
 	UFUNCTION(BlueprintCallable)
-	void Hold(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable);
+	bool Hold(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable);
 
 	UFUNCTION(BlueprintCallable)
 	void Swap();
@@ -59,8 +59,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Release(const EHandType Type);
 
-public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Lerp(float Deleta);
+	virtual void Lerp_Implementation(float Deleta);
+
 	void SetStart(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable);
 	
 	const FHoldStruct* GetHoldStruct(const EHandType Type) const;
@@ -69,10 +71,13 @@ public:
 	const FHoldStruct& GetRightStruct() const;
 	const FHoldStruct& GetLeftStruct() const;
 
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<EHandType> HandDominance = EHandType::RIGHT;
+	bool CompareHoldedObject(IHorrorHoldableInterface* LeftObject, IHorrorHoldableInterface* RightObject) const;
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EHandType HandDominance = EHandType::RIGHT;
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHoldStruct RightHand = FHoldStruct(FVector(0.f, 20.f, 0.f));
 
