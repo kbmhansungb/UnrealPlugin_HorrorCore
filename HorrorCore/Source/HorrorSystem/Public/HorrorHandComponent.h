@@ -15,7 +15,7 @@ enum EHandType
 };
 
 USTRUCT(BlueprintType)
-struct FHoldStruct
+struct HORRORSYSTEM_API FHoldStruct
 {
 	GENERATED_BODY()
 
