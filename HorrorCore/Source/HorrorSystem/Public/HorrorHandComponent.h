@@ -74,6 +74,9 @@ public:
 	const FHoldStruct& GetRightStruct() const;
 	const FHoldStruct& GetLeftStruct() const;
 
+	FHoldStruct& GetRightStruct();
+	FHoldStruct& GetLeftStruct();
+
 	bool CompareHoldedObject(IHorrorHoldableInterface* LeftObject, IHorrorHoldableInterface* RightObject) const;
 
 public:

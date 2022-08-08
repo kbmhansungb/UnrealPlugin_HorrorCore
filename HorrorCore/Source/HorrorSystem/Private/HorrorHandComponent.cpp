@@ -112,10 +112,10 @@ const FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type) con
 	switch (Type)
 	{
 	case EHandType::LEFT:
-		return &LeftHand;
+		return &GetLeftStruct();
 		break;
 	case EHandType::RIGHT:
-		return &RightHand;
+		return &GetRightStruct();
 		break;
 	default:
 		check(false && "Need add case");
@@ -128,10 +128,10 @@ FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type)
 	switch (Type)
 	{
 	case EHandType::LEFT:
-		return &LeftHand;
+		return &GetLeftStruct();
 		break;
 	case EHandType::RIGHT:
-		return &RightHand;
+		return &GetRightStruct();
 		break;
 	default:
 		check(false && "Need add case");
@@ -145,6 +145,16 @@ const FHoldStruct& UHorrorHandComponent::GetRightStruct() const
 }
 
 const FHoldStruct& UHorrorHandComponent::GetLeftStruct() const
+{
+	return LeftHand;
+}
+
+FHoldStruct& UHorrorHandComponent::GetRightStruct()
+{
+	return RightHand;
+}
+
+FHoldStruct& UHorrorHandComponent::GetLeftStruct()
 {
 	return LeftHand;
 }
