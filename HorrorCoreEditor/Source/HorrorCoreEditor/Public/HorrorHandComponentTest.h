@@ -14,4 +14,18 @@ class HORRORCOREEDITOR_API UTestHorrorHoldableObject : public UObject,
 	GENERATED_BODY()
 
 public:
+	virtual void ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface);
+};
+
+
+UCLASS()
+class HORRORCOREEDITOR_API UTestHorrorHoldableHoldReleaseTestObject : public UObject,
+	public IHorrorHoldableInterface
+{
+	GENERATED_BODY()
+
+public:
+	bool IsReleased = false;
+
+	virtual void ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface);
 };

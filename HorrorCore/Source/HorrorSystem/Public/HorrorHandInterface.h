@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include <Engine/EngineTypes.h>
 #include "HorrorHandInterface.generated.h"
 
 class IHorrorHoldableInterface;
@@ -29,4 +30,8 @@ public:
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	TScriptInterface<IHorrorHoldableInterface> GetHoldable() const;
 	virtual TScriptInterface<IHorrorHoldableInterface> GetHoldable_Implementation() const;
+
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	void GetHoldablePutLocation(FHitResult& HitResult) const;
+	virtual void GetHoldablePutLocation_Implementation(FHitResult& HitResult) const = 0;
 };
