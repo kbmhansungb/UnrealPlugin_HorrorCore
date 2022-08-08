@@ -5,6 +5,17 @@
 #include <GameFramework/Actor.h>
 #include <Kismet/KismetMathLibrary.h>
 
+void FHoldStruct::ReleaseHoldItem(const TScriptInterface<IHorrorHandInterface>& HandInterface)
+{
+	if (!HoldItem)
+	{
+		return;
+	}
+
+	IHorrorHoldableInterface::Execute_ResponseReleaseHoldable(HoldItem.GetObject(), HandInterface);
+	HoldItem = nullptr;
+}
+
 UHorrorHandComponent::UHorrorHandComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -72,7 +83,7 @@ void UHorrorHandComponent::Swap()
 void UHorrorHandComponent::Release(const EHandType Type)
 {
 	FHoldStruct* HandStruct = GetHoldStruct(Type);
-	HandStruct->HoldItem = nullptr;
+	HandStruct->ReleaseHoldItem(this);
 }
 
 void UHorrorHandComponent::Lerp_Implementation(float Deleta)
@@ -142,4 +153,3 @@ bool UHorrorHandComponent::CompareHoldedObject(IHorrorHoldableInterface* LeftObj
 {
 	return LeftHand.HoldItem == LeftObject && RightHand.HoldItem == RightObject;
 }
-

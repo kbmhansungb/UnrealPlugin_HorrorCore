@@ -28,6 +28,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TScriptInterface<IHorrorHoldableInterface> HoldItem;
+
+public:
+	void ReleaseHoldItem(const TScriptInterface<IHorrorHandInterface>& HandInterface);
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
