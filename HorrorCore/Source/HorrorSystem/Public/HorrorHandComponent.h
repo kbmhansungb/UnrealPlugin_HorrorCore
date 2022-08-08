@@ -62,12 +62,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Release(const EHandType Type);
 
+	virtual void GetHoldablePutLocation_Implementation(FHitResult& HitResult) const;
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Lerp(float Deleta);
 	virtual void Lerp_Implementation(float Deleta);
 
 	void SetStart(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable);
-	
+
 	const FHoldStruct* GetHoldStruct(const EHandType Type) const;
 	FHoldStruct* GetHoldStruct(const EHandType Type);
 
@@ -95,5 +97,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float LerpSpeed = 5.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float HandLength = 300.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<ETraceTypeQuery> TraceType;
 };
 

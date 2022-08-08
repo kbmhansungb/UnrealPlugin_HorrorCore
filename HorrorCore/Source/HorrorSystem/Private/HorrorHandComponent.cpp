@@ -4,15 +4,21 @@
 #include "HorrorHoldableInterface.h"
 #include <GameFramework/Actor.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Kismet/KismetSystemLibrary.h>
+#include <Kismet/GameplayStatics.h>
 
 void FHoldStruct::ReleaseHoldItem(const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
-	if (!HoldItem)
+	if (!HoldItem.GetObject())
 	{
 		return;
 	}
 
-	IHorrorHoldableInterface::Execute_ResponseReleaseHoldable(HoldItem.GetObject(), HandInterface);
+	if (HoldItem.GetObject()->GetClass()->ImplementsInterface(UHorrorHoldableInterface::StaticClass()))
+	{
+		IHorrorHoldableInterface::Execute_ResponseReleaseHoldable(HoldItem.GetObject(), HandInterface);
+	}
+
 	HoldItem = nullptr;
 }
 
@@ -84,6 +90,24 @@ void UHorrorHandComponent::Release(const EHandType Type)
 {
 	FHoldStruct* HandStruct = GetHoldStruct(Type);
 	HandStruct->ReleaseHoldItem(this);
+}
+
+void UHorrorHandComponent::GetHoldablePutLocation_Implementation(FHitResult& HitResult) const
+{
+	HitResult = FHitResult();
+
+	const FVector& Position = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetCameraLocation();
+	const FVector& Forward = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetActorForwardVector();
+
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
+	{
+		return;
+	}
+
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + -Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
+	{
+		return;
+	}
 }
 
 void UHorrorHandComponent::Lerp_Implementation(float Deleta)
