@@ -47,5 +47,5 @@ public:
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void ResponseReleaseHoldable(const TScriptInterface<IHorrorHandInterface>& HandInterface);
-	virtual void ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) {};
+	virtual void ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) = 0;
 };
