@@ -165,7 +165,7 @@ bool FHorror2DInventoryStruct::TryTakeItem(const FIntPoint& Index, TScriptInterf
 	return true;
 }
 
-bool FHorror2DInventoryStruct::TryTakeItemActor(UObject* Outer, const FIntPoint& Index, TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface)
+bool FHorror2DInventoryStruct::TryTakeItemActor(UObject* Outer, const FTransform& Transform, const FIntPoint& Index, TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface)
 {
 	TScriptInterface<IHorrorItemInterface> ItemInterface;
 	bool Result = TryTakeItem(Index, ItemInterface);
@@ -179,7 +179,7 @@ bool FHorror2DInventoryStruct::TryTakeItemActor(UObject* Outer, const FIntPoint&
 	TSubclassOf<AActor> ActorClass;
 	IHorrorItemInterface::Execute_GetItemActorClass(ItemInterface.GetObject(), ActorClass);
 
-	AActor* Actor = Outer->GetWorld()->SpawnActor(ActorClass);
+	AActor* Actor = Outer->GetWorld()->SpawnActor(ActorClass, &Transform);
 	if (!Actor)
 	{
 		return false;

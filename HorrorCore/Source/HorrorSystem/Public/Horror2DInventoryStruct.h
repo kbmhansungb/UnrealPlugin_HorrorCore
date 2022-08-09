@@ -60,7 +60,7 @@ private:
 public:
 	bool IsTakable(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const;
 	bool TryTakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& Iteminterface);
-	bool TryTakeItemActor(UObject* Outer, const FIntPoint& Index, TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface);
+	bool TryTakeItemActor(UObject* Outer, const FTransform& Transform, const FIntPoint& Index, TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface);
 private:
 	void TakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& ItemType);
 

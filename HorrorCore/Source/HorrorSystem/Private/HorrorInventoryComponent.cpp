@@ -54,7 +54,7 @@ bool UHorrorInventoryComponent::IsTakable_Implementation(FIntPoint Index, TScrip
 
 bool UHorrorInventoryComponent::TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor)
 {
-	return Inventory.TryTakeItemActor(this, Index, ItemActor);
+	return Inventory.TryTakeItemActor(this, this->GetComponentTransform(), Index, ItemActor);
 }
 
 void UHorrorInventoryComponent::GetInventorySize_Implementation(FIntSize2D& InventorySize) const
