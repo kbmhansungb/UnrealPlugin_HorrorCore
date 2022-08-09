@@ -6,8 +6,8 @@
 * HorrorEvent는 공포게임에서 사용될 Event를 가지고 있습니다. 
 * HorrorSystem은 보다 게임 플레이에 가까운, 인벤토리, 플레이어가 게임에서 상호작용을 하는 HorrorHandComponent등 을 구현합니다.
 
-* 접두사로 Horror를 이용합니다.
-* 접미사 Editor는 테스트와 같이, Editor에서만 존재해야 하는 코드 및 애셋이 존재합니다.
+- 접두사로 Horror를 이용합니다.
+- 접미사 Editor는 테스트와 같이, Editor에서만 존재해야 하는 코드 및 애셋이 존재합니다.
 
 # 설치
 
