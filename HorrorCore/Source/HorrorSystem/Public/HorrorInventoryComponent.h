@@ -31,9 +31,9 @@ public:
 	// IHorrorInventoryInterface에서 상속함
 public:
 	virtual bool IsStorable_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const override;
-	virtual bool StoreItem_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) override;
+	virtual bool StoreItem_Implementation(const TScriptInterface<IHorrorItemActorInterface>& ItemActor, FIntPoint Index) override;
 	virtual bool IsTakable_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const override;
-	virtual bool TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) override;
+	virtual bool TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor) override;
 	virtual void GetInventorySize_Implementation(FIntSize2D& InventorySize) const override;
 	
 protected:

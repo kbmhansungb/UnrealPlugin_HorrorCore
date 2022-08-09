@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "HorrorItemInterface.h"
+#include "HorrorItemActorInterface.h"
+#include "Engine/World.h"
 #include "Horror2DInventoryStruct.generated.h"
 
 USTRUCT(BlueprintType)
@@ -51,12 +53,14 @@ public:
 public:
 	bool IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index) const;
 	bool TryStoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index);
+	bool TryStoreItemActor(const TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface, const FIntPoint& Index);
 private:
 	void StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index);
 
 public:
 	bool IsTakable(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const;
 	bool TryTakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& Iteminterface);
+	bool TryTakeItemActor(UObject* Outer, const FIntPoint& Index, TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface);
 private:
 	void TakeItem(const FIntPoint& Index, TScriptInterface<IHorrorItemInterface>& ItemType);
 
