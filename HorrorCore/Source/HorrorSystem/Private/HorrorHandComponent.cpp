@@ -89,7 +89,10 @@ void UHorrorHandComponent::Swap()
 void UHorrorHandComponent::Release(const EHandType Type)
 {
 	FHoldStruct* HandStruct = GetHoldStruct(Type);
-	HandStruct->ReleaseHoldItem(this);
+	if (HandStruct)
+	{
+		HandStruct->ReleaseHoldItem(this);
+	}
 }
 
 void UHorrorHandComponent::GetHoldablePutLocation_Implementation(FHitResult& HitResult) const
