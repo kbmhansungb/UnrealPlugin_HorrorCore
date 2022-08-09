@@ -7,7 +7,7 @@
 #include "Widget_ItemSlot.generated.h"
 
 class UImage;
-class IHorrorInventoryInterface;
+class IHorrorItemInterface;
 class UWidget_ItemList;
 
 /**
@@ -30,4 +30,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Meta = (BindWidget))
 	UImage* Icon;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	TScriptInterface<IHorrorItemActorInterface> GetItemInterface(bool& IsHold)  const;
+	virtual TScriptInterface<IHorrorItemActorInterface> GetItemInterface_Implementation(bool& IsHold) const;
+
+
 };
