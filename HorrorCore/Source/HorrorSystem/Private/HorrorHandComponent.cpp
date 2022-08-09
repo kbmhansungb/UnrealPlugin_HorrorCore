@@ -41,11 +41,6 @@ void UHorrorHandComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Lerp(DeltaTime);
 }
 
-bool UHorrorHandComponent::IsDominanceHand_Implementation() const
-{
-	return true;
-}
-
 TScriptInterface<IHorrorHoldableInterface> UHorrorHandComponent::GetHoldable_Implementation() const
 {
 	return GetHoldStruct(HandDominance)->HoldItem;

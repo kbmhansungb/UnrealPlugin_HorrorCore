@@ -24,12 +24,8 @@ class HORRORSYSTEM_API IHorrorHandInterface
 
 public:
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	bool IsDominanceHand() const;
-	virtual bool IsDominanceHand_Implementation() const { return false; }
-
-	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	TScriptInterface<IHorrorHoldableInterface> GetHoldable() const;
-	virtual TScriptInterface<IHorrorHoldableInterface> GetHoldable_Implementation() const;
+	virtual TScriptInterface<IHorrorHoldableInterface> GetHoldable_Implementation() const = 0;
 
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void GetHoldablePutLocation(FHitResult& HitResult) const;
