@@ -37,27 +37,27 @@ void UHorrorInventoryComponent::InitWidget()
 	}
 }
 
-bool UHorrorInventoryComponent::IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const
+bool UHorrorInventoryComponent::IsStorable_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const
 {
 	return Inventory.IsStorable(Iteminterface, Index);
 }
 
-bool UHorrorInventoryComponent::StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index)
+bool UHorrorInventoryComponent::StoreItem_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index)
 {
 	return Inventory.TryStoreItem(Iteminterface, Index);
 }
 
-bool UHorrorInventoryComponent::IsTakable(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
+bool UHorrorInventoryComponent::IsTakable_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
 {
 	return Inventory.IsTakable(Index, Iteminterface);;
 }
 
-bool UHorrorInventoryComponent::TakeItem(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface)
+bool UHorrorInventoryComponent::TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface)
 {
 	return Inventory.TryTakeItem(Index, Iteminterface);
 }
 
-const FIntSize2D& UHorrorInventoryComponent::GetInventorySize() const
+void UHorrorInventoryComponent::GetInventorySize_Implementation(FIntSize2D& InventorySize) const
 {
-	return Inventory.InventorySize;
+	InventorySize = Inventory.InventorySize;
 }

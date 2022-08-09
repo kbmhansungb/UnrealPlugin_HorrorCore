@@ -36,9 +36,9 @@ public:
 
 	// IHorrorItemInterface에서 상속됨
 public:
-	virtual const FName& GetItemName() const override { return Name; }
-	virtual int32 GetItemMaxStack() const override { return StackSize; }
-	virtual const TSubclassOf<AActor>& GetItemActorClass() const override { return ActorClass; }
-	virtual const FIntSize2D& GetIconSize() const override { return Size; }
-	virtual const FSlateBrush& GetIconBrush() const override { return IconBrush; }
+	virtual void GetItemName_Implementation(FName& ItemName) const override;
+	virtual int32 GetItemMaxStack_Implementation() const override;
+	virtual void GetItemActorClass_Implementation(TSubclassOf<AActor>& ItemActorClass) const override;
+	virtual void GetIconSize_Implementation(FIntSize2D& ItemIntSize) const override;
+	virtual void GetIconBrush_Implementation(FSlateBrush& ItemIcon) const override;
 };
