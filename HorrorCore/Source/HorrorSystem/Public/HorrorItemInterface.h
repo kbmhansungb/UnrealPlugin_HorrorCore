@@ -11,7 +11,7 @@
 #include "HorrorItemInterface.generated.h"
 
 USTRUCT(BlueprintType)
-struct FIntSize2D
+struct HORRORSYSTEM_API FIntSize2D
 {
 	GENERATED_BODY()
 
@@ -26,21 +26,11 @@ public:
 	int32 Y;
 
 public:
-	FORCEINLINE bool operator == (const FIntSize2D& Other) const
-	{
-		return (X == Other.X) && (Y == Other.Y);
-	}
-
-	FORCEINLINE bool operator != (const FIntSize2D& Other) const
-	{
-		return (X != Other.X) || (Y != Other.Y);
-	}
+	bool operator == (const FIntSize2D& Other) const;
+	bool operator != (const FIntSize2D& Other) const;
 };
 
-FORCEINLINE FIntPoint operator+(const FIntPoint& Point, const FIntSize2D& Size)
-{
-	return FIntPoint(Point.X + Size.X, Point.Y + Size.Y);
-}
+FIntPoint operator+(const FIntPoint& Point, const FIntSize2D& Size);
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, BlueprintType)
@@ -60,14 +50,26 @@ public:
 	virtual AActor* SpawnItemActor(AActor* ContextObject, const FTransform& Transform, bool bNoCollisionFail = false, AActor* Owner = nullptr) const;
 
 public:
-	virtual const FName& GetItemName() const = 0;
-	virtual int32 GetItemMaxStack() const = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void GetItemName(FName& ItemName) const;
+	virtual void GetItemName_Implementation(FName& ItemName) const = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	int32 GetItemMaxStack() const;
+	virtual int32 GetItemMaxStack_Implementation() const = 0;
 
 	// 유효하면 아이템으로 스폰될 수 있는 아이템이고 그렇지 않으면 스폰될 수 없는 아이템입니다.
-	virtual const TSubclassOf<AActor>& GetItemActorClass() const = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void GetItemActorClass(TSubclassOf<AActor>& ItemActorClass) const;
+	virtual void GetItemActorClass_Implementation(TSubclassOf<AActor>& ItemActorClass) const = 0;
 
-	virtual const FIntSize2D& GetIconSize() const = 0;
-	virtual const FSlateBrush& GetIconBrush() const = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void GetIconSize(FIntSize2D& ItemIntSize) const;
+	virtual void GetIconSize_Implementation(FIntSize2D& ItemIntSize) const = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void GetIconBrush(FSlateBrush& ItemIcon) const;
+	virtual void GetIconBrush_Implementation(FSlateBrush& ItemIcon) const = 0;
 };
 
 
@@ -75,7 +77,7 @@ public:
  *
  */
 USTRUCT(BlueprintType)
-struct FHorrorItemBundle
+struct HORRORSYSTEM_API FHorrorItemBundle
 {
 	GENERATED_BODY()
 
@@ -92,34 +94,9 @@ public:
 	int32 Count;
 
 public:
-	inline void PutIn();
-	inline void TakeOut();
-	inline bool IsEmpty() const;
-	inline bool CanTakeOut() const;
-	inline bool CanPutIn() const;
+	void PutIn();
+	void TakeOut();
+	bool IsEmpty() const;
+	bool CanTakeOut() const;
+	bool CanPutIn() const;
 };
-
-inline void FHorrorItemBundle::PutIn()
-{
-	Count += 1;
-}
-
-inline void FHorrorItemBundle::TakeOut()
-{
-	Count -= 1;
-}
-
-inline bool FHorrorItemBundle::IsEmpty() const
-{
-	return 0 == Count;
-}
-
-inline bool FHorrorItemBundle::CanTakeOut() const
-{
-	return Count > 0;
-}
-
-inline bool FHorrorItemBundle::CanPutIn() const
-{
-	return TypeInterface->GetItemMaxStack() > Count;
-}
