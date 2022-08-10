@@ -12,9 +12,9 @@ UHorrorInventoryComponent::UHorrorInventoryComponent()
 	Space = EWidgetSpace::World;
 }
 
-void UHorrorInventoryComponent::SetWidget(UUserWidget* Widget)
+void UHorrorInventoryComponent::SetWidget(UUserWidget* NewWidget)
 {
-	Super::SetWidget(Widget);
+	Super::SetWidget(NewWidget);
 	InternalInitWidget();
 }
 

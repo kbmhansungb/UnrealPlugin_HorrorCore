@@ -20,7 +20,7 @@ class HORRORSYSTEM_API UHorrorInventoryComponent : public UWidgetComponent,
 
 public:	
 	UHorrorInventoryComponent();
-	virtual void SetWidget(UUserWidget* Widget) override;
+	virtual void SetWidget(UUserWidget* NewWidget) override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
