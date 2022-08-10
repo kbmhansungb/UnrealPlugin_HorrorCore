@@ -23,15 +23,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FHorror2DInventoryStruct Inventory;
-	
-public:
-	UPROPERTY(BlueprintAssignable)
-	FInventoryChangedDelegate InventoryChangedDelegate;
-
-public:
 	virtual void InitWidget() override;
 
 	// IHorrorInventoryInterface에서 상속함
@@ -42,6 +33,13 @@ public:
 	virtual bool TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor) override;
 	virtual void GetInventorySize_Implementation(FIntSize2D& InventorySize) const override;
 	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FInventoryChangedDelegate InventoryChangedDelegate;
+	
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FHorror2DInventoryStruct Inventory;
+
 	UInventoryWidget* InventoryWidget = nullptr;
 };
