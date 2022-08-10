@@ -40,7 +40,7 @@ public class HorrorSystem : ModuleRules
 				"Slate",
 				"SlateCore",
 				// ... add private dependencies that you statically link with here ...
-				"UMG"
+				"UMG",
 			}
 			);
 		
