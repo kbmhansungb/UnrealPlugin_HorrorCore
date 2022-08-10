@@ -46,6 +46,10 @@ public class HorrorCoreEditor : ModuleRules
 				"HorrorEvent",
 				"HorrorSystem",
 
+				"UMG",
+				"MovieScene",
+				"LevelSequence",
+				"ActorSequence",
 			}
 			);
 		
