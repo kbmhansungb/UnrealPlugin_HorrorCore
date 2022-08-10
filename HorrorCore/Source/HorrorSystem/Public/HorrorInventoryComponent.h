@@ -20,6 +20,7 @@ class HORRORSYSTEM_API UHorrorInventoryComponent : public UWidgetComponent,
 
 public:	
 	UHorrorInventoryComponent();
+	virtual void SetWidget(UUserWidget* Widget) override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -33,6 +34,9 @@ public:
 	virtual bool TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor) override;
 	virtual void GetInventorySize_Implementation(FIntSize2D& InventorySize) const override;
 	
+private:
+	void InternalInitWidget();
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FInventoryChangedDelegate InventoryChangedDelegate;
@@ -40,6 +44,4 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHorror2DInventoryStruct Inventory;
-
-	UInventoryWidget* InventoryWidget = nullptr;
 };

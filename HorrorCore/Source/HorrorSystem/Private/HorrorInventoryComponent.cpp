@@ -12,6 +12,12 @@ UHorrorInventoryComponent::UHorrorInventoryComponent()
 	Space = EWidgetSpace::World;
 }
 
+void UHorrorInventoryComponent::SetWidget(UUserWidget* Widget)
+{
+	Super::SetWidget(Widget);
+	InternalInitWidget();
+}
+
 void UHorrorInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -25,16 +31,7 @@ void UHorrorInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 void UHorrorInventoryComponent::InitWidget()
 {
 	UWidgetComponent::InitWidget();
-
-	InventoryWidget = Cast<UInventoryWidget>(GetWidget());
-	if (InventoryWidget)
-	{
-		InventoryWidget->Inventory = this;
-	}
-	else
-	{
-		UE_LOG(HorrorEventLog, Error, TEXT("Cannot cast to UInventoryWidget."));
-	}
+	InternalInitWidget();
 }
 
 bool UHorrorInventoryComponent::IsStorable_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const
@@ -44,6 +41,11 @@ bool UHorrorInventoryComponent::IsStorable_Implementation(const TScriptInterface
 
 bool UHorrorInventoryComponent::StoreItem_Implementation(const TScriptInterface<IHorrorItemActorInterface>& ItemActor, FIntPoint Index)
 {
+	if (!ItemActor.GetObject())
+	{
+		return false;
+	}
+
 	bool Result = Inventory.TryStoreItemActor(ItemActor, Index);
 	
 	if (Result)
@@ -74,4 +76,17 @@ bool UHorrorInventoryComponent::TakeItem_Implementation(FIntPoint Index, TScript
 void UHorrorInventoryComponent::GetInventorySize_Implementation(FIntSize2D& InventorySize) const
 {
 	InventorySize = Inventory.InventorySize;
+}
+
+void UHorrorInventoryComponent::InternalInitWidget()
+{
+	UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(GetWidget());
+	if (InventoryWidget)
+	{
+		InventoryWidget->Inventory = this;
+	}
+	else
+	{
+		UE_LOG(HorrorEventLog, Error, TEXT("Cannot cast to UInventoryWidget."));
+	}
 }
