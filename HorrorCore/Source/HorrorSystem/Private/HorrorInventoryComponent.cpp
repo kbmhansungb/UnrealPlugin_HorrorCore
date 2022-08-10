@@ -24,7 +24,7 @@ void UHorrorInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void UHorrorInventoryComponent::InitWidget()
 {
-	Super::InitWidget();
+	UWidgetComponent::InitWidget();
 
 	InventoryWidget = Cast<UWidget_Inventory>(GetWidget());
 	if (InventoryWidget)
@@ -42,9 +42,9 @@ bool UHorrorInventoryComponent::IsStorable_Implementation(const TScriptInterface
 	return Inventory.IsStorable(Iteminterface, Index);
 }
 
-bool UHorrorInventoryComponent::StoreItem_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index)
+bool UHorrorInventoryComponent::StoreItem_Implementation(const TScriptInterface<IHorrorItemActorInterface>& ItemActor, FIntPoint Index)
 {
-	return Inventory.TryStoreItem(Iteminterface, Index);
+	return Inventory.TryStoreItemActor(ItemActor, Index);
 }
 
 bool UHorrorInventoryComponent::IsTakable_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
@@ -52,9 +52,9 @@ bool UHorrorInventoryComponent::IsTakable_Implementation(FIntPoint Index, TScrip
 	return Inventory.IsTakable(Index, Iteminterface);;
 }
 
-bool UHorrorInventoryComponent::TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface)
+bool UHorrorInventoryComponent::TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor)
 {
-	return Inventory.TryTakeItem(Index, Iteminterface);
+	return Inventory.TryTakeItemActor(this, this->GetComponentTransform(), Index, ItemActor);
 }
 
 void UHorrorInventoryComponent::GetInventorySize_Implementation(FIntSize2D& InventorySize) const

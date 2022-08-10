@@ -1,4 +1,5 @@
 // 2022 06    Bum moo, Kim    Free copyright
 
+#pragma once
 
-#include "HorrorHandInterface.h"
+#include "CoreMinimal.h"

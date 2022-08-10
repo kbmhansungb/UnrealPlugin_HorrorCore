@@ -106,6 +106,21 @@ bool FHorror2DInventoryStruct::TryStoreItem(const TScriptInterface<IHorrorItemIn
 	return true;
 }
 
+bool FHorror2DInventoryStruct::TryStoreItemActor(const TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface, const FIntPoint& Index)
+{
+	bool Result = TryStoreItem(IHorrorItemActorInterface::Execute_GetItemInterface(ItemActorInterface.GetObject()), Index);
+
+	if (Result)
+	{
+		if (AActor* Actor = Cast<AActor>(ItemActorInterface.GetObject()))
+		{
+			Actor->Destroy();
+		}
+	}
+
+	return Result;
+}
+
 void FHorror2DInventoryStruct::StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index)
 {
 	FHorrorItem2DInventoryData* ItemBundle = GetItemStackPtr(Index);
@@ -147,6 +162,30 @@ bool FHorror2DInventoryStruct::TryTakeItem(const FIntPoint& Index, TScriptInterf
 
 	TakeItem(Index, Iteminterface);
 
+	return true;
+}
+
+bool FHorror2DInventoryStruct::TryTakeItemActor(UObject* Outer, const FTransform& Transform, const FIntPoint& Index, TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface)
+{
+	TScriptInterface<IHorrorItemInterface> ItemInterface;
+	bool Result = TryTakeItem(Index, ItemInterface);
+
+	if (!Result)
+	{
+		ItemActorInterface = TScriptInterface<IHorrorItemActorInterface>();
+		return false;
+	}
+
+	TSubclassOf<AActor> ActorClass;
+	IHorrorItemInterface::Execute_GetItemActorClass(ItemInterface.GetObject(), ActorClass);
+
+	AActor* Actor = Outer->GetWorld()->SpawnActor(ActorClass, &Transform);
+	if (!Actor)
+	{
+		return false;
+	}
+
+	ItemActorInterface = Actor;
 	return true;
 }
 

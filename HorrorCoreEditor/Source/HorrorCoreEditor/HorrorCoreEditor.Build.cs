@@ -45,6 +45,7 @@ public class HorrorCoreEditor : ModuleRules
 				"HorrorCore",
 				"HorrorEvent",
 				"HorrorSystem",
+
 			}
 			);
 		

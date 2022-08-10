@@ -41,11 +41,6 @@ void UHorrorHandComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Lerp(DeltaTime);
 }
 
-bool UHorrorHandComponent::IsDominanceHand_Implementation() const
-{
-	return true;
-}
-
 TScriptInterface<IHorrorHoldableInterface> UHorrorHandComponent::GetHoldable_Implementation() const
 {
 	return GetHoldStruct(HandDominance)->HoldItem;
@@ -89,7 +84,10 @@ void UHorrorHandComponent::Swap()
 void UHorrorHandComponent::Release(const EHandType Type)
 {
 	FHoldStruct* HandStruct = GetHoldStruct(Type);
-	HandStruct->ReleaseHoldItem(this);
+	if (HandStruct)
+	{
+		HandStruct->ReleaseHoldItem(this);
+	}
 }
 
 void UHorrorHandComponent::GetHoldablePutLocation_Implementation(FHitResult& HitResult) const
