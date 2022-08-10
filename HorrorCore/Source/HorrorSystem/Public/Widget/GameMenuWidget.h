@@ -34,5 +34,5 @@ public:
 
 protected:
 	UPROPERTY(Meta = (BindWidget))
-	UOptionWidget* Option;
+	UOptionWidget* OptionWidget;
 };
