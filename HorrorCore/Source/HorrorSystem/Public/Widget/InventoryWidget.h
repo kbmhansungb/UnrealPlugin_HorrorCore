@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Widget_Inventory.generated.h"
+#include "InventoryWidget.generated.h"
 
 class UCanvasPanel;
-class UWidget_ItemList;
+class UItemListWidget;
 class IHorrorInventoryInterface;
 
 /**
  * 
  */
 UCLASS(Abstract)
-class HORRORSYSTEM_API UWidget_Inventory : public UUserWidget
+class HORRORSYSTEM_API UInventoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -23,7 +23,7 @@ public:
 	TScriptInterface<IHorrorInventoryInterface> Inventory;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UWidget_ItemList* ItemList;
+	UItemListWidget* ItemList;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UCanvasPanel* MainCanvas;

@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Widget_MainMenu.generated.h"
+#include "MainMenuWidget.generated.h"
 
 class UButton;
-class UWidget_Option;
+class UOptionWidget;
 
 /**
  * 
  */
 UCLASS()
-class HORRORSYSTEM_API UWidget_MainMenu : public UUserWidget
+class HORRORSYSTEM_API UMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
@@ -47,7 +47,7 @@ protected:
 	UButton* QuitButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	UWidget_Option* OptionWidget;
+	UOptionWidget* OptionWidget;
 
     UPROPERTY(Meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* ActiveAnimation;

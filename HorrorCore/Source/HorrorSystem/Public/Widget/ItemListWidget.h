@@ -6,14 +6,14 @@
 #include "UObject/NoExportTypes.h"
 #include "Blueprint/UserWidget.h"
 #include "HorrorItemInterface.h"
-#include "Widget_ItemList.generated.h"
+#include "ItemListWidget.generated.h"
 
 class IHorrorInventoryInterface;
 class UImage;
-class UWidget_ItemSlot;
+class UItemSlotWidget;
 class UCanvasPanel;
 class UTextureRenderTarget2D;
-class UWidget_Inventory;
+class UInventoryWidget;
 
 USTRUCT(BlueprintType)
 struct FItemSlotForm
@@ -22,26 +22,26 @@ struct FItemSlotForm
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UWidget_ItemSlot> Class;
+	TSubclassOf<UItemSlotWidget> Class;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SquareSize = 90;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float Padding;
+	float Padding;
 };
 
 /**
  * 
  */
 UCLASS(Abstract)
-class HORRORSYSTEM_API UWidget_ItemList : public UUserWidget
+class HORRORSYSTEM_API UItemListWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
-	UWidget_Inventory* Inventory;
+	UInventoryWidget* Inventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIntSize2D ItemListSize{1, 1};
@@ -59,7 +59,7 @@ public:
     UWidgetAnimation* ActiveAnimation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UWidget_ItemSlot*> ItemSlots;
+	TArray<UItemSlotWidget*> ItemSlots;
 
 public:
 	UFUNCTION(BlueprintCallable)

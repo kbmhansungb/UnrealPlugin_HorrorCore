@@ -4,24 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Widget_ItemWidget.generated.h"
+#include "ItemWidget.generated.h"
 
 class UImage;
 class IHorrorInventoryInterface;
 class IHorrorItemInterface;
-class UWidget_Inventory;
+class UInventoryWidget;
 
 /**
  * 
  */
 UCLASS()
-class HORRORSYSTEM_API UWidget_ItemWidget : public UUserWidget
+class HORRORSYSTEM_API UItemWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
-	UWidget_Inventory* Inventory;
+	UInventoryWidget* Inventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
 	FIntPoint Index;

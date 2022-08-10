@@ -1,7 +1,7 @@
 // 2022 06    Bum moo, Kim    Free copyright
 
 
-#include "Widget_ItemSlot.h"
+#include "Widget/ItemSlotWidget.h"
 #include <Kismet/GameplayStatics.h>
 #include <GameFramework/PlayerController.h>
 #include <GameFramework/Pawn.h>
@@ -9,7 +9,7 @@
 #include <HorrorItemInterface.h>
 #include <HorrorItemActorInterface.h>
 
-TScriptInterface<IHorrorItemActorInterface> UWidget_ItemSlot::GetItemInterface_Implementation(bool& IsHold) const
+TScriptInterface<IHorrorItemActorInterface> UItemSlotWidget::GetItemInterface_Implementation(bool& IsHold) const
 {
 	UHorrorHandComponent* HandComponent = Cast<UHorrorHandComponent>(UGameplayStatics::GetPlayerController(this, 0)->GetPawn()->GetComponentByClass(UHorrorHandComponent::StaticClass()));
 	

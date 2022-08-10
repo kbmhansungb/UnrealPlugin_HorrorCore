@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Widget_GamePlayHUD.generated.h"
+#include "GamePlayHUDWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class HORRORSYSTEM_API UWidget_GamePlayHUD : public UUserWidget
+class HORRORSYSTEM_API UGamePlayHUDWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

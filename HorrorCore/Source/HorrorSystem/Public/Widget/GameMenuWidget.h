@@ -4,38 +4,35 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Widget_Option.generated.h"
+#include "GameMenuWidget.generated.h"
+
+class UOptionWidget;
 
 /**
  * 
  */
 UCLASS()
-class HORRORSYSTEM_API UWidget_Option : public UUserWidget
+class HORRORSYSTEM_API UGameMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 public:
 	//virtual void NativePreConstruct() override
 	//{
 	//	Super::NativePreConstruct();
 	//}
 
-	void ChangeLanguage()
+	UFUNCTION(BlueprintCallable)
+	void QuitGame()
 	{
-
 	}
 
-	void ChangeBaseSound()
+	UFUNCTION(BlueprintCallable)
+	void OpenOption()
 	{
-
-	}
-
-	void ChangeScreenBrightness()
-	{
-	
 	}
 
 protected:
-    UPROPERTY(Meta = (BindWidgetAnim), Transient)
-    UWidgetAnimation* ActiveAnimation;
+	UPROPERTY(Meta = (BindWidget))
+	UOptionWidget* Option;
 };

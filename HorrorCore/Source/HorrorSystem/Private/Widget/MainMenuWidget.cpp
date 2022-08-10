@@ -1,13 +1,13 @@
 // 2022 06    Bum moo, Kim    Free copyright
 
 
-#include "Widget_MainMenu.h"
+#include "Widget/MainMenuWidget.h"
 #include "Components/Button.h"
-#include "HorrorSystem/Public/Widget_Option.h"
+#include "Widget/OptionWidget.h"
 
 #include "Kismet/GameplayStatics.h"
 
-void UWidget_MainMenu::NativePreConstruct()
+void UMainMenuWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
@@ -36,24 +36,24 @@ void UWidget_MainMenu::NativePreConstruct()
 	}
 }
 
-void UWidget_MainMenu::BeginDestroy()
+void UMainMenuWidget::BeginDestroy()
 {
 	Super::BeginDestroy();
 }
 
-void UWidget_MainMenu::ContinueGame()
+void UMainMenuWidget::ContinueGame()
 {
 }
 
-void UWidget_MainMenu::NewStartGame()
+void UMainMenuWidget::NewStartGame()
 {
 }
 
-void UWidget_MainMenu::OpenOption()
+void UMainMenuWidget::OpenOption()
 {
 }
 
-void UWidget_MainMenu::QuitGame()
+void UMainMenuWidget::QuitGame()
 {
 	UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, true);
 }

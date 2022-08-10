@@ -6,7 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "HorrorItemInterface.h"
 #include "HorrorInventoryInterface.h"
-#include "Widget_Inventory.h"
+#include "Widget/InventoryWidget.h"
 #include "Horror2DInventoryStruct.h"
 #include "HorrorInventoryComponent.generated.h"
 
@@ -37,5 +37,5 @@ public:
 	virtual void GetInventorySize_Implementation(FIntSize2D& InventorySize) const override;
 	
 protected:
-	UWidget_Inventory* InventoryWidget = nullptr;
+	UInventoryWidget* InventoryWidget = nullptr;
 };

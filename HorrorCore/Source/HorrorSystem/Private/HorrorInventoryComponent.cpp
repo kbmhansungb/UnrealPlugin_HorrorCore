@@ -26,14 +26,14 @@ void UHorrorInventoryComponent::InitWidget()
 {
 	UWidgetComponent::InitWidget();
 
-	InventoryWidget = Cast<UWidget_Inventory>(GetWidget());
+	InventoryWidget = Cast<UInventoryWidget>(GetWidget());
 	if (InventoryWidget)
 	{
 		InventoryWidget->Inventory = this;
 	}
 	else
 	{
-		UE_LOG(HorrorEventLog, Error, TEXT("Cannot cast to UWidget_Inventory."));
+		UE_LOG(HorrorEventLog, Error, TEXT("Cannot cast to UInventoryWidget."));
 	}
 }
 
