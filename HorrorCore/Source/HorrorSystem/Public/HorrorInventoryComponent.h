@@ -10,6 +10,8 @@
 #include "Horror2DInventoryStruct.h"
 #include "HorrorInventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInventoryChangedDelegate);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HORRORSYSTEM_API UHorrorInventoryComponent : public UWidgetComponent, 
 	public IHorrorInventoryInterface
@@ -24,6 +26,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHorror2DInventoryStruct Inventory;
+	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FInventoryChangedDelegate InventoryChangedDelegate;
 
 public:
 	virtual void InitWidget() override;
