@@ -44,7 +44,14 @@ bool UHorrorInventoryComponent::IsStorable_Implementation(const TScriptInterface
 
 bool UHorrorInventoryComponent::StoreItem_Implementation(const TScriptInterface<IHorrorItemActorInterface>& ItemActor, FIntPoint Index)
 {
-	return Inventory.TryStoreItemActor(ItemActor, Index);
+	bool Result = Inventory.TryStoreItemActor(ItemActor, Index);
+	
+	if (Result)
+	{
+		InventoryChangedDelegate.Broadcast();
+	}
+
+	return Result;
 }
 
 bool UHorrorInventoryComponent::IsTakable_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
@@ -54,7 +61,14 @@ bool UHorrorInventoryComponent::IsTakable_Implementation(FIntPoint Index, TScrip
 
 bool UHorrorInventoryComponent::TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor)
 {
-	return Inventory.TryTakeItemActor(this, this->GetComponentTransform(), Index, ItemActor);
+	bool Result = Inventory.TryTakeItemActor(this, this->GetComponentTransform(), Index, ItemActor);
+
+	if (Result)
+	{
+		InventoryChangedDelegate.Broadcast();
+	}
+
+	return Result;
 }
 
 void UHorrorInventoryComponent::GetInventorySize_Implementation(FIntSize2D& InventorySize) const
