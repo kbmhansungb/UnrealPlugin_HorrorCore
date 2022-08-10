@@ -2,4 +2,3 @@
 
 #include "HorrorWidgetTest.h"
 #include <Misc/AutomationTest.h>
-#include <HorrorSystem/Public/Widget_Inventory.h>
