@@ -5,8 +5,8 @@ bool FHorrorItem2DInventoryData::IsIntersect(const FIntPoint& Int) const
 	FIntSize2D GetIconSize;
 	IHorrorItemInterface::Execute_GetIconSize(ItemBundle.TypeInterface.GetObject(), GetIconSize);
 
-	const bool& InX = (StartIndex.X <= Int.X) && (Int.X <= StartIndex.X + GetIconSize.X);
-	const bool& InY = (StartIndex.Y <= Int.Y) && (Int.Y <= StartIndex.Y + GetIconSize.Y);
+	const bool& InX = (StartIndex.X <= Int.X) && (Int.X <= StartIndex.X + GetIconSize.X - 1);
+	const bool& InY = (StartIndex.Y <= Int.Y) && (Int.Y <= StartIndex.Y + GetIconSize.Y - 1);
 
 	return InX && InY;
 }
