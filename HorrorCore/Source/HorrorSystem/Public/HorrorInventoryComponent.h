@@ -33,6 +33,7 @@ public:
 	virtual bool IsTakable_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const override;
 	virtual bool TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor) override;
 	virtual void GetInventorySize_Implementation(FIntSize2D& InventorySize) const override;
+	virtual void CopyItemBundleArray_Implementation(TArray<FHorrorItem2DInventoryData>& InventoryDataArray) const;
 	
 private:
 	void InternalInitWidget();

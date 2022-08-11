@@ -78,6 +78,11 @@ void UHorrorInventoryComponent::GetInventorySize_Implementation(FIntSize2D& Inve
 	InventorySize = Inventory.InventorySize;
 }
 
+void UHorrorInventoryComponent::CopyItemBundleArray_Implementation(TArray<FHorrorItem2DInventoryData>& InventoryDataArray) const
+{
+	InventoryDataArray = TArray<FHorrorItem2DInventoryData>(Inventory.Items);
+}
+
 void UHorrorInventoryComponent::InternalInitWidget()
 {
 	UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(GetWidget());
