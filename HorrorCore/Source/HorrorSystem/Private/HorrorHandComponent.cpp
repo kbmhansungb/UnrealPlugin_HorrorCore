@@ -41,9 +41,42 @@ void UHorrorHandComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Lerp(DeltaTime);
 }
 
+void UHorrorHandComponent::GetHoldItem_Implementation(bool& IsHold, TScriptInterface<IHorrorHoldableInterface>& HoldableItem) const
+{
+	// 없는 손으로는 잡을 수 없으므로
+	IsHold = true;
+	HoldableItem = TScriptInterface<IHorrorHoldableInterface>();
+
+	const FHoldStruct* HoldStruct = GetHoldStruct(HandDominance);
+
+	if (HoldStruct)
+	{
+		IsHold = HoldStruct->HoldItem.GetObject() != nullptr;
+		HoldableItem = HoldStruct->HoldItem.GetObject();
+	}
+}
+
 TScriptInterface<IHorrorHoldableInterface> UHorrorHandComponent::GetHoldable_Implementation() const
 {
 	return GetHoldStruct(HandDominance)->HoldItem;
+}
+
+void UHorrorHandComponent::GetHoldablePutLocation_Implementation(FHitResult& HitResult) const
+{
+	HitResult = FHitResult();
+
+	const FVector& Position = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetCameraLocation();
+	const FVector& Forward = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetActorForwardVector();
+
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
+	{
+		return;
+	}
+
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + -Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
+	{
+		return;
+	}
 }
 
 bool UHorrorHandComponent::IsEmptyHand(const EHandType Type)
@@ -87,24 +120,6 @@ void UHorrorHandComponent::Release(const EHandType Type)
 	if (HandStruct)
 	{
 		HandStruct->ReleaseHoldItem(this);
-	}
-}
-
-void UHorrorHandComponent::GetHoldablePutLocation_Implementation(FHitResult& HitResult) const
-{
-	HitResult = FHitResult();
-
-	const FVector& Position = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetCameraLocation();
-	const FVector& Forward = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetActorForwardVector();
-
-	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
-	{
-		return;
-	}
-
-	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + -Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
-	{
-		return;
 	}
 }
 

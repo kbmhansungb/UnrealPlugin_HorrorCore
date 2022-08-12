@@ -24,6 +24,10 @@ class HORRORSYSTEM_API IHorrorHandInterface
 
 public:
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
+	void GetHoldItem(bool& IsHold, TScriptInterface<IHorrorHoldableInterface>& HoldableItem) const;
+	virtual void GetHoldItem_Implementation(bool& IsHold, TScriptInterface<IHorrorHoldableInterface>& HoldableItem) const = 0;
+
+	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	TScriptInterface<IHorrorHoldableInterface> GetHoldable() const;
 	virtual TScriptInterface<IHorrorHoldableInterface> GetHoldable_Implementation() const = 0;
 

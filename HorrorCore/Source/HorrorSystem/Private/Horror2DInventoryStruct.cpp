@@ -5,8 +5,8 @@ bool FHorrorItem2DInventoryData::IsIntersect(const FIntPoint& Int) const
 	FIntSize2D GetIconSize;
 	IHorrorItemInterface::Execute_GetIconSize(ItemBundle.TypeInterface.GetObject(), GetIconSize);
 
-	const bool& InX = (StartIndex.X <= Int.X) && (Int.X <= StartIndex.X + GetIconSize.X);
-	const bool& InY = (StartIndex.Y <= Int.Y) && (Int.Y <= StartIndex.Y + GetIconSize.Y);
+	const bool& InX = (StartIndex.X <= Int.X) && (Int.X <= StartIndex.X + GetIconSize.X - 1);
+	const bool& InY = (StartIndex.Y <= Int.Y) && (Int.Y <= StartIndex.Y + GetIconSize.Y - 1);
 
 	return InX && InY;
 }
@@ -65,6 +65,8 @@ int32 FHorror2DInventoryStruct::GetItemStackIndex(const FIntPoint& Index) const
 
 bool FHorror2DInventoryStruct::IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index) const
 {
+	check(Iteminterface);
+
 	if (IsValidIndex(Index) == false)
 	{
 		return false;
@@ -96,6 +98,8 @@ bool FHorror2DInventoryStruct::IsStorable(const TScriptInterface<IHorrorItemInte
 
 bool FHorror2DInventoryStruct::TryStoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, const FIntPoint& Index)
 {
+	check(Iteminterface);
+
 	if (IsStorable(Iteminterface, Index) == false)
 	{
 		return false;
@@ -108,7 +112,11 @@ bool FHorror2DInventoryStruct::TryStoreItem(const TScriptInterface<IHorrorItemIn
 
 bool FHorror2DInventoryStruct::TryStoreItemActor(const TScriptInterface<IHorrorItemActorInterface>& ItemActorInterface, const FIntPoint& Index)
 {
-	bool Result = TryStoreItem(IHorrorItemActorInterface::Execute_GetItemInterface(ItemActorInterface.GetObject()), Index);
+	check(ItemActorInterface.GetObject());
+
+	TScriptInterface<IHorrorItemInterface> ItemInterface;
+	IHorrorItemActorInterface::Execute_GetItemInterface(ItemActorInterface.GetObject(), ItemInterface);
+	bool Result = TryStoreItem(ItemInterface, Index);
 
 	if (Result)
 	{

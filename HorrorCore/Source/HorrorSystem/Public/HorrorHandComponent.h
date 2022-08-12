@@ -47,7 +47,9 @@ protected:
 
 	// IHorrorHandInterface에서 상속됨
 public:
+	virtual void GetHoldItem_Implementation(bool& IsHold, TScriptInterface<IHorrorHoldableInterface>& HoldableItem) const override;
 	virtual TScriptInterface<IHorrorHoldableInterface> GetHoldable_Implementation() const override;
+	virtual void GetHoldablePutLocation_Implementation(FHitResult& HitResult) const override;
 	
 public:
 	UFUNCTION(BlueprintCallable)
@@ -61,8 +63,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Release(const EHandType Type);
-
-	virtual void GetHoldablePutLocation_Implementation(FHitResult& HitResult) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Lerp(float Deleta);

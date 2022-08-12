@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "HorrorItemInterface.h"
 #include "HorrorItemActorInterface.h"
+#include "Horror2DInventoryStruct.h"
 #include "HorrorInventoryInterface.generated.h"
 
 // This class does not need to be modified.
@@ -42,4 +43,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void GetInventorySize(FIntSize2D& InventorySize) const;
 	virtual void GetInventorySize_Implementation(FIntSize2D& InventorySize) const = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void CopyItemBundleArray(TArray<FHorrorItem2DInventoryData>& InventoryDataArray) const;
+	virtual void CopyItemBundleArray_Implementation(TArray<FHorrorItem2DInventoryData>& InventoryDataArray) const = 0;
 };

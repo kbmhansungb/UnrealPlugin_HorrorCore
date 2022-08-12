@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
 	float SquareSize = 90.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true, AllowedClasses = "HorrorItemInterface"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowedClasses = "HorrorItemInterface"))
 	TScriptInterface<IHorrorItemInterface> ItemInterface;
 
 	UPROPERTY(BlueprintReadWrite, Meta = (BindWidget))
