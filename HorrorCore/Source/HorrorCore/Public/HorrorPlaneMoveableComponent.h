@@ -26,17 +26,14 @@ public:
 
 	// IHorrorAxisMoveableInterface에서 상속됨
 public:
-	virtual void PreMoveable() override;
-	virtual void PostMoveable() override;
-
-	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const override;
-	// FHitResult.TraceStart와 FHitResult.TraceEnd는 서로 달라야 합니다.
-	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) override;
-	virtual void ApplyMoving(const FVector& IntersectionLocation) override;
-
-	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const override;
-	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override;
-	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
+	//virtual void PreMoveable() override;
+	//virtual void PostMoveable() override;
+	virtual void PrepareMoving_Implementation(const FHitResult& HitLocation) override;
+	virtual FVector GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const override;
+	virtual void ApplyMoving_Implementation(const FVector& IntersectionLocation) override;
+	virtual FTransform GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const override;
+	//virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override;
+	//virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
 
 private:
 	FTransform VirtualRelativeTransform;

@@ -10,15 +10,22 @@
 
 #include "DrawDebugHelpers.h"
 
-void UHorrorSphereMoveableComponent::PreMoveable() 
+//void UHorrorSphereMoveableComponent::PreMoveable() 
+//{
+//}
+//
+//void UHorrorSphereMoveableComponent::PostMoveable() 
+//{
+//}
+
+void UHorrorSphereMoveableComponent::PrepareMoving_Implementation(const FHitResult& HitLocation)
 {
+	SphereRadius = (HitLocation.Location - GetComponentLocation()).Size();
+	FirstIntersectionPoint = GetIntersectionPoint(HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal());
+	OriginalRelativeTransform = GetRelativeTransform();
 }
 
-void UHorrorSphereMoveableComponent::PostMoveable() 
-{
-}
-
-FVector UHorrorSphereMoveableComponent::GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const
+FVector UHorrorSphereMoveableComponent::GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const
 {
 	FVector Result;
 	FMath::SphereDistToLine(GetComponentLocation(), SphereRadius, Origin, Direction, Result);
@@ -26,14 +33,7 @@ FVector UHorrorSphereMoveableComponent::GetIntersectionPoint(const FVector& Orig
 	return Result;
 }
 
-void UHorrorSphereMoveableComponent::SetFirstIntersectionPoint(const FHitResult& HitLocation)
-{
-	SphereRadius = (HitLocation.Location - GetComponentLocation()).Size();
-	FirstIntersectionPoint = GetIntersectionPoint(HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal());
-	OriginalRelativeTransform = GetRelativeTransform();
-}
-
-void UHorrorSphereMoveableComponent::ApplyMoving(const FVector& IntersectionLocation)
+void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& IntersectionLocation)
 {
 	FTransform NewRelativeTransform = GetNewVirtualTransform(IntersectionLocation);
 	//NewRelativeTransform = ClampNewRelativeTransform(NewRelativeTransform);
@@ -42,7 +42,7 @@ void UHorrorSphereMoveableComponent::ApplyMoving(const FVector& IntersectionLoca
 	SetRelativeTransform(NewRelativeTransform);
 }
 
-FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform(const FVector& IntersectionLocation) const
+FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const
 {
 	const FVector& VO = (FirstIntersectionPoint - GetComponentLocation()).GetSafeNormal();
 	const FVector& V1 = (IntersectionLocation - GetComponentLocation()).GetSafeNormal();
@@ -53,14 +53,14 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform(const FVector&
 
 	return FTransform(Quat * OriginalRelativeTransform.GetRotation(), OriginalRelativeTransform.GetLocation(), OriginalRelativeTransform.GetScale3D());
 }
-
-FTransform UHorrorSphereMoveableComponent::ClampNewRelativeTransform(const FTransform& Transform) const
-{
-	return Transform;
-}
-
-FTransform UHorrorSphereMoveableComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
-{
-	return Transform;
-}
+//
+//FTransform UHorrorSphereMoveableComponent::ClampNewRelativeTransform(const FTransform& Transform) const
+//{
+//	return Transform;
+//}
+//
+//FTransform UHorrorSphereMoveableComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
+//{
+//	return Transform;
+//}
 

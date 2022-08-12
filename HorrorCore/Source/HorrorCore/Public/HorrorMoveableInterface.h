@@ -18,15 +18,19 @@ class HORRORCORE_API IHorrorMoveableInterface
 	GENERATED_BODY()
 
 public:
-	virtual void PreMoveable() {}
-	virtual void PostMoveable() {}
+	UFUNCTION(Category = "Horror|Moveable", BlueprintCallable, BlueprintNativeEvent)
+	void PrepareMoving(const FHitResult& HitLocation);
+	virtual void PrepareMoving_Implementation(const FHitResult& HitLocation) = 0;
 
-	virtual FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const = 0;
-	virtual void SetFirstIntersectionPoint(const FHitResult& HitLocation) = 0;
-	virtual void ApplyMoving(const FVector& IntersectionLocation) = 0;
+	UFUNCTION(Category = "Horror|Moveable", BlueprintCallable, BlueprintNativeEvent)
+	FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const;
+	virtual FVector GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const = 0;
 
-	virtual FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const = 0;
-	virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const = 0;
-	virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const = 0;
+	UFUNCTION(Category = "Horror|Moveable", BlueprintCallable, BlueprintNativeEvent)
+	void ApplyMoving(const FVector& IntersectionLocation);
+	virtual void ApplyMoving_Implementation(const FVector& IntersectionLocation) = 0;
 
+	UFUNCTION(Category = "Horror|Moveable", BlueprintCallable, BlueprintNativeEvent)
+	FTransform GetNewVirtualTransform(const FVector& IntersectionLocation) const;
+	virtual FTransform GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const = 0;
 };
