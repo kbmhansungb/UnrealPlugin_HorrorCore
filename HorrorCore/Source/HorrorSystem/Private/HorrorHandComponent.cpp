@@ -4,6 +4,23 @@
 #include "HorrorHoldableInterface.h"
 #include <GameFramework/Actor.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Kismet/KismetSystemLibrary.h>
+#include <Kismet/GameplayStatics.h>
+
+void FHoldStruct::ReleaseHoldItem(const TScriptInterface<IHorrorHandInterface>& HandInterface)
+{
+	if (!HoldItem.GetObject())
+	{
+		return;
+	}
+
+	if (HoldItem.GetObject()->GetClass()->ImplementsInterface(UHorrorHoldableInterface::StaticClass()))
+	{
+		IHorrorHoldableInterface::Execute_ResponseReleaseHoldable(HoldItem.GetObject(), HandInterface);
+	}
+
+	HoldItem = nullptr;
+}
 
 UHorrorHandComponent::UHorrorHandComponent()
 {
@@ -24,9 +41,19 @@ void UHorrorHandComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Lerp(DeltaTime);
 }
 
-bool UHorrorHandComponent::IsDominanceHand_Implementation() const
+void UHorrorHandComponent::GetHoldItem_Implementation(bool& IsHold, TScriptInterface<IHorrorHoldableInterface>& HoldableItem) const
 {
-	return true;
+	// 없는 손으로는 잡을 수 없으므로
+	IsHold = true;
+	HoldableItem = TScriptInterface<IHorrorHoldableInterface>();
+
+	const FHoldStruct* HoldStruct = GetHoldStruct(HandDominance);
+
+	if (HoldStruct)
+	{
+		IsHold = HoldStruct->HoldItem.GetObject() != nullptr;
+		HoldableItem = HoldStruct->HoldItem.GetObject();
+	}
 }
 
 TScriptInterface<IHorrorHoldableInterface> UHorrorHandComponent::GetHoldable_Implementation() const
@@ -34,16 +61,40 @@ TScriptInterface<IHorrorHoldableInterface> UHorrorHandComponent::GetHoldable_Imp
 	return GetHoldStruct(HandDominance)->HoldItem;
 }
 
+void UHorrorHandComponent::GetHoldablePutLocation_Implementation(FHitResult& HitResult) const
+{
+	HitResult = FHitResult();
+
+	const FVector& Position = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetCameraLocation();
+	const FVector& Forward = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetActorForwardVector();
+
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
+	{
+		return;
+	}
+
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + -Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
+	{
+		return;
+	}
+}
+
 bool UHorrorHandComponent::IsEmptyHand(const EHandType Type)
 {
 	return GetHoldStruct(Type)->HoldItem.GetObject() == nullptr;
 }
 
-void UHorrorHandComponent::Hold(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable)
+bool UHorrorHandComponent::Hold(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable)
 {
-	GetHoldStruct(Type)->HoldItem = Holdable;
+	if (GetHoldStruct(Type)->HoldItem == nullptr)
+	{
+		GetHoldStruct(Type)->HoldItem = Holdable;
+		SetStart(Type, Holdable);
 
-	SetStart(Type, Holdable);
+		return true;
+	}
+
+	return false;
 }
 
 void UHorrorHandComponent::Swap()
@@ -66,10 +117,13 @@ void UHorrorHandComponent::Swap()
 void UHorrorHandComponent::Release(const EHandType Type)
 {
 	FHoldStruct* HandStruct = GetHoldStruct(Type);
-	HandStruct->HoldItem = nullptr;
+	if (HandStruct)
+	{
+		HandStruct->ReleaseHoldItem(this);
+	}
 }
 
-void UHorrorHandComponent::Lerp(float Deleta)
+void UHorrorHandComponent::Lerp_Implementation(float Deleta)
 {
 	if (RightHand.HoldItem.GetObject())
 	{
@@ -88,4 +142,61 @@ void UHorrorHandComponent::SetStart(const EHandType Type, const TScriptInterface
 	Transform = FTransform(GetHoldStruct(Type)->RelativePosition + StartOffset) * Transform;
 
 	IHorrorHoldableInterface::Execute_SetHoldableTransform(Holdable.GetObject(), Transform);
+}
+
+const FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type) const
+{
+	switch (Type)
+	{
+	case EHandType::LEFT:
+		return &GetLeftStruct();
+		break;
+	case EHandType::RIGHT:
+		return &GetRightStruct();
+		break;
+	default:
+		check(false && "Need add case");
+		return nullptr;
+	}
+}
+
+FHoldStruct* UHorrorHandComponent::GetHoldStruct(const EHandType Type)
+{
+	switch (Type)
+	{
+	case EHandType::LEFT:
+		return &GetLeftStruct();
+		break;
+	case EHandType::RIGHT:
+		return &GetRightStruct();
+		break;
+	default:
+		check(false && "Need add case");
+		return nullptr;
+	}
+}
+
+const FHoldStruct& UHorrorHandComponent::GetRightStruct() const
+{
+	return RightHand;
+}
+
+const FHoldStruct& UHorrorHandComponent::GetLeftStruct() const
+{
+	return LeftHand;
+}
+
+FHoldStruct& UHorrorHandComponent::GetRightStruct()
+{
+	return RightHand;
+}
+
+FHoldStruct& UHorrorHandComponent::GetLeftStruct()
+{
+	return LeftHand;
+}
+
+bool UHorrorHandComponent::CompareHoldedObject(IHorrorHoldableInterface* LeftObject, IHorrorHoldableInterface* RightObject) const
+{
+	return LeftHand.HoldItem == LeftObject && RightHand.HoldItem == RightObject;
 }

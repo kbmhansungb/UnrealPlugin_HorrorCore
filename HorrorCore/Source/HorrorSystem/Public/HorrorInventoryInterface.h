@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "HorrorItemInterface.h"
+#include "HorrorItemActorInterface.h"
+#include "Horror2DInventoryStruct.h"
 #include "HorrorInventoryInterface.generated.h"
 
 // This class does not need to be modified.
@@ -22,11 +24,27 @@ class HORRORSYSTEM_API IHorrorInventoryInterface
 	GENERATED_BODY()
 
 public:
-	virtual bool IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const = 0;
-	virtual bool StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) = 0;
-	
-	virtual bool IsTakable(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& ItemInterface) const = 0;
-	virtual bool TakeItem(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& ItemInterface) = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index);
+	virtual bool IsStorable_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const = 0;
 
-	virtual const FIntSize2D& GetInventorySize() const = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool StoreItem(const TScriptInterface<IHorrorItemActorInterface>& Iteminterface, FIntPoint Index);
+	virtual bool StoreItem_Implementation(const TScriptInterface<IHorrorItemActorInterface>& ItemActor, FIntPoint Index) = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool IsTakable(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& ItemInterface) const;
+	virtual bool IsTakable_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& ItemInterface) const = 0;
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool TakeItem(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemInterface);
+	virtual bool TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor) = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void GetInventorySize(FIntSize2D& InventorySize) const;
+	virtual void GetInventorySize_Implementation(FIntSize2D& InventorySize) const = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void CopyItemBundleArray(TArray<FHorrorItem2DInventoryData>& InventoryDataArray) const;
+	virtual void CopyItemBundleArray_Implementation(TArray<FHorrorItem2DInventoryData>& InventoryDataArray) const = 0;
 };

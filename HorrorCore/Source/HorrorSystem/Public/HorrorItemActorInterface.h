@@ -25,18 +25,14 @@ class HORRORSYSTEM_API IHorrorItemActorInterface
 
 public:
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	TScriptInterface<IHorrorItemInterface> GetItemInterface();
-	virtual TScriptInterface<IHorrorItemInterface> GetItemInterface_Implementation() { return TScriptInterface<IHorrorItemInterface>(); }
+	void GetItemInterface(TScriptInterface<IHorrorItemInterface>& ItemInterface);
+	virtual void GetItemInterface_Implementation(TScriptInterface<IHorrorItemInterface>& ItemInterface) = 0;
 
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void HoldItemActor(UHorrorHandComponent* HandComponent);
-	virtual void HoldItemActor_Implementation(UHorrorHandComponent* HandComponent) {}
+	virtual void HoldItemActor_Implementation(UHorrorHandComponent* HandComponent) = 0;
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void ReleaseItemActor(UHorrorHandComponent* HandComponent);
-	virtual void ReleaseItemActor_Implementation(UHorrorHandComponent* HandComponent) {}
-
-	//UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
-	//void PutWorld();
-	//virtual void PutWorld_Implementation() {};
+	virtual void ReleaseItemActor_Implementation(UHorrorHandComponent* HandComponent) = 0;
 };

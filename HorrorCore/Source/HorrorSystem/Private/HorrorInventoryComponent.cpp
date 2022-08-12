@@ -12,6 +12,12 @@ UHorrorInventoryComponent::UHorrorInventoryComponent()
 	Space = EWidgetSpace::World;
 }
 
+void UHorrorInventoryComponent::SetWidget(UUserWidget* NewWidget)
+{
+	Super::SetWidget(NewWidget);
+	InternalInitWidget();
+}
+
 void UHorrorInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -24,40 +30,68 @@ void UHorrorInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void UHorrorInventoryComponent::InitWidget()
 {
-	Super::InitWidget();
+	UWidgetComponent::InitWidget();
+	InternalInitWidget();
+}
 
-	InventoryWidget = Cast<UWidget_Inventory>(GetWidget());
+bool UHorrorInventoryComponent::IsStorable_Implementation(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const
+{
+	return Inventory.IsStorable(Iteminterface, Index);
+}
+
+bool UHorrorInventoryComponent::StoreItem_Implementation(const TScriptInterface<IHorrorItemActorInterface>& ItemActor, FIntPoint Index)
+{
+	if (!ItemActor.GetObject())
+	{
+		return false;
+	}
+
+	bool Result = Inventory.TryStoreItemActor(ItemActor, Index);
+	
+	if (Result)
+	{
+		InventoryChangedDelegate.Broadcast();
+	}
+
+	return Result;
+}
+
+bool UHorrorInventoryComponent::IsTakable_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
+{
+	return Inventory.IsTakable(Index, Iteminterface);;
+}
+
+bool UHorrorInventoryComponent::TakeItem_Implementation(FIntPoint Index, TScriptInterface<IHorrorItemActorInterface>& ItemActor)
+{
+	bool Result = Inventory.TryTakeItemActor(this, this->GetComponentTransform(), Index, ItemActor);
+
+	if (Result)
+	{
+		InventoryChangedDelegate.Broadcast();
+	}
+
+	return Result;
+}
+
+void UHorrorInventoryComponent::GetInventorySize_Implementation(FIntSize2D& InventorySize) const
+{
+	InventorySize = Inventory.InventorySize;
+}
+
+void UHorrorInventoryComponent::CopyItemBundleArray_Implementation(TArray<FHorrorItem2DInventoryData>& InventoryDataArray) const
+{
+	InventoryDataArray = TArray<FHorrorItem2DInventoryData>(Inventory.Items);
+}
+
+void UHorrorInventoryComponent::InternalInitWidget()
+{
+	UInventoryWidget* InventoryWidget = Cast<UInventoryWidget>(GetWidget());
 	if (InventoryWidget)
 	{
 		InventoryWidget->Inventory = this;
 	}
 	else
 	{
-		UE_LOG(HorrorEventLog, Error, TEXT("Cannot cast to UWidget_Inventory."));
+		UE_LOG(HorrorEventLog, Error, TEXT("Cannot cast to UInventoryWidget."));
 	}
-}
-
-bool UHorrorInventoryComponent::IsStorable(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index) const
-{
-	return Inventory.IsStorable(Iteminterface, Index);
-}
-
-bool UHorrorInventoryComponent::StoreItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface, FIntPoint Index)
-{
-	return Inventory.TryStoreItem(Iteminterface, Index);
-}
-
-bool UHorrorInventoryComponent::IsTakable(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface) const
-{
-	return Inventory.IsTakable(Index, Iteminterface);;
-}
-
-bool UHorrorInventoryComponent::TakeItem(FIntPoint Index, TScriptInterface<IHorrorItemInterface>& Iteminterface)
-{
-	return Inventory.TryTakeItem(Index, Iteminterface);
-}
-
-const FIntSize2D& UHorrorInventoryComponent::GetInventorySize() const
-{
-	return Inventory.InventorySize;
 }

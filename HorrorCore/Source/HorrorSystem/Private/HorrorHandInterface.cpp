@@ -2,5 +2,3 @@
 
 
 #include "HorrorHandInterface.h"
-
-TScriptInterface<IHorrorHoldableInterface> IHorrorHandInterface::GetHoldable_Implementation() const { return TScriptInterface<IHorrorHoldableInterface>(); }
