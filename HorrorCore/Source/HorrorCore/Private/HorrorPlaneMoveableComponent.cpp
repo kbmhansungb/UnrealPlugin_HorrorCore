@@ -9,87 +9,50 @@
 
 // IHorrorAxisMoveableInterface에서 상속됨
 
-//void UHorrorPlaneMoveableComponent::PreMoveable()
-//{
-//}
-//
-//void UHorrorPlaneMoveableComponent::PostMoveable()
-//{
-//}
-
 void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResult& HitLocation)
 {
-	FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal());
+	const FVector& Direction = (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal();
+	LastIntersectionLocation = GetComponentLocation();
+	FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, Direction);
+
 	OriginalRelativeTransform = GetRelativeTransform();
 }
 
 FVector UHorrorPlaneMoveableComponent::GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const
 {
-	return FMath::RayPlaneIntersection(Origin, Direction, FPlane(GetComponentLocation(), GetUpVector()));
+	if (IsValidDirection(Direction))
+	{
+		return FMath::RayPlaneIntersection(Origin, Direction, FPlane(GetComponentLocation(), GetUpVector()));
+	}
+	else
+	{
+		return LastIntersectionLocation;
+	}
 }
 
 
 void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& IntersectionLocation)
 {
-	FTransform ResultRelativeTransform = OriginalRelativeTransform * IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation);
+	LastIntersectionLocation = IntersectionLocation;
+	FTransform ResultRelativeTransform = IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation);
 
-	//ResultRelativeTransform = ClampNewRelativeTransform(ResultRelativeTransform);
-	//ResultRelativeTransform = AdjustNewRelativeTransform(ResultRelativeTransform);
-	
 	SetRelativeTransform(ResultRelativeTransform);
 }
 
 FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const
 {
-	// W = R * PW
-	// W = R` * V * PW
+	FVector NewLocation = OriginalRelativeTransform.GetLocation();
+	FVector Deleta = IntersectionLocation - FirstIntersectionLocation;
 
-	// V = VT * VR * VS * v
-	// VR = VS = I
-	// V = VT * v
+	Deleta = GetComponentRotation().UnrotateVector(Deleta);
 
-	// W = R` * VT * PW
+	NewLocation.X += Deleta.X;
+	NewLocation.Y += Deleta.Y;
 
-	return FTransform(IntersectionLocation);
+	return FTransform(OriginalRelativeTransform.GetRotation(), NewLocation, OriginalRelativeTransform.GetScale3D());
 }
 
-//FTransform UHorrorPlaneMoveableComponent::ClampNewRelativeTransform(const FTransform& Transform) const
-//{
-//	const FQuat& Quat = Transform.GetRotation();
-//	const FVector& Scale = Transform.GetScale3D();
-//	FVector Location = Transform.GetLocation();
-//	Location.X = FMath::Clamp(Location.X, XRange.X, XRange.Y);
-//	Location.Y = FMath::Clamp(Location.Y, XRange.X, XRange.Y);
-//	Location.Z = 0.0f;
-//
-//	return FTransform( Quat, Location, Scale );
-//}
-//
-//FTransform UHorrorPlaneMoveableComponent::AdjustNewRelativeTransform(const FTransform& Transform) const
-//{
-//	//TArray<FHitResult> OutHits;
-//
-//	//FComponentQueryParams Params(SCENE_QUERY_STAT(MoveComponent), GetOwner());
-//	//FCollisionResponseParams ResponseParam;
-//	//InitSweepCollisionParams(Params, ResponseParam);
-//	
-//	//const UPrimitiveComponent* Primitive = this;
-//	//if (GetWorld()->ComponentSweepMulti(OutHits, const_cast<UPrimitiveComponent*>(Primitive), GetComponentLocation(), Transform.GetLocation(), Transform.GetRotation(), Params))
-//	//{
-//	//	int a = 3;
-//	//}
-//	
-//	//const FQuat& Quat = Transform.GetRotation();
-//	//const FVector& Scale = Transform.GetScale3D();
-//	//FVector Location = Transform.GetLocation();
-//
-//	//for (const auto& Hit : OutHits)
-//	//{
-//	//	Location -= Hit.ImpactNormal * Hit.Distance;
-//	//}
-//
-//	//return FTransform(Quat, Location, Scale);
-//
-//	return Transform;
-//}
-//
+bool UHorrorPlaneMoveableComponent::IsValidDirection(const FVector& Direction) const
+{
+	return FMath::Abs(FVector::DotProduct(Direction, GetUpVector())) > AllowIntersectionRadian;
+}

@@ -24,18 +24,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxStepSize = 10.0f;
 
+	UPROPERTY(EditAnywhere, BLueprintReadWrite)
+	float AllowIntersectionRadian = 0.08f;
+
 	// IHorrorAxisMoveableInterface에서 상속됨
 public:
-	//virtual void PreMoveable() override;
-	//virtual void PostMoveable() override;
 	virtual void PrepareMoving_Implementation(const FHitResult& HitLocation) override;
 	virtual FVector GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const override;
 	virtual void ApplyMoving_Implementation(const FVector& IntersectionLocation) override;
 	virtual FTransform GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const override;
-	//virtual FTransform ClampNewRelativeTransform(const FTransform& Transform) const override;
-	//virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
+
+public:
+	bool IsValidDirection(const FVector& Direction) const;
 
 private:
 	FVector FirstIntersectionLocation;
 	FTransform OriginalRelativeTransform;
+
+	FVector LastIntersectionLocation;
 };
