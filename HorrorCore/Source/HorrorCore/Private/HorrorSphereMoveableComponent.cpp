@@ -21,7 +21,7 @@
 void UHorrorSphereMoveableComponent::PrepareMoving_Implementation(const FHitResult& HitLocation)
 {
 	SphereRadius = (HitLocation.Location - GetComponentLocation()).Size();
-	FirstIntersectionPoint = GetIntersectionPoint(HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal());
+	FirstIntersectionLocation = (GetIntersectionPoint(HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal()));
 	OriginalRelativeTransform = GetRelativeTransform();
 }
 
@@ -44,7 +44,7 @@ void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& I
 
 FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const
 {
-	const FVector& VO = (FirstIntersectionPoint - GetComponentLocation()).GetSafeNormal();
+	const FVector& VO = (FirstIntersectionLocation - GetComponentLocation()).GetSafeNormal();
 	const FVector& V1 = (IntersectionLocation - GetComponentLocation()).GetSafeNormal();
 
 	const FVector& Axis = (VO ^ V1).GetSafeNormal();

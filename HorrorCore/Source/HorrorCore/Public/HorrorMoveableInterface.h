@@ -7,7 +7,7 @@
 #include "Engine/EngineTypes.h"
 #include "HorrorMoveableInterface.generated.h"
 
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, BlueprintType)
 class UHorrorMoveableInterface : public UInterface
 {
 	GENERATED_BODY()

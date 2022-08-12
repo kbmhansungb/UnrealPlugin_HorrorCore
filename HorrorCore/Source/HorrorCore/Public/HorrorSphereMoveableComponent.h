@@ -30,6 +30,6 @@ protected:
 
 private:
 	float SphereRadius;
-	FVector FirstIntersectionPoint;
+	FVector FirstIntersectionLocation;
 	FTransform OriginalRelativeTransform;
 };

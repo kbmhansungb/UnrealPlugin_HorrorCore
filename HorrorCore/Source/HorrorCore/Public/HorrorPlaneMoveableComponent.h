@@ -36,5 +36,6 @@ public:
 	//virtual FTransform AdjustNewRelativeTransform(const FTransform& Transform) const override;
 
 private:
-	FTransform VirtualRelativeTransform;
+	FVector FirstIntersectionLocation;
+	FTransform OriginalRelativeTransform;
 };
