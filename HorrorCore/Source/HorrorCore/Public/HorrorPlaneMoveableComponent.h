@@ -37,6 +37,9 @@ public:
 public:
 	bool IsValidDirection(const FVector& Direction) const;
 
+public:
+	FTransform GetComponentTransformFromNewRelative(const FTransform& NewRelativeTransform);
+
 private:
 	FVector FirstIntersectionLocation;
 	FTransform OriginalRelativeTransform;

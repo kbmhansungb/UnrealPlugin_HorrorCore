@@ -16,6 +16,8 @@ void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResul
 	FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, Direction);
 
 	OriginalRelativeTransform = GetRelativeTransform();
+
+	SetMobility(EComponentMobility::Movable);
 }
 
 FVector UHorrorPlaneMoveableComponent::GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const
@@ -34,9 +36,40 @@ FVector UHorrorPlaneMoveableComponent::GetIntersectionPoint_Implementation(const
 void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& IntersectionLocation)
 {
 	LastIntersectionLocation = IntersectionLocation;
-	FTransform ResultRelativeTransform = IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation);
+	const FTransform& NewRelativeTransform = IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation);
 
-	SetRelativeTransform(ResultRelativeTransform);
+	UWorld* World = GetWorld();
+
+	TArray<USceneComponent*> Children;
+	GetChildrenComponents(true, Children);
+
+	const FTransform& Start = GetComponentTransform();
+	const FTransform& End = GetComponentTransformFromNewRelative(NewRelativeTransform);
+
+	bool HasBlocking = false;
+	for (USceneComponent* SceneComponent : Children)
+	{
+		TArray<FHitResult> HitResults;
+
+		if (UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(SceneComponent))
+		{
+			FComponentQueryParams QueryParams(SCENE_QUERY_STAT(SweepComponent), GetOwner());
+
+			FTransform PrimitiveWorldTransform = PrimitiveComponent->GetComponentTransform().GetRelativeTransform(Start) * End;
+
+			HasBlocking = World->ComponentSweepMulti(
+				HitResults, PrimitiveComponent, 
+				PrimitiveComponent->GetComponentLocation(), PrimitiveWorldTransform.GetLocation(), PrimitiveWorldTransform.Rotator(),
+				QueryParams);
+		}
+
+		if (HasBlocking)
+		{
+			return;
+		}
+	}
+
+	SetRelativeTransform(NewRelativeTransform);
 }
 
 FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const
@@ -55,4 +88,14 @@ FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform_Implementation(
 bool UHorrorPlaneMoveableComponent::IsValidDirection(const FVector& Direction) const
 {
 	return FMath::Abs(FVector::DotProduct(Direction, GetUpVector())) > AllowIntersectionRadian;
+}
+
+FTransform UHorrorPlaneMoveableComponent::GetComponentTransformFromNewRelative(const FTransform& NewRelativeTransform)
+{
+	FTransform WorldTransform = NewRelativeTransform;
+	if (GetAttachParent())
+	{
+		WorldTransform *= GetAttachParent()->GetComponentTransform();
+	}
+	return WorldTransform;
 }
