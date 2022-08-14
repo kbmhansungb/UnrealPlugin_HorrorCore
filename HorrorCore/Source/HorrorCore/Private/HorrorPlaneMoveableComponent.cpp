@@ -53,6 +53,7 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 
 		if (UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(SceneComponent))
 		{
+			// Descendant Sweep Test
 			FComponentQueryParams QueryParams(SCENE_QUERY_STAT(SweepComponent), GetOwner());
 
 			FTransform PrimitiveWorldTransform = PrimitiveComponent->GetComponentTransform().GetRelativeTransform(Start) * End;
