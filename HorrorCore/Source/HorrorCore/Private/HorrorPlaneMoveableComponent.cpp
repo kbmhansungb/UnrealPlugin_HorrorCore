@@ -16,6 +16,8 @@ void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResul
 	FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, Direction);
 
 	OriginalRelativeTransform = GetRelativeTransform();
+
+	ToFirstIntersectionFromWorldLocation = FirstIntersectionLocation - GetComponentLocation();
 }
 
 FVector UHorrorPlaneMoveableComponent::GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const
@@ -36,9 +38,9 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 	UWorld* World = GetWorld();
 	check(World);
 
-	LastIntersectionLocation = IntersectionLocation;
 	SetDestination(IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation));
 	const FTransform& NewRelativeTransform = GetStepToDestination(World->GetDeltaSeconds());
+	LastIntersectionLocation = IntersectionLocation;
 
 	const FTransform& Start = GetComponentTransform();
 	const FTransform& End = GetComponentTransformFromNewRelative(NewRelativeTransform);
@@ -78,18 +80,17 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 
 FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const
 {
-	FVector NewLocation = OriginalRelativeTransform.GetLocation();
-	FVector Deleta = IntersectionLocation - FirstIntersectionLocation;
-
-	Deleta = GetComponentRotation().UnrotateVector(Deleta);
-
-	NewLocation.X += Deleta.X;
-	NewLocation.Y += Deleta.Y;
+	const FVector& NewLocation
+	{
+		IntersectionLocation.X - ToFirstIntersectionFromWorldLocation.X,
+		IntersectionLocation.Y - ToFirstIntersectionFromWorldLocation.Y,
+		OriginalRelativeTransform.GetLocation().Z
+	};
 
 	return FTransform(
-		OriginalRelativeTransform.GetRotation(), 
+		GetRelativeRotation(),
 		NewLocation, 
-		OriginalRelativeTransform.GetScale3D());
+		GetRelativeScale3D());
 }
 
 bool UHorrorPlaneMoveableComponent::IsValidDirection(const FVector& Direction) const
@@ -117,7 +118,7 @@ FTransform UHorrorPlaneMoveableComponent::GetStepToDestination(const float Delet
 	// Destination은 RelativeTransform입니다.
 
 	// 회전이 없으므로 좌표만 생각합니다.
-	const FVector& ToDestinationVector = DestinationRelativeTransfrom.GetLocation() - GetComponentLocation();
+	const FVector& ToDestinationVector = DestinationRelativeTransfrom.GetLocation() - GetRelativeLocation();
 	const float Distance = ToDestinationVector.Size();
 
 	if (FLT_EPSILON > Distance)
@@ -126,7 +127,7 @@ FTransform UHorrorPlaneMoveableComponent::GetStepToDestination(const float Delet
 	}
 
 	float MovementScale = MaxStepLength * DeletaTime;
-	const FVector& Step = ToDestinationVector * (MaxStepLength / Distance);
+	const FVector& Step = ToDestinationVector * (MovementScale / Distance);
 	return FTransform(
 		GetRelativeRotation(),
 		GetRelativeLocation() + Step,

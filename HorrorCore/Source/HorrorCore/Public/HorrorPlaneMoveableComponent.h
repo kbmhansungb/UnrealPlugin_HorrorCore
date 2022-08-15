@@ -43,6 +43,8 @@ public:
 	FTransform GetStepToDestination(const float DeletaTime) const;
 
 private:
+	FVector ToFirstIntersectionFromWorldLocation;
+
 	FVector FirstIntersectionLocation;
 	FTransform OriginalRelativeTransform;
 
