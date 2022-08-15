@@ -22,7 +22,7 @@ public:
 	FVector2D YRange;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxStepLength = 10.0f;
+	float MaxStepLength = 100.0f;
 
 	UPROPERTY(EditAnywhere, BLueprintReadWrite)
 	float AllowIntersectionRadian = 0.08f;
@@ -38,6 +38,8 @@ public:
 	bool IsValidDirection(const FVector& Direction) const;
 
 public:
+	void UpdateVirtualRelativeTransform(const FTransform& VirtualTransform, const FTransform& RelativeTransform);
+
 	FTransform GetComponentTransformFromNewRelative(const FTransform& NewRelativeTransform) const;
 	void SetDestination(const FTransform& NewDestinationRelativeTransfrom);
 	FTransform GetStepToDestination(const float DeletaTime) const;
@@ -50,6 +52,8 @@ private:
 
 	FVector LastIntersectionLocation;
 	FTransform DestinationRelativeTransfrom;
+
+	FTransform VirtualToRelativeTransform;
 
 public:
 	inline const FVector& GetFirstIntersectionLocation() const { return FirstIntersectionLocation; }
