@@ -45,9 +45,6 @@ public:
 	FTransform GetStepToDestination(const float DeletaTime) const;
 
 private:
-	FVector ToFirstIntersectionFromWorldLocation;
-
-	FVector FirstIntersectionLocation;
 	FTransform OriginalRelativeTransform;
 
 	FVector LastIntersectionLocation;
@@ -56,7 +53,6 @@ private:
 	FTransform VirtualToRelativeTransform;
 
 public:
-	inline const FVector& GetFirstIntersectionLocation() const { return FirstIntersectionLocation; }
 	inline const FTransform& GetOriginalRelativeTransform() const { return OriginalRelativeTransform; }
 	inline const FVector& GetLastIntersectionLocation() const { return LastIntersectionLocation; }
 	inline const FTransform& GetDestinationRelativeTransfrom() const { return DestinationRelativeTransfrom; }

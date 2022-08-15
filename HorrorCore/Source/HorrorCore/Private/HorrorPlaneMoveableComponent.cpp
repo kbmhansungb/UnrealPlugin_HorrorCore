@@ -13,12 +13,9 @@ void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResul
 {
 	const FVector& Direction = (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal();
 	LastIntersectionLocation = GetComponentLocation();
-	FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, Direction);
 
 	OriginalRelativeTransform = GetRelativeTransform();
-
-	ToFirstIntersectionFromWorldLocation = FirstIntersectionLocation - GetComponentLocation();
-
+	const FVector& FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, Direction);
 	UpdateVirtualRelativeTransform(IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, FirstIntersectionLocation), GetRelativeTransform());
 }
 
@@ -135,7 +132,7 @@ FTransform UHorrorPlaneMoveableComponent::GetStepToDestination(const float Delet
 	}
 
 	float MovementScale = MaxStepLength * DeletaTime;
-	const FVector& Step = ToDestinationVector * (MovementScale / Distance);
+	const FVector& Step = (Distance > MovementScale) ? ToDestinationVector * (MovementScale / Distance) : ToDestinationVector;
 	return FTransform(
 		GetRelativeRotation(),
 		GetRelativeLocation() + Step,
