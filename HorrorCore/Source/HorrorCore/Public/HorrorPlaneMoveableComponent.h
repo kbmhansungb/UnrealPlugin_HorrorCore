@@ -34,6 +34,8 @@ public:
 	virtual void ApplyMoving_Implementation(const FVector& IntersectionLocation) override;
 	virtual FTransform GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const override;
 
+#pragma region Implementation
+
 public:
 	bool IsValidDirection(const FVector& Direction) const;
 
@@ -57,4 +59,6 @@ public:
 	inline const FTransform& GetOriginalRelativeTransform() const { return OriginalRelativeTransform; }
 	inline const FVector& GetLastIntersectionLocation() const { return LastIntersectionLocation; }
 	inline const FTransform& GetDestinationRelativeTransfrom() const { return DestinationRelativeTransfrom; }
+
+#pragma endregion
 };
