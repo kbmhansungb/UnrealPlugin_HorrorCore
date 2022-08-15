@@ -39,22 +39,18 @@ public:
 public:
 	bool IsValidDirection(const FVector& Direction) const;
 
-	void UpdateVirtualRelativeTransform(const FTransform& VirtualTransform, const FTransform& RelativeTransform);
-	FTransform GetNewRelativeTransform(const FVector& IntersectionLocation);
+	void UpdateRelativeWithVirtualTransform(const FTransform& VirtualTransform);
+	FTransform GetNewWorldTransform(const FVector& IntersectionLocation);
 
-	FTransform GetComponentTransformFromNewRelative(const FTransform& NewRelativeTransform) const;
-	void SetDestination(const FTransform& NewDestinationRelativeTransfrom);
+	void SetDestination(const FTransform& NewDestinationTransfrom);
 	FTransform GetStepToDestination(const float DeletaTime) const;
 
 private:
+	// WorldSpace
+	FTransform DestinationTransfrom;
+
 	FVector LastIntersectionLocation;
-	FTransform DestinationRelativeTransfrom;
-
-	FTransform VirtualToRelativeTransform;
-
-public:
-	inline const FVector& GetLastIntersectionLocation() const { return LastIntersectionLocation; }
-	inline const FTransform& GetDestinationRelativeTransfrom() const { return DestinationRelativeTransfrom; }
+	FTransform RelativeWithVirtualTransform;
 
 #pragma endregion
 };

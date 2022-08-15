@@ -15,7 +15,7 @@ void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResul
 	LastIntersectionLocation = GetComponentLocation();
 
 	const FVector& FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, Direction);
-	UpdateVirtualRelativeTransform(IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, FirstIntersectionLocation), GetRelativeTransform());
+	UpdateRelativeWithVirtualTransform(IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, FirstIntersectionLocation));
 }
 
 FVector UHorrorPlaneMoveableComponent::GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const
@@ -36,11 +36,11 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 	UWorld* World = GetWorld();
 	check(World);
 
-	SetDestination(GetNewRelativeTransform(IntersectionLocation));
+	SetDestination(GetNewWorldTransform(IntersectionLocation));
 	const FTransform& NewStepTransform = GetStepToDestination(World->GetDeltaSeconds());
 
 	const FTransform& Start = GetComponentTransform();
-	const FTransform& End = GetComponentTransformFromNewRelative(NewStepTransform);
+	const FTransform& End = NewStepTransform;
 
 	TArray<USceneComponent*> Children;
 	GetChildrenComponents(true, Children);
@@ -72,7 +72,7 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 
 	}
 
-	SetRelativeTransform(NewStepTransform);
+	SetWorldTransform(NewStepTransform);
 }
 
 FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const
@@ -81,13 +81,15 @@ FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform_Implementation(
 	{
 		IntersectionLocation.X,
 		IntersectionLocation.Y,
-		GetRelativeLocation().Z
+		GetComponentLocation().Z
 	};
 
-	return FTransform(
-		GetRelativeRotation(),
+	const FTransform& NewVirtualTransform = FTransform(
+		GetComponentRotation(),
 		NewLocation, 
-		GetRelativeScale3D());
+		GetComponentScale());
+
+	return NewVirtualTransform;
 }
 
 bool UHorrorPlaneMoveableComponent::IsValidDirection(const FVector& Direction) const
@@ -95,31 +97,21 @@ bool UHorrorPlaneMoveableComponent::IsValidDirection(const FVector& Direction) c
 	return FMath::Abs(FVector::DotProduct(Direction, GetUpVector())) > AllowIntersectionRadian;
 }
 
-void UHorrorPlaneMoveableComponent::UpdateVirtualRelativeTransform(const FTransform& VirtualTransform, const FTransform& RelativeTransform)
+void UHorrorPlaneMoveableComponent::UpdateRelativeWithVirtualTransform(const FTransform& VirtualTransform)
 {
-	VirtualToRelativeTransform = VirtualTransform.Inverse() * RelativeTransform;
+	RelativeWithVirtualTransform = GetComponentTransform() * VirtualTransform.Inverse();
 }
 
-FTransform UHorrorPlaneMoveableComponent::GetNewRelativeTransform(const FVector& IntersectionLocation)
+FTransform UHorrorPlaneMoveableComponent::GetNewWorldTransform(const FVector& IntersectionLocation)
 {
-	const FTransform& NewRelativeTransform = IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation) * VirtualToRelativeTransform;
+	const FTransform& NewRelativeTransform = RelativeWithVirtualTransform * IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation);
 	LastIntersectionLocation = IntersectionLocation;
 	return NewRelativeTransform;
 }
 
-FTransform UHorrorPlaneMoveableComponent::GetComponentTransformFromNewRelative(const FTransform& NewRelativeTransform) const
+void UHorrorPlaneMoveableComponent::SetDestination(const FTransform& NewDestinationTransfrom)
 {
-	FTransform WorldTransform = NewRelativeTransform;
-	if (GetAttachParent())
-	{
-		WorldTransform *= GetAttachParent()->GetComponentTransform();
-	}
-	return WorldTransform;
-}
-
-void UHorrorPlaneMoveableComponent::SetDestination(const FTransform& NewDestinationRelativeTransfrom)
-{
-	DestinationRelativeTransfrom = NewDestinationRelativeTransfrom;
+	DestinationTransfrom = NewDestinationTransfrom;
 }
 
 FTransform UHorrorPlaneMoveableComponent::GetStepToDestination(const float DeletaTime) const
@@ -127,19 +119,19 @@ FTransform UHorrorPlaneMoveableComponent::GetStepToDestination(const float Delet
 	// Destination은 RelativeTransform입니다.
 
 	// 회전이 없으므로 좌표만 생각합니다.
-	const FVector& ToDestinationVector = DestinationRelativeTransfrom.GetLocation() - GetRelativeLocation();
+	const FVector& ToDestinationVector = DestinationTransfrom.GetLocation() - GetComponentLocation();
 	const float Distance = ToDestinationVector.Size();
 
 	if (FLT_EPSILON > Distance)
 	{
-		return DestinationRelativeTransfrom;
+		return DestinationTransfrom;
 	}
 
 	float MovementScale = MaxStepLength * DeletaTime;
 	const FVector& Step = (Distance > MovementScale) ? ToDestinationVector * (MovementScale / Distance) : ToDestinationVector;
 	return FTransform(
-		GetRelativeRotation(),
-		GetRelativeLocation() + Step,
-		GetRelativeScale3D()
+		GetComponentRotation(),
+		GetComponentLocation() + Step,
+		GetComponentScale()
 	);
 }
