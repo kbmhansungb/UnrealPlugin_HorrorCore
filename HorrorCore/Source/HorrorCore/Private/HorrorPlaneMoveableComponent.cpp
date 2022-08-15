@@ -37,10 +37,8 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 	UWorld* World = GetWorld();
 	check(World);
 
-	const FTransform& NewRelativeTransform = IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation) * VirtualToRelativeTransform;
-	SetDestination(NewRelativeTransform);
+	SetDestination(GetNewRelativeTransform(IntersectionLocation));
 	const FTransform& NewStepTransform = GetStepToDestination(World->GetDeltaSeconds());
-	LastIntersectionLocation = IntersectionLocation;
 
 	const FTransform& Start = GetComponentTransform();
 	const FTransform& End = GetComponentTransformFromNewRelative(NewStepTransform);
@@ -101,6 +99,13 @@ bool UHorrorPlaneMoveableComponent::IsValidDirection(const FVector& Direction) c
 void UHorrorPlaneMoveableComponent::UpdateVirtualRelativeTransform(const FTransform& VirtualTransform, const FTransform& RelativeTransform)
 {
 	VirtualToRelativeTransform = VirtualTransform.Inverse() * RelativeTransform;
+}
+
+FTransform UHorrorPlaneMoveableComponent::GetNewRelativeTransform(const FVector& IntersectionLocation)
+{
+	const FTransform& NewRelativeTransform = IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, IntersectionLocation) * VirtualToRelativeTransform;
+	LastIntersectionLocation = IntersectionLocation;
+	return NewRelativeTransform;
 }
 
 FTransform UHorrorPlaneMoveableComponent::GetComponentTransformFromNewRelative(const FTransform& NewRelativeTransform) const
