@@ -14,7 +14,6 @@ void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResul
 	const FVector& Direction = (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal();
 	LastIntersectionLocation = GetComponentLocation();
 
-	OriginalRelativeTransform = GetRelativeTransform();
 	const FVector& FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, Direction);
 	UpdateVirtualRelativeTransform(IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, FirstIntersectionLocation), GetRelativeTransform());
 }
@@ -82,7 +81,7 @@ FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform_Implementation(
 	{
 		IntersectionLocation.X,
 		IntersectionLocation.Y,
-		OriginalRelativeTransform.GetLocation().Z
+		GetRelativeLocation().Z
 	};
 
 	return FTransform(
