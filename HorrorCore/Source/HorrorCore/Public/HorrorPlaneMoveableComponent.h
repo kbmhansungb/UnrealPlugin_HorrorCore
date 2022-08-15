@@ -39,10 +39,9 @@ public:
 public:
 	bool IsValidDirection(const FVector& Direction) const;
 
-public:
 	void UpdateVirtualRelativeTransform(const FTransform& VirtualTransform, const FTransform& RelativeTransform);
-
 	FTransform GetNewRelativeTransform(const FVector& IntersectionLocation);
+
 	FTransform GetComponentTransformFromNewRelative(const FTransform& NewRelativeTransform) const;
 	void SetDestination(const FTransform& NewDestinationRelativeTransfrom);
 	FTransform GetStepToDestination(const float DeletaTime) const;
