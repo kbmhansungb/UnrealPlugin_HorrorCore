@@ -16,6 +16,8 @@ class HORRORCORE_API UHorrorSphereMoveableComponent : public USceneComponent,
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxRotationSpeed = 10.0f;
 
 	// IHorrorAxisMoveableInterface에서 상속됨
 protected:
@@ -26,8 +28,4 @@ protected:
 	
 private:
 	float SphereRadius;
-	FTransform OriginalRelativeTransform;
-
-	FVector LastNormalizedVector;
-	FTransform RelativeWithVirtualTransform;
 };
