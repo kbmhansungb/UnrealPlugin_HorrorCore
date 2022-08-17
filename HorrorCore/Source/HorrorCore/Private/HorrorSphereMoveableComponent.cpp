@@ -12,8 +12,19 @@
 
 void UHorrorSphereMoveableComponent::PrepareMoving_Implementation(const FHitResult& HitLocation)
 {
+	check((HitLocation.TraceEnd - HitLocation.TraceStart).Size() > FLT_EPSILON);
+
 	SphereRadius = (HitLocation.Location - GetComponentLocation()).Size();
+
 	const FVector& FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal());
+	const FVector& ToIntersectionVector = (FirstIntersectionLocation - GetComponentLocation()) / SphereRadius;
+	// Intersection to Upvector
+	{
+		const FVector& Axis = (ToIntersectionVector ^ GetUpVector()).GetSafeNormal();
+		const float& Rad = FMath::Acos(ToIntersectionVector | GetUpVector());
+
+		IntersectionCorrectionQuarts = FQuat(Axis, Rad);
+	}
 }
 
 FVector UHorrorSphereMoveableComponent::GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const
@@ -51,8 +62,7 @@ void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& I
 			const FTransform& GoPrimitiveWorldTransform = PrimitiveComponent->GetComponentTransform().GetRelativeTransform(Start) * End;
 
 			// Sweep 검사에서, 회전이 포함되지 않으므로, 갈 수는 있지만, 돌아오지 못하는 상황이 있습니다.
-			// 따라서 돌아올 수 있는지 확인하여, 이동을 결정하는 것은
-			// 완벽한 해결책은 아니지만 그럴싸하게 작동합니다.
+			// 따라서 돌아올 수 있는지 확인하여, 이동을 결정하는 것은 그럴싸하게 작동합니다.
 
 			const bool CanGo = World->ComponentSweepMulti(
 				HitResults, PrimitiveComponent,
@@ -84,6 +94,7 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 
 	const FVector& V0 = GetUpVector();
 	FVector V1 = (IntersectionLocation - GetComponentLocation()) / SphereRadius;
+	V1 = IntersectionCorrectionQuarts.RotateVector(V1);
 
 	DrawDebugSphere(GetWorld(), V0 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Red);
 	DrawDebugSphere(GetWorld(), V1 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Blue);

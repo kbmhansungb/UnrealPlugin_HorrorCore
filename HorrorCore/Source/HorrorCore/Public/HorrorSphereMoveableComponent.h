@@ -28,4 +28,5 @@ protected:
 	
 private:
 	float SphereRadius;
+	FQuat IntersectionCorrectionQuarts;
 };
