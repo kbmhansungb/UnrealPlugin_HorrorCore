@@ -1,5 +1,5 @@
 // 2022 06    Bum moo, Kim    Free copyright
 
+#pragma once
 
-#include "HorrorAxisMoveableInterface.h"
-
+#include "CoreMinimal.h"

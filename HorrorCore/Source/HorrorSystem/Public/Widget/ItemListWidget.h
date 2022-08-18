@@ -28,7 +28,7 @@ public:
 	float SquareSize = 90;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Padding;
+		float Padding;
 };
 
 /**
