@@ -62,7 +62,7 @@ void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& I
 			const FTransform& GoPrimitiveWorldTransform = PrimitiveComponent->GetComponentTransform().GetRelativeTransform(Start) * End;
 
 			// Sweep 검사에서, 회전이 포함되지 않으므로, 갈 수는 있지만, 돌아오지 못하는 상황이 있습니다.
-			// 따라서 돌아올 수 있는지 확인하여, 이동을 결정하는 것은 그럴싸하게 작동합니다.
+			// 따라서 돌아올 수 있는지 확인하여, 이동을 결정하는 것은 어느정도는... 그럴싸하게 작동합니다.
 
 			const bool CanGo = World->ComponentSweepMulti(
 				HitResults, PrimitiveComponent,
@@ -92,12 +92,13 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 	static constexpr float DebugSphereSize = 5.0f;
 	static constexpr int32 DebugSphereSegment = 16;
 
-	const FVector& V0 = GetUpVector();
-	FVector V1 = (IntersectionLocation - GetComponentLocation()) / SphereRadius;
-	V1 = IntersectionCorrectionQuarts.RotateVector(V1);
+	const FVector& V0 = FVector::UpVector; //GetUpVector();
+	FVector V1 = ConvertRelativeVector(IntersectionLocation);
+	V1 = DropVectorParameter(V1);
+	V1.Normalize();
 
-	DrawDebugSphere(GetWorld(), V0 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Red);
-	DrawDebugSphere(GetWorld(), V1 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Blue);
+	DrawDebugSphere(GetWorld(), GetComponentQuat().RotateVector(V0 * SphereRadius) + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Red);
+	DrawDebugSphere(GetWorld(), GetComponentQuat().RotateVector(V1 * SphereRadius) + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Blue);
 
 	{
 		const float& Radian = FMath::Acos(V1 | V0);
@@ -115,7 +116,7 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 		}
 	}
 
-	DrawDebugSphere(GetWorld(), V1 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Green);
+	DrawDebugSphere(GetWorld(), GetComponentQuat().RotateVector(V1 * SphereRadius) + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Green);
 
 	const FVector& Axis = (V0 ^ V1).GetSafeNormal();
 	const float& Rad = FMath::Acos(V1 | V0);
@@ -125,3 +126,17 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 	return FTransform(Quat * GetComponentQuat(), GetComponentLocation(), GetComponentScale());
 }
 
+inline FVector UHorrorSphereMoveableComponent::ConvertRelativeVector(const FVector& IntersectionLocation) const
+{
+	FVector RelativeVector = (IntersectionLocation - GetComponentLocation());
+
+	RelativeVector = IntersectionCorrectionQuarts.RotateVector(RelativeVector);
+	RelativeVector = GetComponentQuat().UnrotateVector(RelativeVector);
+
+	return RelativeVector;
+}
+
+FVector UHorrorSphereMoveableComponent::DropVectorParameter(const FVector& SphereVector) const
+{
+	return FVector(MaintainX ? SphereVector.X : 0.f, MaintainY ? SphereVector.Y : 0.f, SphereVector.Z);
+}

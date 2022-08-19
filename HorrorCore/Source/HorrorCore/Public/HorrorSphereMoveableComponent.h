@@ -9,15 +9,21 @@
 #include "HorrorSphereMoveableComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom, Horror), meta=(BlueprintSpawnableComponent) )
 class HORRORCORE_API UHorrorSphereMoveableComponent : public USceneComponent,
 	public IHorrorMoveableInterface
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "SphereMoveable|Horror", EditAnywhere, BlueprintReadWrite)
 	float MaxRotationSpeed = 10.0f;
+
+	UPROPERTY(Category = "SphereMoveable|Horror", EditAnywhere, BlueprintReadWrite)
+	bool MaintainX = true;
+
+	UPROPERTY(Category = "SphereMoveable|Horror", EditAnywhere, BlueprintReadWrite)
+	bool MaintainY = true;
 
 	// IHorrorAxisMoveableInterface에서 상속됨
 protected:
@@ -26,6 +32,10 @@ protected:
 	virtual void ApplyMoving_Implementation(const FVector& IntersectionLocation) override;
 	virtual FTransform GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const override;
 	
+public:
+	FVector ConvertRelativeVector(const FVector& IntersectionLocation) const;
+	FVector DropVectorParameter(const FVector& SphereVector) const;
+
 private:
 	float SphereRadius;
 	FQuat IntersectionCorrectionQuarts;
