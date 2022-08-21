@@ -24,13 +24,6 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-public:
-	UPROPERTY(Category = "Horror|Holdable", VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* ItemMeshComponent;
-
-	UPROPERTY(Category = "Horror|Holdable", VisibleAnywhere, BlueprintReadOnly)
-	UActorSequenceComponent* PutSequence;
-
 	// IHorrorHoldableInterface을(를) 통해 상속됨
 public:
 	virtual AActor* GetHoldableActor_Implementation() const override;
@@ -39,5 +32,18 @@ public:
 	virtual void SetHoldableTransform_Implementation(const FTransform& DesireTransform) override;
 	virtual void LerpHoldableTransform_Implementation(const FTransform& DesireTransform) override;
 	virtual void ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) override;
+	
+public:
+	UFUNCTION(Category = "Horror|HoldableActor", BlueprintCallable)
+	void SetSequence(bool PlayAnim);
 
+	UFUNCTION(Category = "Horror|HoldableActor", BlueprintCallable)
+	FQuat GetTransformQuat(const FVector& DesireNormal);
+
+public:
+	UPROPERTY(Category = "Horror|Holdable", VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* ItemMeshComponent;
+
+	UPROPERTY(Category = "Horror|Holdable", VisibleAnywhere, BlueprintReadOnly)
+	UActorSequenceComponent* PutSequence;
 };
