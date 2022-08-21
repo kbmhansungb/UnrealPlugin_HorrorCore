@@ -15,8 +15,6 @@ AHorrorHoldableActor::AHorrorHoldableActor()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(FName("Root"));
 	ItemMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("ItemMesh"));
 	ItemMeshComponent->SetupAttachment(RootComponent);
-
-	PutSequence = CreateDefaultSubobject<UActorSequenceComponent>(FName("PutSequence"));
 }
 
 void AHorrorHoldableActor::BeginPlay()
@@ -44,7 +42,6 @@ bool AHorrorHoldableActor::IsHoldable_Implementation(const TScriptInterface<IHor
 
 void AHorrorHoldableActor::ResponseHoldHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
-	SetSequence(false);
 }
 
 void AHorrorHoldableActor::SetHoldableTransform_Implementation(const FTransform& DesireTransform)
@@ -68,29 +65,10 @@ void AHorrorHoldableActor::ResponseReleaseHoldable_Implementation(const TScriptI
 	FVector WorldLocation = HitResult.Location;
 
 	AddActorWorldTransform(
-		FTransform(
-			GetTransformQuat(Normal),
-			WorldLocation - GetActorLocation() + FVector(0.f, 0.f, 20.f)
-		),
+		FTransform(GetTransformQuat(Normal), WorldLocation - GetActorLocation()),
 		false, nullptr, ETeleportType::None
 	);
 	AddActorWorldRotation(GetTransformQuat(Normal), false, nullptr, ETeleportType::None);
-	SetSequence(true);
-}
-
-void AHorrorHoldableActor::SetSequence(bool PlayAnim)
-{
-	if (!PutSequence) return;
-	if (!PutSequence->GetSequencePlayer()) return;
-
-	if (PlayAnim)
-	{
-		PutSequence->GetSequencePlayer()->Play();
-	}
-	else
-	{
-		PutSequence->GetSequencePlayer()->GoToEndAndStop();
-	}
 }
 
 FQuat AHorrorHoldableActor::GetTransformQuat(const FVector& DesireNormal)

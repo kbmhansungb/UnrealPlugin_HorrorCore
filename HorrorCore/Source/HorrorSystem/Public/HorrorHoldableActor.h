@@ -35,15 +35,9 @@ public:
 	
 public:
 	UFUNCTION(Category = "Horror|HoldableActor", BlueprintCallable)
-	void SetSequence(bool PlayAnim);
-
-	UFUNCTION(Category = "Horror|HoldableActor", BlueprintCallable)
 	FQuat GetTransformQuat(const FVector& DesireNormal);
 
 public:
 	UPROPERTY(Category = "Horror|Holdable", VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* ItemMeshComponent;
-
-	UPROPERTY(Category = "Horror|Holdable", VisibleAnywhere, BlueprintReadOnly)
-	UActorSequenceComponent* PutSequence;
 };
