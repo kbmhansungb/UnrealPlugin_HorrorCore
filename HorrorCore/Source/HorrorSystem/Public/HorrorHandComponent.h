@@ -68,6 +68,8 @@ public:
 	void Lerp(float Deleta);
 	virtual void Lerp_Implementation(float Deleta);
 
+	bool CheckPutable(const FHitResult& HitResult) const;
+
 	void SetStart(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable);
 
 	const FHoldStruct* GetHoldStruct(const EHandType Type) const;
