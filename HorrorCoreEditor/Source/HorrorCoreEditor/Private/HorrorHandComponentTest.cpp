@@ -9,6 +9,28 @@ void UTestHorrorHoldableObject::ResponseReleaseHoldable_Implementation(const TSc
 {
 }
 
+AActor* UTestHorrorHoldableObject::GetHoldableActor_Implementation() const
+{
+	return nullptr;
+}
+
+bool UTestHorrorHoldableObject::IsHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) const
+{
+	return false;
+}
+
+void UTestHorrorHoldableObject::ResponseHoldHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface)
+{
+}
+
+void UTestHorrorHoldableObject::SetHoldableTransform_Implementation(const FTransform& DesireTransform)
+{
+}
+
+void UTestHorrorHoldableObject::LerpHoldableTransform_Implementation(const FTransform& DesireTransform)
+{
+}
+
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(
 	FHorrorHandComponentTest, "Horror.HandComponent.Hold_Swap_ReleaseTest",
 	EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::SmokeFilter
@@ -82,6 +104,28 @@ bool FHorrorHandComponentTest::RunTest(const FString& Parameters)
 void UTestHorrorHoldableHoldReleaseTestObject::ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
 	this->IsReleased = true;
+}
+
+AActor* UTestHorrorHoldableHoldReleaseTestObject::GetHoldableActor_Implementation() const
+{
+	return nullptr;
+}
+
+bool UTestHorrorHoldableHoldReleaseTestObject::IsHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) const
+{
+	return false;
+}
+
+void UTestHorrorHoldableHoldReleaseTestObject::ResponseHoldHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface)
+{
+}
+
+void UTestHorrorHoldableHoldReleaseTestObject::SetHoldableTransform_Implementation(const FTransform& DesireTransform)
+{
+}
+
+void UTestHorrorHoldableHoldReleaseTestObject::LerpHoldableTransform_Implementation(const FTransform& DesireTransform)
+{
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(

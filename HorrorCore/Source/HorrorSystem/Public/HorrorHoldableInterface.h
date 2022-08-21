@@ -27,23 +27,23 @@ class HORRORSYSTEM_API IHorrorHoldableInterface
 public:
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	AActor* GetHoldableActor() const;
-	virtual AActor* GetHoldableActor_Implementation() const { return nullptr; }
+	virtual AActor* GetHoldableActor_Implementation() const = 0;
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	bool IsHoldable(const TScriptInterface<IHorrorHandInterface>& HandInterface) const;
-	virtual bool IsHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) const { return false; }
+	virtual bool IsHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) const = 0;
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void ResponseHoldHoldable(const TScriptInterface<IHorrorHandInterface>& HandInterface);
-	virtual void ResponseHoldHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) {};
+	virtual void ResponseHoldHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) = 0;
 
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void SetHoldableTransform(const FTransform& DesireTransform);
-	virtual void SetHoldableTransform_Implementation(const FTransform& DesireTransform) {};
+	virtual void SetHoldableTransform_Implementation(const FTransform& DesireTransform) = 0;
 
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void LerpHoldableTransform(const FTransform& DesireTransform);
-	virtual void LerpHoldableTransform_Implementation(const FTransform& DesireTransform) {};
+	virtual void LerpHoldableTransform_Implementation(const FTransform& DesireTransform) = 0;
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, BlueprintNativeEvent)
 	void ResponseReleaseHoldable(const TScriptInterface<IHorrorHandInterface>& HandInterface);

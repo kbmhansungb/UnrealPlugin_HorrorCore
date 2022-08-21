@@ -15,6 +15,13 @@ class HORRORCOREEDITOR_API UTestHorrorHoldableObject : public UObject,
 
 public:
 	virtual void ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface);
+
+	// IHorrorHoldableInterface을(를) 통해 상속됨
+	virtual AActor* GetHoldableActor_Implementation() const override;
+	virtual bool IsHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) const override;
+	virtual void ResponseHoldHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) override;
+	virtual void SetHoldableTransform_Implementation(const FTransform& DesireTransform) override;
+	virtual void LerpHoldableTransform_Implementation(const FTransform& DesireTransform) override;
 };
 
 
@@ -28,4 +35,11 @@ public:
 	bool IsReleased = false;
 
 	virtual void ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface);
+
+	// IHorrorHoldableInterface을(를) 통해 상속됨
+	virtual AActor* GetHoldableActor_Implementation() const override;
+	virtual bool IsHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) const override;
+	virtual void ResponseHoldHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface) override;
+	virtual void SetHoldableTransform_Implementation(const FTransform& DesireTransform) override;
+	virtual void LerpHoldableTransform_Implementation(const FTransform& DesireTransform) override;
 };
