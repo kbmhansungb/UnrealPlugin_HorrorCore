@@ -68,15 +68,20 @@ void UHorrorHandComponent::GetHoldablePutLocation_Implementation(FHitResult& Hit
 	const FVector& Position = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetCameraLocation();
 	const FVector& Forward = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetActorForwardVector();
 
-	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true) &&
+		CheckPutable(HitResult))
 	{
 		return;
 	}
 
-	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + -Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + -GetOwner()->GetActorUpVector() * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true) &&
+		CheckPutable(HitResult))
 	{
 		return;
 	}
+
+	HitResult.Location = GetOwner()->GetActorTransform().GetTranslation();
+	HitResult.Normal = FVector::UpVector;
 }
 
 bool UHorrorHandComponent::IsEmptyHand(const EHandType Type)
@@ -134,6 +139,14 @@ void UHorrorHandComponent::Lerp_Implementation(float Deleta)
 	{
 		IHorrorHoldableInterface::Execute_LerpHoldableTransform(LeftHand.HoldItem.GetObject(), FTransform(LeftHand.RelativePosition) * GetComponentTransform());
 	}
+}
+
+bool UHorrorHandComponent::CheckPutable(const FHitResult& HitResult) const
+{
+	static constexpr float RadFrom30Degree = 0.86602540378f;
+	check(HitResult.bBlockingHit);
+
+	return FVector::DotProduct(HitResult.Normal, FVector::UpVector) > RadFrom30Degree;
 }
 
 void UHorrorHandComponent::SetStart(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable)
