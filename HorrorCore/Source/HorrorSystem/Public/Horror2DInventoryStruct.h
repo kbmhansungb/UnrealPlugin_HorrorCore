@@ -28,6 +28,7 @@ public:
 
 public:
 	bool IsIntersect(const FIntPoint& Int) const;
+	bool IsIntersect(const FIntPoint& Index, const FIntSize2D& Size2D) const;
 	bool IsEqualItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface) const;
 };
 
@@ -45,7 +46,8 @@ public:
 
 public:
 	bool IsValidIndex(const FIntPoint& Index) const;
-	bool IsNotExceed(const FIntPoint& Index, const TScriptInterface<IHorrorItemInterface>& Iteminterface) const;
+	bool IsNotExceed(const FIntPoint& Index, const TScriptInterface<IHorrorItemInterface>& ItemInterface) const;
+	bool IsOverlaped(const FIntPoint& Index, const TScriptInterface<IHorrorItemInterface>& ItemInterface) const;
 	FHorrorItem2DInventoryData* GetItemStackPtr(const FIntPoint& Index);
 	const FHorrorItem2DInventoryData* GetItemStackPtr(const FIntPoint& Index) const;
 	int32 GetItemStackIndex(const FIntPoint& Index) const;
