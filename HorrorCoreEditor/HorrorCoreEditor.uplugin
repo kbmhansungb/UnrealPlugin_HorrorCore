@@ -25,6 +25,10 @@
 		{
 			"Name": "HorrorCore",
 			"Enabled": true
+		},
+		{
+			"Name": "ActorSequence",
+			"Enabled": true
 		}
 	]
 }

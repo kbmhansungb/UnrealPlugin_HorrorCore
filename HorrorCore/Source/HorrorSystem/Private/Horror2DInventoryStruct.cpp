@@ -11,6 +11,21 @@ bool FHorrorItem2DInventoryData::IsIntersect(const FIntPoint& Int) const
 	return InX && InY;
 }
 
+bool FHorrorItem2DInventoryData::IsIntersect(const FIntPoint& Index, const FIntSize2D& Size2D) const
+{
+	const FIntPoint LU = Index;
+	const FIntPoint LD = FIntPoint(Index.X, Index.Y + Size2D.Y - 1);
+	const FIntPoint RU = FIntPoint(Index.X + Size2D.X - 1, Index.Y);
+	const FIntPoint RD = Index + Size2D - 1;
+
+	if (IsIntersect(LU) || IsIntersect(LD) || IsIntersect(RU) || IsIntersect(RD))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool FHorrorItem2DInventoryData::IsEqualItem(const TScriptInterface<IHorrorItemInterface>& Iteminterface) const
 {
 	return Iteminterface == ItemBundle.TypeInterface;
@@ -34,6 +49,21 @@ bool FHorror2DInventoryStruct::IsNotExceed(const FIntPoint& Index, const TScript
 	return
 		InventorySize.X >= MaxPoint.X &&
 		InventorySize.Y >= MaxPoint.Y;
+}
+
+bool FHorror2DInventoryStruct::IsOverlaped(const FIntPoint& Index, const TScriptInterface<IHorrorItemInterface>& ItemInterface) const
+{
+	FIntSize2D IconSize;
+	IHorrorItemInterface::Execute_GetIconSize(ItemInterface.GetObject(), IconSize);
+
+	for (const auto& Item : Items)
+	{
+		if (Item.IsIntersect(Index, IconSize))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 FHorrorItem2DInventoryData* FHorror2DInventoryStruct::GetItemStackPtr(const FIntPoint& Index)
@@ -91,6 +121,12 @@ bool FHorror2DInventoryStruct::IsStorable(const TScriptInterface<IHorrorItemInte
 		{
 			return false;
 		}
+
+		if (IsOverlaped(Index, Iteminterface))
+		{
+			return false;
+		}
+
 	}
 
 	return true;
