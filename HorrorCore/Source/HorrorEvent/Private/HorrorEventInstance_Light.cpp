@@ -34,6 +34,8 @@ void UHorrorLightComponent::UpdateLight()
 {
 	for (const auto& Light : Lights)
 	{
+		check(Light.Light);
+
 		ULightComponent* LightComponent = Light.Light->GetLightComponent();
 
 		LightComponent->SetVisibility(IsOn);
