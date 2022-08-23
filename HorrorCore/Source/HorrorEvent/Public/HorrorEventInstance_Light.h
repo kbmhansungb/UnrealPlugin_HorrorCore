@@ -10,6 +10,7 @@
 class AActor;
 class ALight;
 class UCurveFloat;
+class UHorrorLightComponent;
 
 USTRUCT(BlueprintType)
 struct HORROREVENT_API FHorrorLIghtStruct
@@ -26,6 +27,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ALight*	Light;
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLightDelegate, UHorrorLightComponent*, EffectedLight);
 
 UCLASS(ClassGroup = (Horror), BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
 class HORROREVENT_API UHorrorLightComponent : public UActorComponent
@@ -84,6 +87,12 @@ public:
 	
 	UFUNCTION(Category = "Horror", BlueprintCallable, CallInEditor)
 	void CatchLight();
+
+	UPROPERTY(BlueprintAssignable)
+	FLightDelegate LightOnDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FLightDelegate LightOffDelegate;
 };
 
 /*

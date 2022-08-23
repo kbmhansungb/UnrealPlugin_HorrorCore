@@ -40,6 +40,21 @@ void UHorrorLightComponent::UpdateLight()
 		LightComponent->SetIntensity(MultiflyIntensity * Light.Intensity);
 		LightComponent->SetLightColor(BaseColor * Light.Color);
 	}
+
+	if (IsOn)
+	{
+		if (LightOnDelegate.IsBound())
+		{
+			LightOnDelegate.Broadcast(this);
+		}
+	}
+	else
+	{
+		if (LightOffDelegate.IsBound())
+		{
+			LightOffDelegate.Broadcast(this);
+		}
+	}
 }
 
 void UHorrorLightComponent::CatchLight()
