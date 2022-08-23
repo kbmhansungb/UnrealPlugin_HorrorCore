@@ -12,7 +12,7 @@ class ALight;
 class UCurveFloat;
 
 USTRUCT(BlueprintType)
-struct FHorrorLIghtStruct
+struct HORROREVENT_API FHorrorLIghtStruct
 {
 	GENERATED_BODY()
 
@@ -28,7 +28,7 @@ public:
 };
 
 UCLASS(ClassGroup = (Horror), BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
-class UHorrorLightComponent : public UActorComponent
+class HORROREVENT_API UHorrorLightComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
