@@ -8,6 +8,9 @@
 #include "InputCoreTypes.h"
 #include "HorrorSphereMoveableComponent.generated.h"
 
+class UHorrorSphereMoveableComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSphereMoveableDelegate, UHorrorSphereMoveableComponent*, PublisherSphereMoveableComponent);
 
 UCLASS( ClassGroup=(Custom, Horror), meta=(BlueprintSpawnableComponent) )
 class HORRORCORE_API UHorrorSphereMoveableComponent : public USceneComponent,
@@ -28,15 +31,33 @@ public:
 	// IHorrorAxisMoveableInterface에서 상속됨
 protected:
 	virtual void PrepareMoving_Implementation(const FHitResult& HitLocation) override;
+	virtual void EndMoving_Implementation() override;
 	virtual FVector GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const override;
 	virtual void ApplyMoving_Implementation(const FVector& IntersectionLocation) override;
 	virtual FTransform GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const override;
 	
 public:
+	UPROPERTY(BlueprintAssignable)
+	FSphereMoveableDelegate StartMovingDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FSphereMoveableDelegate EndMovingDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FSphereMoveableDelegate BlockMovingDelegate;
+
+#pragma region Implementation
+
+public:
 	FVector ConvertRelativeVector(const FVector& IntersectionLocation) const;
 	FVector DropVectorParameter(const FVector& SphereVector) const;
+	void UpdateLastBlocking(bool NewHasBlocking);
 
 private:
 	float SphereRadius;
 	FQuat IntersectionCorrectionQuarts;
+	bool LastBlocking;
+
+#pragma endregion
+
 };

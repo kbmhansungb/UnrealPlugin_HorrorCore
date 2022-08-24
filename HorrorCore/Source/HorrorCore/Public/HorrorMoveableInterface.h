@@ -23,6 +23,10 @@ public:
 	virtual void PrepareMoving_Implementation(const FHitResult& HitLocation) = 0;
 
 	UFUNCTION(Category = "Horror|Moveable", BlueprintCallable, BlueprintNativeEvent)
+	void EndMoving();
+	virtual void EndMoving_Implementation() = 0;
+
+	UFUNCTION(Category = "Horror|Moveable", BlueprintCallable, BlueprintNativeEvent)
 	FVector GetIntersectionPoint(const FVector& Origin, const FVector& Direction) const;
 	virtual FVector GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const = 0;
 

@@ -25,6 +25,20 @@ void UHorrorSphereMoveableComponent::PrepareMoving_Implementation(const FHitResu
 
 		IntersectionCorrectionQuarts = FQuat(Axis, Rad);
 	}
+
+	LastBlocking = false;
+	if (StartMovingDelegate.IsBound())
+	{
+		StartMovingDelegate.Broadcast(this);
+	}
+}
+
+void UHorrorSphereMoveableComponent::EndMoving_Implementation()
+{
+	if (EndMovingDelegate.IsBound())
+	{
+		EndMovingDelegate.Broadcast(this);
+	}
 }
 
 FVector UHorrorSphereMoveableComponent::GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const
@@ -80,8 +94,15 @@ void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& I
 
 		if (HasBlocking)
 		{
-			return;
+			break;
 		}
+	}
+
+	UpdateLastBlocking(HasBlocking);
+
+	if (HasBlocking)
+	{
+		return;
 	}
 
 	SetWorldTransform(NewVirtualTransform);
@@ -139,4 +160,20 @@ inline FVector UHorrorSphereMoveableComponent::ConvertRelativeVector(const FVect
 FVector UHorrorSphereMoveableComponent::DropVectorParameter(const FVector& SphereVector) const
 {
 	return FVector(MaintainX ? SphereVector.X : 0.f, MaintainY ? SphereVector.Y : 0.f, SphereVector.Z);
+}
+
+void UHorrorSphereMoveableComponent::UpdateLastBlocking(bool NewHasBlocking)
+{
+	if (LastBlocking && !NewHasBlocking)
+	{
+		if (BlockMovingDelegate.IsBound())
+		{
+			BlockMovingDelegate.Broadcast(this);
+		}
+	}
+
+	if (LastBlocking != NewHasBlocking)
+	{
+		LastBlocking = NewHasBlocking;
+	}
 }
