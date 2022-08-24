@@ -7,6 +7,9 @@
 #include "HorrorMoveableInterface.h"
 #include "HorrorPlaneMoveableComponent.generated.h"
 
+class UHorrorPlaneMoveableComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlaneMoveableDelegate, UHorrorPlaneMoveableComponent*, PublisherPlaneMoveableComponent);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HORRORCORE_API UHorrorPlaneMoveableComponent : public UPrimitiveComponent,
@@ -30,9 +33,20 @@ public:
 	// IHorrorAxisMoveableInterface에서 상속됨
 public:
 	virtual void PrepareMoving_Implementation(const FHitResult& HitLocation) override;
+	virtual void EndMoving_Implementation() override;
 	virtual FVector GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const override;
 	virtual void ApplyMoving_Implementation(const FVector& IntersectionLocation) override;
 	virtual FTransform GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const override;
+	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FPlaneMoveableDelegate StartMovingDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FPlaneMoveableDelegate EndMovingDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FPlaneMoveableDelegate BlockMovingDelegate;
 
 #pragma region Implementation
 
@@ -45,6 +59,8 @@ public:
 	void SetDestination(const FTransform& NewDestinationTransfrom);
 	FTransform GetStepToDestination(const float DeletaTime) const;
 
+	void UpdateLastBlocking(bool NewHasBlocking);
+
 private:
 	// WorldSpace
 	FTransform DestinationTransfrom;
@@ -52,5 +68,6 @@ private:
 	FVector LastIntersectionLocation;
 	FTransform RelativeWithVirtualTransform;
 
+	bool LastBlocking;
 #pragma endregion
 };

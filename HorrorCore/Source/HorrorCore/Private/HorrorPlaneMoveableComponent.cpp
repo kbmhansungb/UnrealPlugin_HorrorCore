@@ -16,6 +16,20 @@ void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResul
 
 	const FVector& FirstIntersectionLocation = IHorrorMoveableInterface::Execute_GetIntersectionPoint(this, HitLocation.TraceStart, Direction);
 	UpdateRelativeWithVirtualTransform(IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, FirstIntersectionLocation));
+
+	LastBlocking = false;
+	if (StartMovingDelegate.IsBound())
+	{
+		StartMovingDelegate.Broadcast(this);
+	}
+}
+
+void UHorrorPlaneMoveableComponent::EndMoving_Implementation()
+{
+	if (EndMovingDelegate.IsBound())
+	{
+		EndMovingDelegate.Broadcast(this);
+	}
 }
 
 FVector UHorrorPlaneMoveableComponent::GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const
@@ -66,10 +80,15 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 		if (HasBlocking)
 		{
 			// 충돌이 있는 경우 움직이지 않습니다.
-			return;
+			break;
 		}
+	}
 
+	UpdateLastBlocking(HasBlocking);
 
+	if (HasBlocking)
+	{
+		return;
 	}
 
 	SetWorldTransform(NewStepTransform);
@@ -134,4 +153,20 @@ FTransform UHorrorPlaneMoveableComponent::GetStepToDestination(const float Delet
 		GetComponentLocation() + Step,
 		GetComponentScale()
 	);
+}
+
+void UHorrorPlaneMoveableComponent::UpdateLastBlocking(bool NewHasBlocking)
+{
+	if (LastBlocking && !NewHasBlocking)
+	{
+		if (BlockMovingDelegate.IsBound())
+		{
+			BlockMovingDelegate.Broadcast(this);
+		}
+	}
+
+	if (LastBlocking != NewHasBlocking)
+	{
+		LastBlocking = NewHasBlocking;
+	}
 }
