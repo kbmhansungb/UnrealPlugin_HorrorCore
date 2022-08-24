@@ -28,6 +28,9 @@ public:
 	UPROPERTY(Category = "SphereMoveable|Horror", EditAnywhere, BlueprintReadWrite)
 	bool MaintainY = true;
 
+	UPROPERTY(Category = "SphereMoveable|Horror", EditAnywhere, BlueprintReadWrite)
+	bool MaintainZ = true;
+
 	// IHorrorAxisMoveableInterface에서 상속됨
 protected:
 	virtual void PrepareMoving_Implementation(const FHitResult& HitLocation) override;
@@ -49,7 +52,6 @@ public:
 #pragma region Implementation
 
 public:
-	FVector ConvertRelativeVector(const FVector& IntersectionLocation) const;
 	FVector DropVectorParameter(const FVector& SphereVector) const;
 	void UpdateLastBlocking(bool NewHasBlocking);
 

@@ -47,6 +47,7 @@ FVector UHorrorSphereMoveableComponent::GetIntersectionPoint_Implementation(cons
 
 	FVector ClosetPoint;
 	FMath::SphereDistToLine(GetComponentLocation(), SphereRadius, Origin, Direction, ClosetPoint);
+
 	return ClosetPoint;
 }
 
@@ -113,13 +114,46 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 	static constexpr float DebugSphereSize = 5.0f;
 	static constexpr int32 DebugSphereSegment = 16;
 
-	const FVector& V0 = FVector::UpVector; //GetUpVector();
-	FVector V1 = ConvertRelativeVector(IntersectionLocation);
-	V1 = DropVectorParameter(V1);
+
+	const FVector& V0 = GetUpVector();
+	FVector V1 = IntersectionCorrectionQuarts.RotateVector(IntersectionLocation - GetComponentLocation());
+	{
+		USceneComponent* ParentComponent = GetAttachParent();
+
+		if (ParentComponent)
+		{
+			const FVector& Forward = ParentComponent->GetForwardVector();
+			const FVector& Right = ParentComponent->GetRightVector();
+			const FVector& Up = ParentComponent->GetUpVector();
+
+			FVector DropVector(0.f);
+
+			if (MaintainX)
+			{
+				DropVector += (V1 | Forward) * Forward;
+			}
+
+			if (MaintainY)
+			{
+				DropVector += (V1 | Right) * Right;
+			}
+
+			if (MaintainZ)
+			{
+				DropVector += (V1 | Up) * Up;
+			}
+
+			V1 = DropVector;
+		}
+		else
+		{
+			V1 = DropVectorParameter(V1);
+		}
+	}
 	V1.Normalize();
 
-	DrawDebugSphere(GetWorld(), GetComponentQuat().RotateVector(V0 * SphereRadius) + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Red);
-	DrawDebugSphere(GetWorld(), GetComponentQuat().RotateVector(V1 * SphereRadius) + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Blue);
+	DrawDebugSphere(GetWorld(), V0 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Red);
+	DrawDebugSphere(GetWorld(), V1 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Blue);
 
 	{
 		const float& Radian = FMath::Acos(V1 | V0);
@@ -137,7 +171,7 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 		}
 	}
 
-	DrawDebugSphere(GetWorld(), GetComponentQuat().RotateVector(V1 * SphereRadius) + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Green);
+	DrawDebugSphere(GetWorld(), V1 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Green);
 
 	const FVector& Axis = (V0 ^ V1).GetSafeNormal();
 	const float& Rad = FMath::Acos(V1 | V0);
@@ -147,19 +181,12 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 	return FTransform(Quat * GetComponentQuat(), GetComponentLocation(), GetComponentScale());
 }
 
-inline FVector UHorrorSphereMoveableComponent::ConvertRelativeVector(const FVector& IntersectionLocation) const
-{
-	FVector RelativeVector = (IntersectionLocation - GetComponentLocation());
-
-	RelativeVector = IntersectionCorrectionQuarts.RotateVector(RelativeVector);
-	RelativeVector = GetComponentQuat().UnrotateVector(RelativeVector);
-
-	return RelativeVector;
-}
-
 FVector UHorrorSphereMoveableComponent::DropVectorParameter(const FVector& SphereVector) const
 {
-	return FVector(MaintainX ? SphereVector.X : 0.f, MaintainY ? SphereVector.Y : 0.f, SphereVector.Z);
+	return FVector(
+		MaintainX ? SphereVector.X : 0.f, 
+		MaintainY ? SphereVector.Y : 0.f, 
+		MaintainZ ? SphereVector.Z : 0.f);
 }
 
 void UHorrorSphereMoveableComponent::UpdateLastBlocking(bool NewHasBlocking)
