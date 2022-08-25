@@ -38,13 +38,19 @@ protected:
 	virtual FVector GetIntersectionPoint_Implementation(const FVector& Origin, const FVector& Direction) const override;
 	virtual void ApplyMoving_Implementation(const FVector& IntersectionLocation) override;
 	virtual FTransform GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const override;
-	
+
+	UFUNCTION(Category = "SphereMoveable|Horror", BlueprintCallable)
+	float GetLastRotRad() const;
+
 public:
 	UPROPERTY(BlueprintAssignable)
-	FSphereMoveableDelegate StartMovingDelegate;
+	FSphereMoveableDelegate PrepareMovingDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FSphereMoveableDelegate EndMovingDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FSphereMoveableDelegate MoveDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FSphereMoveableDelegate BlockMovingDelegate;
@@ -59,6 +65,8 @@ private:
 	float SphereRadius;
 	FQuat IntersectionCorrectionQuarts;
 	bool LastBlocking;
+
+	mutable float LastRotRad;
 
 #pragma endregion
 

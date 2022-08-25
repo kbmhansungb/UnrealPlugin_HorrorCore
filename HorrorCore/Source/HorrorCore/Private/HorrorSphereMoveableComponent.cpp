@@ -27,9 +27,9 @@ void UHorrorSphereMoveableComponent::PrepareMoving_Implementation(const FHitResu
 	}
 
 	LastBlocking = false;
-	if (StartMovingDelegate.IsBound())
+	if (PrepareMovingDelegate.IsBound())
 	{
-		StartMovingDelegate.Broadcast(this);
+		PrepareMovingDelegate.Broadcast(this);
 	}
 }
 
@@ -68,6 +68,11 @@ void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& I
 	bool HasBlocking = false;
 	for (USceneComponent* SceneComponent : Children)
 	{
+		if (SceneComponent->ComponentHasTag(FName("NotMovealbe")))
+		{
+			continue; 
+		}
+		
 		TArray<FHitResult> HitResults;
 
 		if (UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(SceneComponent))
@@ -79,18 +84,18 @@ void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& I
 			// Sweep 검사에서, 회전이 포함되지 않으므로, 갈 수는 있지만, 돌아오지 못하는 상황이 있습니다.
 			// 따라서 돌아올 수 있는지 확인하여, 이동을 결정하는 것은 어느정도는... 그럴싸하게 작동합니다.
 
-			const bool CanGo = World->ComponentSweepMulti(
+			const bool SweepHitWhenGoing = World->ComponentSweepMulti(
 				HitResults, PrimitiveComponent,
 				PrimitiveComponent->GetComponentLocation(), GoPrimitiveWorldTransform.GetLocation(), GoPrimitiveWorldTransform.Rotator(),
 				QueryParams);
 
 			TArray<FHitResult> ComeHitResults;
-			const bool CanCome = World->ComponentSweepMulti(
+			const bool SweepHitWhenComming = World->ComponentSweepMulti(
 				ComeHitResults, PrimitiveComponent,
 				GoPrimitiveWorldTransform.GetLocation(), PrimitiveComponent->GetComponentLocation(), PrimitiveComponent->GetComponentRotation(),
 				QueryParams);
 
-			HasBlocking = CanGo && CanCome;
+			HasBlocking = SweepHitWhenGoing || SweepHitWhenComming;
 		}
 
 		if (HasBlocking)
@@ -104,6 +109,11 @@ void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& I
 	if (HasBlocking)
 	{
 		return;
+	}
+
+	if (MoveDelegate.IsBound())
+	{
+		MoveDelegate.Broadcast(this);
 	}
 
 	SetWorldTransform(NewVirtualTransform);
@@ -176,9 +186,18 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 	const FVector& Axis = (V0 ^ V1).GetSafeNormal();
 	const float& Rad = FMath::Acos(V1 | V0);
 
+	{
+		LastRotRad = Rad;
+	}
+
 	const FQuat& Quat = FQuat(Axis, Rad);
 
 	return FTransform(Quat * GetComponentQuat(), GetComponentLocation(), GetComponentScale());
+}
+
+float UHorrorSphereMoveableComponent::GetLastRotRad() const
+{
+	return LastBlocking ? 0.f : LastRotRad;
 }
 
 FVector UHorrorSphereMoveableComponent::DropVectorParameter(const FVector& SphereVector) const
@@ -191,7 +210,7 @@ FVector UHorrorSphereMoveableComponent::DropVectorParameter(const FVector& Spher
 
 void UHorrorSphereMoveableComponent::UpdateLastBlocking(bool NewHasBlocking)
 {
-	if (LastBlocking && !NewHasBlocking)
+	if (!LastBlocking && NewHasBlocking)
 	{
 		if (BlockMovingDelegate.IsBound())
 		{

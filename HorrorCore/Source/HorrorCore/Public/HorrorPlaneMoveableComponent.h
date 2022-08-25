@@ -40,10 +40,13 @@ public:
 	
 public:
 	UPROPERTY(BlueprintAssignable)
-	FPlaneMoveableDelegate StartMovingDelegate;
+	FPlaneMoveableDelegate PrepareMovingDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FPlaneMoveableDelegate EndMovingDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FPlaneMoveableDelegate MoveDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FPlaneMoveableDelegate BlockMovingDelegate;

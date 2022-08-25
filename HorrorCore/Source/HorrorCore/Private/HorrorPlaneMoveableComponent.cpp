@@ -18,9 +18,9 @@ void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResul
 	UpdateRelativeWithVirtualTransform(IHorrorMoveableInterface::Execute_GetNewVirtualTransform(this, FirstIntersectionLocation));
 
 	LastBlocking = false;
-	if (StartMovingDelegate.IsBound())
+	if (PrepareMovingDelegate.IsBound())
 	{
-		StartMovingDelegate.Broadcast(this);
+		PrepareMovingDelegate.Broadcast(this);
 	}
 }
 
@@ -62,6 +62,11 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 	bool HasBlocking = false;
 	for (USceneComponent* SceneComponent : Children)
 	{
+		if (SceneComponent->ComponentHasTag(FName("NotMovealbe")))
+		{
+			continue;
+		}
+
 		TArray<FHitResult> HitResults;
 
 		if (UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(SceneComponent))
@@ -89,6 +94,11 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 	if (HasBlocking)
 	{
 		return;
+	}
+
+	if (MoveDelegate.IsBound())
+	{
+		MoveDelegate.Broadcast(this);
 	}
 
 	SetWorldTransform(NewStepTransform);
