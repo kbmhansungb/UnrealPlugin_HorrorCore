@@ -90,10 +90,4 @@ void UHorrorInventoryComponent::InternalInitWidget()
 	{
 		InventoryWidget->Inventory = this;
 	}
-#if WITH_EDITOR
-	else
-	{
-		UE_LOG(HorrorEventLog, Error, TEXT("Cannot cast to UInventoryWidget."));
-	}
-#endif
 }
