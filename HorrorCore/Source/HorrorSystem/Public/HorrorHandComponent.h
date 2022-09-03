@@ -10,6 +10,7 @@
 UENUM(BlueprintType)
 enum class EHandType : uint8
 {
+	// None,
 	RIGHT,
 	LEFT,
 };
