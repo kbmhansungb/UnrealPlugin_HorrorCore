@@ -9,18 +9,18 @@
 
 bool FHoldStruct::IsEmpty() const
 {
-	return HoldingItem == nullptr;
+	return HoldingItem.GetObject() == nullptr;
 }
 
 bool FHoldStruct::IsHoldingItem(const TScriptInterface<IHorrorHoldableInterface>& Other) const
 {
-	return HoldingItem == Other;
+	return HoldingItem.GetObject() == Other.GetObject();
 }
 
 void FHoldStruct::HoldItem(const TScriptInterface<IHorrorHoldableInterface>& NewHoldingItem, const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
-	check(!HoldingItem);
-	check(HandInterface);
+	check(!HoldingItem.GetObject());
+	check(NewHoldingItem.GetObject());
 	check(NewHoldingItem.GetObject()->GetClass()->ImplementsInterface(UHorrorHoldableInterface::StaticClass()));
 
 	HoldingItem = NewHoldingItem;
@@ -29,7 +29,7 @@ void FHoldStruct::HoldItem(const TScriptInterface<IHorrorHoldableInterface>& New
 
 void FHoldStruct::ReleaseHoldingItem(const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
-	check(HoldingItem);
+	check(HoldingItem.GetObject());
 	check(HoldingItem.GetObject()->GetClass()->ImplementsInterface(UHorrorHoldableInterface::StaticClass()));
 
 	IHorrorHoldableInterface::Execute_ResponseReleaseHoldable(HoldingItem.GetObject(), HandInterface);
