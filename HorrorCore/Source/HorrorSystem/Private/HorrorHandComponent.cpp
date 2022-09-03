@@ -7,12 +7,12 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
-bool FHoldStruct::IsEmpty()
+bool FHoldStruct::IsEmpty() const
 {
 	return HoldingItem == nullptr;
 }
 
-bool FHoldStruct::IsEqual(const TScriptInterface<IHorrorHoldableInterface>& Other)
+bool FHoldStruct::IsEqual(const TScriptInterface<IHorrorHoldableInterface>& Other) const
 {
 	return HoldingItem == Other;
 }

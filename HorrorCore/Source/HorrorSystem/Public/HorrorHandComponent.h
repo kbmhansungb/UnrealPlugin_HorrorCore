@@ -31,8 +31,8 @@ public:
 	TScriptInterface<IHorrorHoldableInterface> HoldingItem;
 
 public:
-	bool IsEmpty();
-	bool IsEqual(const TScriptInterface<IHorrorHoldableInterface>& Other);
+	bool IsEmpty() const;
+	bool IsEqual(const TScriptInterface<IHorrorHoldableInterface>& Other) const;
 
 	void HoldItem(const TScriptInterface<IHorrorHoldableInterface>& NewHoldingItem, const TScriptInterface<IHorrorHandInterface>& HandInterface);
 	void ReleaseHoldingItem(const TScriptInterface<IHorrorHandInterface>& HandInterface);
