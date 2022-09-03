@@ -28,10 +28,10 @@ public:
 	FVector RelativePosition;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TScriptInterface<IHorrorHoldableInterface> HoldItem;
+	TScriptInterface<IHorrorHoldableInterface> HoldingItem;
 
 public:
-	void ReleaseHoldItem(const TScriptInterface<IHorrorHandInterface>& HandInterface);
+	void ReleaseHoldingItem(const TScriptInterface<IHorrorHandInterface>& HandInterface);
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
