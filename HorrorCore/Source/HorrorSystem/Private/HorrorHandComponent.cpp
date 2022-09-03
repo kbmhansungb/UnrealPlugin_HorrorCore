@@ -7,6 +7,16 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
+void FHoldStruct::HoldItem(const TScriptInterface<IHorrorHoldableInterface>& NewHoldingItem, const TScriptInterface<IHorrorHandInterface>& HandInterface)
+{
+	check(HoldingItem.GetObject() == nullptr);
+	check(HandInterface.GetObject() != nullptr);
+	check(NewHoldingItem.GetObject()->GetClass()->ImplementsInterface(UHorrorHoldableInterface::StaticClass()));
+
+	HoldingItem = NewHoldingItem;
+	IHorrorHoldableInterface::Execute_ResponseHoldHoldable(NewHoldingItem.GetObject(), HandInterface);
+}
+
 void FHoldStruct::ReleaseHoldingItem(const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
 	if (!HoldingItem.GetObject())
