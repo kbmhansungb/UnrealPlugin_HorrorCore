@@ -29,16 +29,10 @@ void FHoldStruct::HoldItem(const TScriptInterface<IHorrorHoldableInterface>& New
 
 void FHoldStruct::ReleaseHoldingItem(const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
-	if (!HoldingItem.GetObject())
-	{
-		return;
-	}
+	check(HoldingItem);
+	check(HoldingItem.GetObject()->GetClass()->ImplementsInterface(UHorrorHoldableInterface::StaticClass()));
 
-	if (HoldingItem.GetObject()->GetClass()->ImplementsInterface(UHorrorHoldableInterface::StaticClass()))
-	{
-		IHorrorHoldableInterface::Execute_ResponseReleaseHoldable(HoldingItem.GetObject(), HandInterface);
-	}
-
+	IHorrorHoldableInterface::Execute_ResponseReleaseHoldable(HoldingItem.GetObject(), HandInterface);
 	HoldingItem = nullptr;
 }
 
@@ -142,7 +136,7 @@ void UHorrorHandComponent::Swap()
 void UHorrorHandComponent::Release(const EHandType Type)
 {
 	FHoldStruct* HandStruct = GetHoldStruct(Type);
-	if (HandStruct)
+	if (HandStruct && !HandStruct->IsEmpty())
 	{
 		HandStruct->ReleaseHoldingItem(this);
 	}
