@@ -21,7 +21,7 @@ struct HORRORSYSTEM_API FHoldStruct
 	GENERATED_BODY()
 
 public:
-	FHoldStruct() {}
+	FHoldStruct() = default;
 	FHoldStruct(const FVector& RelativePosition) : RelativePosition(RelativePosition) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
