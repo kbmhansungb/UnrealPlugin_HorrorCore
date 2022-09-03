@@ -104,6 +104,6 @@ protected:
 	float HandLength = 300.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<ETraceTypeQuery> TraceType;
+	TEnumAsByte<ETraceTypeQuery> TracePutLocationQueryType;
 };
 

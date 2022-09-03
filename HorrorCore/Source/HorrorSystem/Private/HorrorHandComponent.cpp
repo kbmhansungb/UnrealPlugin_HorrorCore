@@ -68,13 +68,13 @@ void UHorrorHandComponent::GetHoldablePutLocation_Implementation(FHitResult& Hit
 	const FVector& Position = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetCameraLocation();
 	const FVector& Forward = UGameplayStatics::GetPlayerController(this, 0)->PlayerCameraManager->GetActorForwardVector();
 
-	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + Forward * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true) &&
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + Forward * HandLength, TracePutLocationQueryType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true) &&
 		CheckPutable(HitResult))
 	{
 		return;
 	}
 
-	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + -GetOwner()->GetActorUpVector() * HandLength, TraceType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true) &&
+	if (UKismetSystemLibrary::LineTraceSingle(this, Position, Position + -GetOwner()->GetActorUpVector() * HandLength, TracePutLocationQueryType, true, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true) &&
 		CheckPutable(HitResult))
 	{
 		return;
