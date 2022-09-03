@@ -118,6 +118,7 @@ bool UTestHorrorHoldableHoldReleaseTestObject::IsHoldable_Implementation(const T
 
 void UTestHorrorHoldableHoldReleaseTestObject::ResponseHoldHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
+	this->IsHold = true;
 }
 
 void UTestHorrorHoldableHoldReleaseTestObject::SetHoldableTransform_Implementation(const FTransform& DesireTransform)
@@ -129,11 +130,11 @@ void UTestHorrorHoldableHoldReleaseTestObject::LerpHoldableTransform_Implementat
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(
-	FHorrorHandComponentReleaseHoldableTest, "Horror.HandComponent.Hold_ReleaseResponseTest",
+	FHorrorHandComponentHoldableResponseTest, "Horror.HandComponent.HoldableResponseTest",
 	EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::SmokeFilter
 );
 
-bool FHorrorHandComponentReleaseHoldableTest::RunTest(const FString& Parameters)
+bool FHorrorHandComponentHoldableResponseTest::RunTest(const FString& Parameters)
 {
 	UHorrorHandComponent* HandComponent = NewObject<UHorrorHandComponent>();
 	HandComponent->HandDominance = EHandType::RIGHT;
@@ -146,6 +147,11 @@ bool FHorrorHandComponentReleaseHoldableTest::RunTest(const FString& Parameters)
 		AddError(FString("Hand does not pick up object."));
 	}
 
+	if (!HoldableObject->IsHold)
+	{
+		AddError(FString("Unresponsive to holding."));
+	}
+
 	HandComponent->Release(EHandType::RIGHT);
 	if (!HandComponent->CompareHoldedObject(nullptr, nullptr))
 	{
@@ -154,7 +160,7 @@ bool FHorrorHandComponentReleaseHoldableTest::RunTest(const FString& Parameters)
 
 	if (!HoldableObject->IsReleased)
 	{
-		AddError(FString("Holdable is not released."));
+		AddError(FString("Unresponsive to release."));
 	}
 
 	return true;

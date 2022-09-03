@@ -32,6 +32,7 @@ class HORRORCOREEDITOR_API UTestHorrorHoldableHoldReleaseTestObject : public UOb
 	GENERATED_BODY()
 
 public:
+	bool IsHold = false;
 	bool IsReleased = false;
 
 	virtual void ResponseReleaseHoldable_Implementation(const TScriptInterface<IHorrorHandInterface>& HandInterface);
