@@ -103,7 +103,7 @@ bool UHorrorHandComponent::Hold(const EHandType Type, const TScriptInterface<IHo
 {
 	if (GetHoldStruct(Type)->HoldingItem == nullptr)
 	{
-		GetHoldStruct(Type)->HoldingItem = Holdable;
+		GetHoldStruct(Type)->HoldItem(Holdable, this);
 		SetStart(Type, Holdable);
 
 		return true;
