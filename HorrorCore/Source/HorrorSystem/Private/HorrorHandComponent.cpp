@@ -7,10 +7,20 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
+bool FHoldStruct::IsEmpty()
+{
+	return HoldingItem == nullptr;
+}
+
+bool FHoldStruct::IsEqual(const TScriptInterface<IHorrorHoldableInterface>& Other)
+{
+	return HoldingItem == Other;
+}
+
 void FHoldStruct::HoldItem(const TScriptInterface<IHorrorHoldableInterface>& NewHoldingItem, const TScriptInterface<IHorrorHandInterface>& HandInterface)
 {
-	check(HoldingItem.GetObject() == nullptr);
-	check(HandInterface.GetObject() != nullptr);
+	check(!HoldingItem);
+	check(HandInterface);
 	check(NewHoldingItem.GetObject()->GetClass()->ImplementsInterface(UHorrorHoldableInterface::StaticClass()));
 
 	HoldingItem = NewHoldingItem;
@@ -101,7 +111,7 @@ bool UHorrorHandComponent::IsEmptyHand(const EHandType Type)
 
 bool UHorrorHandComponent::Hold(const EHandType Type, const TScriptInterface<IHorrorHoldableInterface>& Holdable)
 {
-	if (GetHoldStruct(Type)->HoldingItem == nullptr)
+	if (GetHoldStruct(Type)->IsEmpty())
 	{
 		GetHoldStruct(Type)->HoldItem(Holdable, this);
 		SetStart(Type, Holdable);
