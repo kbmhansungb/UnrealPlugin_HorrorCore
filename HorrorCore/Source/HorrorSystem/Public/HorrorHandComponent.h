@@ -32,7 +32,7 @@ public:
 
 public:
 	bool IsEmpty() const;
-	bool IsEqual(const TScriptInterface<IHorrorHoldableInterface>& Other) const;
+	bool IsHoldingItem(const TScriptInterface<IHorrorHoldableInterface>& Other) const;
 
 	void HoldItem(const TScriptInterface<IHorrorHoldableInterface>& NewHoldingItem, const TScriptInterface<IHorrorHandInterface>& HandInterface);
 	void ReleaseHoldingItem(const TScriptInterface<IHorrorHandInterface>& HandInterface);

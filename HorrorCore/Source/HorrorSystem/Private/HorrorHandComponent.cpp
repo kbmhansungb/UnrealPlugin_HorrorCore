@@ -12,7 +12,7 @@ bool FHoldStruct::IsEmpty() const
 	return HoldingItem == nullptr;
 }
 
-bool FHoldStruct::IsEqual(const TScriptInterface<IHorrorHoldableInterface>& Other) const
+bool FHoldStruct::IsHoldingItem(const TScriptInterface<IHorrorHoldableInterface>& Other) const
 {
 	return HoldingItem == Other;
 }
