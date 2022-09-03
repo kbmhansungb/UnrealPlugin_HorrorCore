@@ -10,6 +10,7 @@
 UENUM(BlueprintType)
 enum class EHandType : uint8
 {
+	// None,
 	RIGHT,
 	LEFT,
 };
@@ -20,17 +21,21 @@ struct HORRORSYSTEM_API FHoldStruct
 	GENERATED_BODY()
 
 public:
-	FHoldStruct() {}
+	FHoldStruct() = default;
 	FHoldStruct(const FVector& RelativePosition) : RelativePosition(RelativePosition) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector RelativePosition;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TScriptInterface<IHorrorHoldableInterface> HoldItem;
+	TScriptInterface<IHorrorHoldableInterface> HoldingItem;
 
 public:
-	void ReleaseHoldItem(const TScriptInterface<IHorrorHandInterface>& HandInterface);
+	bool IsEmpty() const;
+	bool IsHoldingItem(const TScriptInterface<IHorrorHoldableInterface>& Other) const;
+
+	void HoldItem(const TScriptInterface<IHorrorHoldableInterface>& NewHoldingItem, const TScriptInterface<IHorrorHandInterface>& HandInterface);
+	void ReleaseHoldingItem(const TScriptInterface<IHorrorHandInterface>& HandInterface);
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -104,6 +109,6 @@ protected:
 	float HandLength = 300.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<ETraceTypeQuery> TraceType;
+	TEnumAsByte<ETraceTypeQuery> TracePutLocationQueryType;
 };
 
