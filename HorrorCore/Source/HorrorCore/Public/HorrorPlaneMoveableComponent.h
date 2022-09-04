@@ -23,6 +23,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BLueprintReadWrite)
 	float AllowIntersectionRadian = 0.08f;
+	
+	UPROPERTY(Category = "Moveable|Horror", EditAnywhere, BlueprintReadWrite)
+	bool MaintainX = true;
+
+	UPROPERTY(Category = "Moveable|Horror", EditAnywhere, BlueprintReadWrite)
+	bool MaintainY = true;
 
 	// IHorrorAxisMoveableInterface에서 상속됨
 public:
@@ -54,6 +60,7 @@ public:
 	 * @param Direction 평면과의 교차점을 구하고자 하는 방향으로 정규화 되어 있다고 가정합니다.
 	 */
 	bool IsValidDirection(const FVector& Direction) const;
+	FVector DropVectorParameter(const FVector& IntersectionVector) const;
 
 	void UpdateRelativeWithVirtualTransform(const FTransform& VirtualTransform);
 	FTransform GetNewWorldTransform(const FVector& IntersectionLocation);
