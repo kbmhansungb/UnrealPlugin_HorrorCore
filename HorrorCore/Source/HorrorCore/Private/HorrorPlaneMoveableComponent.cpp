@@ -7,8 +7,6 @@
 #include <Engine/World.h>
 #include "DrawDebugHelpers.h"
 
-// IHorrorAxisMoveableInterface에서 상속됨
-
 void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResult& HitLocation)
 {
 	const FVector& Direction = (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal();
