@@ -9,6 +9,8 @@
 
 void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResult& HitLocation)
 {
+	check(HitLocation.TraceEnd.Equals(HitLocation.TraceStart) == false);
+
 	const FVector& Direction = (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal();
 	LastIntersectionLocation = GetComponentLocation();
 
