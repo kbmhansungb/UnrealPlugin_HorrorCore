@@ -48,6 +48,11 @@ public:
 #pragma region Implementation
 
 public:
+	/*
+	 * 평면에대해서 방향이 같거나, 많이 평평하다면, 교차점은 유효하지 않거나 무한대의 값일 수 있습니다.
+	 * 
+	 * @param Direction 평면과의 교차점을 구하고자 하는 방향으로 정규화 되어 있다고 가정합니다.
+	 */
 	bool IsValidDirection(const FVector& Direction) const;
 
 	void UpdateRelativeWithVirtualTransform(const FTransform& VirtualTransform);
