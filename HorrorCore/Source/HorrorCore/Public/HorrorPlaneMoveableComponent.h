@@ -19,16 +19,16 @@ class HORRORCORE_API UHorrorPlaneMoveableComponent : public UPrimitiveComponent,
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D XRange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D YRange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxStepLength = 100.0f;
 
 	UPROPERTY(EditAnywhere, BLueprintReadWrite)
 	float AllowIntersectionRadian = 0.08f;
+	
+	UPROPERTY(Category = "Moveable|Horror", EditAnywhere, BlueprintReadWrite)
+	bool MaintainX = true;
+
+	UPROPERTY(Category = "Moveable|Horror", EditAnywhere, BlueprintReadWrite)
+	bool MaintainY = true;
 
 	// IHorrorAxisMoveableInterface에서 상속됨
 public:
@@ -54,7 +54,13 @@ public:
 #pragma region Implementation
 
 public:
+	/*
+	 * 평면에대해서 방향이 같거나, 많이 평평하다면, 교차점은 유효하지 않거나 무한대의 값일 수 있습니다.
+	 * 
+	 * @param Direction 평면과의 교차점을 구하고자 하는 방향으로 정규화 되어 있다고 가정합니다.
+	 */
 	bool IsValidDirection(const FVector& Direction) const;
+	FVector DropVectorParameter(const FVector& IntersectionVector) const;
 
 	void UpdateRelativeWithVirtualTransform(const FTransform& VirtualTransform);
 	FTransform GetNewWorldTransform(const FVector& IntersectionLocation);

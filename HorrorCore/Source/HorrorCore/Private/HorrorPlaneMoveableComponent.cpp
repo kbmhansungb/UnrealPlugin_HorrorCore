@@ -7,10 +7,10 @@
 #include <Engine/World.h>
 #include "DrawDebugHelpers.h"
 
-// IHorrorAxisMoveableInterface에서 상속됨
-
 void UHorrorPlaneMoveableComponent::PrepareMoving_Implementation(const FHitResult& HitLocation)
 {
+	check(HitLocation.TraceEnd.Equals(HitLocation.TraceStart) == false);
+
 	const FVector& Direction = (HitLocation.TraceEnd - HitLocation.TraceStart).GetUnsafeNormal();
 	LastIntersectionLocation = GetComponentLocation();
 
@@ -50,7 +50,8 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 	UWorld* World = GetWorld();
 	check(World);
 
-	SetDestination(GetNewWorldTransform(IntersectionLocation));
+	const FVector& RemainVector = DropVectorParameter(IntersectionLocation);
+	SetDestination(GetNewWorldTransform(RemainVector));
 	const FTransform& NewStepTransform = GetStepToDestination(World->GetDeltaSeconds());
 
 	const FTransform& Start = GetComponentTransform();
@@ -124,6 +125,39 @@ FTransform UHorrorPlaneMoveableComponent::GetNewVirtualTransform_Implementation(
 bool UHorrorPlaneMoveableComponent::IsValidDirection(const FVector& Direction) const
 {
 	return FMath::Abs(FVector::DotProduct(Direction, GetUpVector())) > AllowIntersectionRadian;
+}
+
+FVector UHorrorPlaneMoveableComponent::DropVectorParameter(const FVector& IntersectionVector) const
+{
+	USceneComponent* ParentComponent = GetAttachParent();
+
+	if (ParentComponent)
+	{
+		const FVector& Forward = ParentComponent->GetForwardVector();
+		const FVector& Right = ParentComponent->GetRightVector();
+
+		FVector RemainVector = IntersectionVector - ParentComponent->GetComponentLocation();
+
+		if (MaintainX == false)
+		{
+			RemainVector -= (RemainVector | Forward) * Forward;
+		}
+
+		if (MaintainY == false)
+		{
+			RemainVector -= (RemainVector | Right) * Right;
+		}
+
+		return RemainVector + ParentComponent->GetComponentLocation();
+	}
+	else
+	{
+		return FVector(
+			MaintainX ? IntersectionVector.X : 0.f,
+			MaintainY ? IntersectionVector.Y : 0.f,
+			IntersectionVector.Z
+		);
+	}
 }
 
 void UHorrorPlaneMoveableComponent::UpdateRelativeWithVirtualTransform(const FTransform& VirtualTransform)
