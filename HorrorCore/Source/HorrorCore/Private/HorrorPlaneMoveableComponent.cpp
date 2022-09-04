@@ -50,8 +50,7 @@ void UHorrorPlaneMoveableComponent::ApplyMoving_Implementation(const FVector& In
 	UWorld* World = GetWorld();
 	check(World);
 
-	const FVector& RemainVector = DropVectorParameter(IntersectionLocation);
-	SetDestination(GetNewWorldTransform(RemainVector));
+	SetDestination(GetNewWorldTransform(IntersectionLocation));
 	const FTransform& NewStepTransform = GetStepToDestination(World->GetDeltaSeconds());
 
 	const FTransform& Start = GetComponentTransform();
@@ -174,7 +173,8 @@ FTransform UHorrorPlaneMoveableComponent::GetNewWorldTransform(const FVector& In
 
 void UHorrorPlaneMoveableComponent::SetDestination(const FTransform& NewDestinationTransfrom)
 {
-	DestinationTransfrom = NewDestinationTransfrom;
+	const FVector& RemainVector = DropVectorParameter(NewDestinationTransfrom.GetLocation());
+	DestinationTransfrom = FTransform(NewDestinationTransfrom.GetRotation(), RemainVector, NewDestinationTransfrom.GetScale3D());
 }
 
 FTransform UHorrorPlaneMoveableComponent::GetStepToDestination(const float DeletaTime) const
