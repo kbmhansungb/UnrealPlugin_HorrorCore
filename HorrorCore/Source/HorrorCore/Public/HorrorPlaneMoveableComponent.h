@@ -19,12 +19,6 @@ class HORRORCORE_API UHorrorPlaneMoveableComponent : public UPrimitiveComponent,
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D XRange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D YRange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxStepLength = 100.0f;
 
 	UPROPERTY(EditAnywhere, BLueprintReadWrite)
