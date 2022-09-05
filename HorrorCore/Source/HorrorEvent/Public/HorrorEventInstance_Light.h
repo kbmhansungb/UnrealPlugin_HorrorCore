@@ -38,9 +38,6 @@ class HORROREVENT_API UHorrorLightComponent : public UActorComponent
 protected:
 	UPROPERTY(Category = "Light", EditAnywhere, BlueprintReadWrite)
 	bool IsBroke;
-
-	UPROPERTY(Category = "Light", EditAnywhere, BlueprintReadWrite)
-	bool IsUnstable;
 	
 	UPROPERTY(Category = "Light", EditAnywhere, BlueprintReadWrite)
 	bool IsOn;
@@ -54,17 +51,10 @@ protected:
 	UPROPERTY(Category = "Lights", EditAnywhere, BlueprintReadWrite)
 	TArray<FHorrorLIghtStruct> Lights;
 
-	UPROPERTY(Category = "Lights", EditAnywhere, BlueprintReadWrite)
-	FName UnstableSequenceTag;
-
 public:
 	FORCEINLINE bool IsItOn() const
 	{
 		return IsOn;
-	}
-	FORCEINLINE bool IsItUnstable() const 
-	{ 
-		return IsUnstable; 
 	}
 	FORCEINLINE bool DoesItTurnOn(bool NewOn) const
 	{

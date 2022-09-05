@@ -13,16 +13,6 @@ void UHorrorLightComponent::SetLgiht(bool NewOn)
 {
 	IsOn = DoesItTurnOn(NewOn);
 	UpdateLight();
-
-	if (IsItUnstable())
-	{
-		TArray<UActorComponent*> Components = GetOwner()->GetComponentsByTag(UActorSequenceComponent::StaticClass(), UnstableSequenceTag);
-		for (UActorComponent* Component : Components)
-		{
-			UActorSequenceComponent* SequenceComponent = Cast<UActorSequenceComponent>(Component);
-			SequenceComponent->GetSequencePlayer()->Play();
-		}
-	}
 }
 
 void UHorrorLightComponent::ToggleLight()
