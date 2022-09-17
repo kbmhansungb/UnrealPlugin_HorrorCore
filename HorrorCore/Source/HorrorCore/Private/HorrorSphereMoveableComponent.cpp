@@ -127,39 +127,7 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 
 	const FVector& V0 = GetUpVector();
 	FVector V1 = IntersectionCorrectionQuarts.RotateVector(IntersectionLocation - GetComponentLocation());
-	{
-		USceneComponent* ParentComponent = GetAttachParent();
-
-		if (ParentComponent)
-		{
-			const FVector& Forward = ParentComponent->GetForwardVector();
-			const FVector& Right = ParentComponent->GetRightVector();
-			const FVector& Up = ParentComponent->GetUpVector();
-
-			FVector DropVector(0.f);
-
-			if (MaintainX)
-			{
-				DropVector += (V1 | Forward) * Forward;
-			}
-
-			if (MaintainY)
-			{
-				DropVector += (V1 | Right) * Right;
-			}
-
-			if (MaintainZ)
-			{
-				DropVector += (V1 | Up) * Up;
-			}
-
-			V1 = DropVector;
-		}
-		else
-		{
-			V1 = DropVectorParameter(V1);
-		}
-	}
+	V1 = DropVectorParameter(V1);
 	V1.Normalize();
 
 	DrawDebugSphere(GetWorld(), V0 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Red);
@@ -202,10 +170,39 @@ float UHorrorSphereMoveableComponent::GetLastRotRad() const
 
 FVector UHorrorSphereMoveableComponent::DropVectorParameter(const FVector& SphereVector) const
 {
-	return FVector(
-		MaintainX ? SphereVector.X : 0.f, 
-		MaintainY ? SphereVector.Y : 0.f, 
-		MaintainZ ? SphereVector.Z : 0.f);
+	USceneComponent* ParentComponent = GetAttachParent();
+
+	FVector RemainVector = SphereVector;
+	if (ParentComponent)
+	{
+		if (MaintainX == false)
+		{
+			const FVector& Forward = ParentComponent->GetForwardVector();
+			RemainVector -= (SphereVector | Forward) * Forward;
+		}
+
+		if (MaintainY == false)
+		{
+			const FVector& Right = ParentComponent->GetRightVector();
+			RemainVector -= (SphereVector | Right) * Right;
+		}
+
+		if (MaintainZ == false)
+		{
+			const FVector& Up = ParentComponent->GetUpVector();
+			RemainVector -= (SphereVector | Up) * Up;
+		}
+	}
+	else
+	{
+		RemainVector = FVector(
+			MaintainX ? SphereVector.X : 0.f,
+			MaintainY ? SphereVector.Y : 0.f,
+			MaintainZ ? SphereVector.Z : 0.f
+		);
+	}
+
+	return RemainVector;
 }
 
 void UHorrorSphereMoveableComponent::UpdateLastBlocking(bool NewHasBlocking)
