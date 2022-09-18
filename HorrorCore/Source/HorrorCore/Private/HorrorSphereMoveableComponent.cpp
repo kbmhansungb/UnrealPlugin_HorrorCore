@@ -121,38 +121,16 @@ void UHorrorSphereMoveableComponent::ApplyMoving_Implementation(const FVector& I
 
 FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation(const FVector& IntersectionLocation) const
 {
-	static constexpr float DebugSphereSize = 5.0f;
-	static constexpr int32 DebugSphereSegment = 16;
-
-
 	const FVector& V0 = GetUpVector();
 	FVector V1 = IntersectionCorrectionQuarts.RotateVector(IntersectionLocation - GetComponentLocation());
 	V1 = DropVectorParameter(V1);
 	V1.Normalize();
 
-	DrawDebugSphere(GetWorld(), V0 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Red);
-	DrawDebugSphere(GetWorld(), V1 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Blue);
-
-	{
-		const float& Omega = FMath::Acos(V1 | V0);
-		const float& MaxAllowedOmega = FMath::DegreesToRadians(MaxRotationSpeed * GetWorld()->GetDeltaSeconds());
-		
-		if (Omega > MaxAllowedOmega)
-		{
-			// 전체 Omega에서 허용되는 Omega만큼만 이동합니다.
-			const float& LerpScale = MaxAllowedOmega / Omega;
-			V1 = SLerpVector(V0, V1, LerpScale, Omega);
-		}
-	}
-
-	DrawDebugSphere(GetWorld(), V1 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Green);
+	V1 = StepToDestination(V0, V1);
 
 	const FVector& Axis = (V0 ^ V1).GetSafeNormal();
 	const float& Rad = FMath::Acos(V1 | V0);
-
-	{
-		LastRotRad = Rad;
-	}
+	LastRotRad = Rad;
 
 	const FQuat& Quat = FQuat(Axis, Rad);
 
@@ -215,6 +193,20 @@ void UHorrorSphereMoveableComponent::UpdateLastBlocking(bool NewHasBlocking)
 	{
 		LastBlocking = NewHasBlocking;
 	}
+}
+
+FVector UHorrorSphereMoveableComponent::StepToDestination(const FVector& Current, const FVector& Destination) const
+{
+	const float& Omega = FMath::Acos(Current | Destination);
+	const float& MaxAllowedOmega = FMath::DegreesToRadians(MaxRotationSpeed * GetWorld()->GetDeltaSeconds());
+
+	if (Omega > MaxAllowedOmega)
+	{
+		// 전체 Omega에서 허용되는 Omega만큼만 이동합니다.
+		const float& LerpScale = MaxAllowedOmega / Omega;
+		return SLerpVector(Current, Destination, LerpScale, Omega);
+	}
+	return Current;
 }
 
 FVector UHorrorSphereMoveableComponent::SLerpVector(const FVector& CurrentVector, const FVector& DesiredVector, const float LerpScale, const float Omega) const
