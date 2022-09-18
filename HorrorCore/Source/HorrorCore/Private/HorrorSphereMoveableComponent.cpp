@@ -134,18 +134,14 @@ FTransform UHorrorSphereMoveableComponent::GetNewVirtualTransform_Implementation
 	DrawDebugSphere(GetWorld(), V1 * SphereRadius + GetComponentLocation(), DebugSphereSize, DebugSphereSegment, FColor::Blue);
 
 	{
-		const float& Radian = FMath::Acos(V1 | V0);
-		const float& MaxRadian = FMath::DegreesToRadians(MaxRotationSpeed * GetWorld()->GetDeltaSeconds());
+		const float& Omega = FMath::Acos(V1 | V0);
+		const float& MaxAllowedOmega = FMath::DegreesToRadians(MaxRotationSpeed * GetWorld()->GetDeltaSeconds());
 		
-		if (Radian > MaxRadian)
+		if (Omega > MaxAllowedOmega)
 		{
-			const float& t = MaxRadian / Radian;
-
-			const float& ASinRad = FMath::Sin((1 - t) * Radian);
-			const float& BSinRad = FMath::Sin(t * Radian);
-			const float& SinRad = FMath::Sin(Radian);
-
-			V1 = (ASinRad / SinRad) * V0 + (BSinRad / SinRad) * V1;
+			// 전체 Omega에서 허용되는 Omega만큼만 이동합니다.
+			const float& LerpScale = MaxAllowedOmega / Omega;
+			V1 = SLerpVector(V0, V1, LerpScale, Omega);
 		}
 	}
 
@@ -220,3 +216,15 @@ void UHorrorSphereMoveableComponent::UpdateLastBlocking(bool NewHasBlocking)
 		LastBlocking = NewHasBlocking;
 	}
 }
+
+FVector UHorrorSphereMoveableComponent::SLerpVector(const FVector& CurrentVector, const FVector& DesiredVector, const float LerpScale, const float Omega) const
+{
+	// https://en.wikipedia.org/wiki/Slerp#:~:text=More%20familiar%20than%20the%20general,this%20becomes%20the%20Slerp%20formula.
+
+	const float& ASinRad = FMath::Sin((1 - LerpScale) * Omega);
+	const float& BSinRad = FMath::Sin(LerpScale * Omega);
+	const float& SinRad = FMath::Sin(Omega);
+
+	return (ASinRad / SinRad) * CurrentVector + (BSinRad / SinRad) * DesiredVector;
+}
+
