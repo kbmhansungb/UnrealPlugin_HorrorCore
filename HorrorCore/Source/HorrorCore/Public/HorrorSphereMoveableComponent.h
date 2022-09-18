@@ -60,6 +60,8 @@ public:
 public:
 	FVector DropVectorParameter(const FVector& SphereVector) const;
 	void UpdateLastBlocking(bool NewHasBlocking);
+	FVector StepToDestination(const FVector& Current, const FVector& Destination) const;
+	FVector SLerpVector(const FVector& CurrentVector, const FVector& DesiredVector, const float LerpScale, const float Omega) const;
 
 private:
 	float SphereRadius;
