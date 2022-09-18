@@ -132,18 +132,18 @@ FVector UHorrorPlaneMoveableComponent::DropVectorParameter(const FVector& Inters
 
 	if (ParentComponent)
 	{
-		const FVector& Forward = ParentComponent->GetForwardVector();
-		const FVector& Right = ParentComponent->GetRightVector();
 
 		FVector RemainVector = IntersectionVector - ParentComponent->GetComponentLocation();
 
 		if (MaintainX == false)
 		{
+			const FVector& Forward = ParentComponent->GetForwardVector();
 			RemainVector -= (RemainVector | Forward) * Forward;
 		}
 
 		if (MaintainY == false)
 		{
+			const FVector& Right = ParentComponent->GetRightVector();
 			RemainVector -= (RemainVector | Right) * Right;
 		}
 
