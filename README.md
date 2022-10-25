@@ -39,4 +39,4 @@
 
 ## More
 
-각각의 내용에 대해서는 [Wiki](https://github.com/kbmhansungb/UnrealPlugin_HorrorCore/wiki)를 참고할 수 있습니다. 이 리포지토리는 플러그인이며 Overview를 담고있는 프로젝트는 [Unreal_HorrorCore](https://github.com/kbmhansungb/Unreal_HorrorCore)에서 확인 할 수 있습니다.
+각각의 내용에 대해서는 [Wiki](https://github.com/kbmhansungb/UnrealPlugin_HorrorCore/wiki)를 참고할 수 있습니다. 이 리포지토리는 플러그인이며 Overview를 담고있는 프로젝트는 [Unreal_HorrorCore](https://github.com/kbmhansungb/Unreal_HorrorCore)에서 확인 할 수 있습니다. 
